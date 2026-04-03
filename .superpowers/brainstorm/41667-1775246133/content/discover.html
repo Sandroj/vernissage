@@ -1,0 +1,139 @@
+<h2>Kunstenaars-keuzescherm</h2>
+<p class="subtitle">Zo ziet het scherm eruit waarop gebruikers aangeven welke kunstenaars ze in de app willen. Klik een kunstenaar aan om te selecteren.</p>
+
+<div class="mockup">
+  <div class="mockup-header">
+    /discover — Scherm 1 van 3
+  </div>
+  <div class="mockup-body">
+    <div style="text-align:center;margin-bottom:16px;">
+      <h3 style="margin:0 0 4px;">Welke kunstenaars wil jij in de app?</h3>
+      <p style="color:#9ca3af;font-size:13px;margin:0;">Klik op alle kunstenaars die je interessant vindt. We voegen de populairste als eerste toe.</p>
+    </div>
+
+    <!-- Grid van 12 kunstenaars -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+
+      <!-- Van Gogh -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/300px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Van Gogh"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Van Gogh</div>
+      </div>
+
+      <!-- Picasso -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/4c/Les_Demoiselles_d%27Avignon.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Picasso"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Picasso</div>
+      </div>
+
+      <!-- Da Vinci -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/300px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Da Vinci"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Da Vinci</div>
+      </div>
+
+      <!-- Monet -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg/300px-Claude_Monet_-_Water_Lilies_-_1906%2C_Ryerson.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Monet"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Monet</div>
+      </div>
+
+      <!-- Rembrandt -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Rembrandt_van_Rijn-De_Nachtwacht-1642.jpg/300px-Rembrandt_van_Rijn-De_Nachtwacht-1642.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Rembrandt"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Rembrandt</div>
+      </div>
+
+      <!-- Dalí -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Dalí"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Dalí</div>
+      </div>
+
+      <!-- Frida Kahlo -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Frida_Kahlo_%281932%29_-_Detroit_Industry_Murals.jpg/300px-Frida_Kahlo_%281932%29_-_Detroit_Industry_Murals.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Frida Kahlo"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Frida Kahlo</div>
+      </div>
+
+      <!-- Klimt -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/300px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Klimt"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Klimt</div>
+      </div>
+
+      <!-- Vermeer -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Meisje_met_de_parel.jpg/300px-Meisje_met_de_parel.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Vermeer"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Vermeer</div>
+      </div>
+
+      <!-- Michelangelo -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/300px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Michelangelo"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Michelangelo</div>
+      </div>
+
+      <!-- Matisse -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Matisse-1.jpg/300px-Matisse-1.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Matisse"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Matisse</div>
+      </div>
+
+      <!-- Munch -->
+      <div onclick="this.classList.toggle('selected-artist')" style="cursor:pointer;border-radius:8px;overflow:hidden;background:#1f2937;border:2px solid transparent;transition:border-color 0.2s;" class="artist-pick">
+        <div style="aspect-ratio:1;overflow:hidden;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/300px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Munch"/>
+        </div>
+        <div style="padding:6px;text-align:center;font-size:11px;color:#e5e7eb;font-weight:500;">Munch</div>
+      </div>
+
+    </div>
+
+    <!-- Navigatie -->
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <button style="background:#374151;color:#9ca3af;border:none;padding:8px 16px;border-radius:6px;cursor:not-allowed;font-size:13px;">← Vorige</button>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <div style="width:24px;height:6px;background:#6366f1;border-radius:3px;"></div>
+        <div style="width:6px;height:6px;background:#374151;border-radius:3px;"></div>
+        <div style="width:6px;height:6px;background:#374151;border-radius:3px;"></div>
+      </div>
+      <button style="background:#6366f1;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;">Volgende →</button>
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <span style="color:#6b7280;font-size:12px;cursor:pointer;text-decoration:underline;">Sla over</span>
+    </div>
+  </div>
+</div>
+
+<style>
+.artist-pick.selected-artist {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+}
+.artist-pick.selected-artist .card-name {
+  color: #818cf8;
+}
+</style>

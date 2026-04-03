@@ -58,33 +58,33 @@ artworks  Artwork[]
 
 ### Artwork
 ```
-id             Int      @id @default(autoincrement())
-artistId       Int
-museumId       Int?
-title          String
-year_start     Int?
-year_end       Int?
-medium_raw     String?
+id              Int      @id @default(autoincrement())
+artistId        Int
+museumId        Int?
+title           String
+year_start      Int?
+year_end        Int?
+medium_raw      String?
 type_normalized String?
-dimensions_raw String?
-image_url      String?
+dimensions_raw  String?
+image_url       String?
 image_local_path String?
-source_url     String?
-artist         Artist   @relation(...)
-museum         Museum?  @relation(...)
-seenBy         Seen[]
+source_url      String?
+artist          Artist   @relation(...)
+museum          Museum?  @relation(...)
+seenBy          Seen[]
 ```
 
 ### User
 ```
-id        String   @id @default(cuid())
-name      String?
-email     String   @unique
-image     String?
-seenPublic Boolean @default(true)   -- accountinstelling: publiek of privé
-accounts  Account[]
-sessions  Session[]
-seen      Seen[]
+id         String   @id @default(cuid())
+name       String?
+email      String   @unique
+image      String?
+seenPublic Boolean  @default(true)   -- accountinstelling: publiek of privé
+accounts   Account[]
+sessions   Session[]
+seen       Seen[]
 ```
 
 ### Seen
@@ -104,6 +104,17 @@ artwork      Artwork  @relation(...)
 @@unique([userId, artworkId])
 ```
 
+### ArtistVote
+```
+id        Int      @id @default(autoincrement())
+userId    String
+artistName String  -- naam van de gewenste kunstenaar (nog niet in app)
+createdAt DateTime @default(now())
+user      User     @relation(...)
+
+@@unique([userId, artistName])
+```
+
 ---
 
 ## Pagina's
@@ -111,9 +122,10 @@ artwork      Artwork  @relation(...)
 | Route | Inhoud |
 |---|---|
 | `/` | Dashboard: voortgang per kunstenaar, recentste "gezien"-items |
-| `/artists` | Overzicht van alle kunstenaars met voortgangsbalk |
+| `/artists` | Overzicht van alle kunstenaars met zoekbalk en voortgangsbalken |
 | `/artists/[slug]` | Kunstenaar-detailpagina (zie layout hieronder) |
 | `/artworks/[id]` | Artwork-detailpagina (zie layout hieronder) |
+| `/discover` | Kunstenaars-keuzescherm: stem op kunstenaars die je in de app wilt |
 | `/profile` | Eigen gezien-lijst, statistieken, accountinstellingen |
 | `/admin` | Kunstenaar toevoegen, scraper-output importeren, handmatige invoer |
 | `/login` | Inloggen via Google of e-mail/wachtwoord |
@@ -121,6 +133,15 @@ artwork      Artwork  @relation(...)
 ---
 
 ## Layouts
+
+### Artistenpagina (`/artists`)
+
+- Zoekbalk bovenaan — zoek op naam, nationaliteit of periode
+- Lijst/raster van kunstenaars die in de app staan, elk met:
+  - Portretfoto
+  - Naam
+  - Voortgangsbalk: X van Y gezien
+- Klikken opent de kunstenaar-detailpagina
 
 ### Kunstenaar-detailpagina (`/artists/[slug]`)
 
@@ -138,7 +159,7 @@ artwork      Artwork  @relation(...)
 
 ### Artwork-detailpagina (`/artworks/[id]`)
 
-**Opbouw (optie A, verticaal):**
+**Opbouw (verticaal):**
 1. Terug-link naar kunstenaar
 2. Grote afbeelding — klikbaar voor lightbox (alleen afbeelding, geen UI)
 3. Titel + kunstenaar + jaar
@@ -146,6 +167,29 @@ artwork      Artwork  @relation(...)
 5. "Markeer als gezien"-knop (of "Bewerken" als al gezien)
 6. Teller: "X mensen hebben dit werk gezien"
 7. Deelknop: kopieer link / Twitter-X / Instagram / e-mail
+
+### Kunstenaars-keuzescherm (`/discover`)
+
+Doel: gebruikers laten aangeven welke kunstenaars ze graag in de app willen zien. Resultaten worden opgeslagen als stemmen voor toekomstige toevoeging.
+
+**Opbouw:**
+- 3 schermen van elk 9 of 12 kunstenaars (totaal 27–36)
+- Navigatie via pijltjes links/rechts
+- Voortgangsindicator: "Pagina 1 van 3"
+- Per kunstenaar: een afbeelding van een bekend werk + naam eronder
+- Klikken = selecteren (toggle), visueel duidelijk (border/overlay)
+- Onderaan: "Volgende" of "Sla op" knop
+
+**Kunstenaarslijst (36 bekendste):**
+Verdeeld over 3 schermen van 12:
+
+*Scherm 1:* Van Gogh, Picasso, Da Vinci, Monet, Rembrandt, Dalí, Frida Kahlo, Vermeer, Michelangelo, Matisse, Klimt, Munch
+*Scherm 2:* Raphael, Botticelli, Caravaggio, Goya, Renoir, Degas, Cézanne, Manet, Gauguin, Mondrian, Chagall, Pollock
+*Scherm 3:* Andy Warhol, Rothko, Basquiat, Klee, Miró, Magritte, O'Keeffe, Schiele, Bosch, Jan van Eyck, Kandinsky
+
+**Afbeeldingen:** al gedownload van Art Institute of Chicago open API (publiek domein) en Wikimedia Commons, opgeslagen in `public/images/discover/`. Download-script: `scripts/download_discover_images.py`.
+
+**Onboarding:** na aanmaken account wordt `/discover` getoond met de optie om te skippen. Later altijd bereikbaar via navigatie.
 
 ---
 
@@ -171,6 +215,15 @@ Na opslaan:
 - Weergavenaam en avatar
 - Zichtbaarheid: toggle publiek/privé — geldt voor alle "gezien"-registraties van dit account
 - Wachtwoord wijzigen (bij e-mailauthenticatie)
+- Uitloggen
+
+---
+
+## Auth
+
+- Inloggen via Google of e-mail/wachtwoord (NextAuth.js)
+- Na inloggen → redirect naar dashboard of `/discover` (bij nieuw account)
+- Uitloggen via knop in navigatie (altijd zichtbaar)
 
 ---
 
@@ -197,8 +250,22 @@ Bronbestand: `~/claude-code/projects/art/sources/kandinsky_scraper_bundle/kandin
 Op de artwork-detailpagina een `DropdownMenu` (shadcn) met:
 - Kopieer link (URL naar `/artworks/[id]`)
 - Deel op Twitter/X
-- Deel op Instagram (link naar bio of download voor Stories)
+- Deel op Instagram (download voor Stories of link naar bio)
 - Deel via e-mail (mailto-link)
+
+---
+
+## Responsive design
+
+De app is volledig responsive en bruikbaar op mobiel, tablet en desktop.
+
+| Breakpoint | Gedrag |
+|---|---|
+| Mobile (< 640px) | Navigatie als hamburgermenu, werkenraster 2 kolommen, artwork-detail verticaal stapelend, discover-scherm 2×6 raster |
+| Tablet (640–1024px) | Sidebar inklapbaar, raster 3–4 kolommen |
+| Desktop (> 1024px) | Volledige sidebar zichtbaar, raster 4–6 kolommen |
+
+Tailwind responsive prefixes (`sm:`, `md:`, `lg:`) voor alle layouts. shadcn/ui componenten zijn zelf al mobile-first.
 
 ---
 
