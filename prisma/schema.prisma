@@ -44,6 +44,9 @@ model Artwork {
   artist           Artist   @relation(fields: [artistId], references: [id])
   museum           Museum?  @relation(fields: [museumId], references: [id])
   seenBy           Seen[]
+
+  @@index([artistId])
+  @@index([museumId])
 }
 
 model User {
@@ -108,6 +111,8 @@ model Seen {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   artwork      Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([artworkId])
   @@unique([userId, artworkId])
 }
 
