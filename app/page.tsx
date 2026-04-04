@@ -1,101 +1,100 @@
-import Image from "next/image";
+import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import Link from 'next/link'
+import ProgressBar from '@/components/progress-bar'
+import { Button } from '@/components/ui/button'
 
-export default function Home() {
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions)
+
+  const artists = await prisma.artist.findMany({
+    include: { _count: { select: { artworks: true } } },
+    orderBy: { name: 'asc' },
+  })
+
+  const seenCounts: Record<number, number> = {}
+  const recentSeen: any[] = []
+
+  if (session?.user?.id) {
+    for (const artist of artists) {
+      seenCounts[artist.id] = await prisma.seen.count({
+        where: { userId: session.user.id, artwork: { artistId: artist.id } },
+      })
+    }
+    const recent = await prisma.seen.findMany({
+      where: { userId: session.user.id },
+      include: { artwork: { include: { artist: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 6,
+    })
+    recentSeen.push(...recent)
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="space-y-10">
+      <div>
+        <h1 className="text-3xl font-bold mb-2">
+          {session?.user?.name ? `Hallo, ${session.user.name.split(' ')[0]}` : 'ArtTracker'}
+        </h1>
+        <p className="text-slate-400">
+          {session ? 'Jouw kunstvoortgang in één oogopslag.' : 'Log in om je voortgang bij te houden.'}
+        </p>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Kunstenaars voortgang */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Kunstenaars</h2>
+          <Link href="/artists">
+            <Button variant="ghost" size="sm" className="text-slate-400">Alle kunstenaars →</Button>
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="space-y-3">
+          {artists.map((artist) => {
+            const seen = seenCounts[artist.id] ?? 0
+            const total = artist._count.artworks
+            const pct = total > 0 ? (seen / total) * 100 : 0
+            return (
+              <Link key={artist.id} href={`/artists/${artist.slug}`} className="block bg-slate-900 rounded-xl p-4 hover:bg-slate-800 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium">{artist.name}</span>
+                  <span className="text-slate-400 text-sm">{seen}/{total}</span>
+                </div>
+                <ProgressBar value={pct} seen={seen} total={total} animate={false} />
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Recent gezien */}
+      {recentSeen.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Recent gezien</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+            {recentSeen.map((s) => (
+              <Link key={s.id} href={`/artworks/${s.artworkId}`} className="group">
+                <div className="aspect-square rounded-lg overflow-hidden bg-slate-800">
+                  <img
+                    src={s.artwork.image_local_path ?? s.artwork.image_url ?? '/placeholder.jpg'}
+                    alt={s.artwork.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  />
+                </div>
+                <p className="text-xs text-slate-400 mt-1 truncate">{s.artwork.title}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!session && (
+        <div className="text-center py-12 border border-slate-800 rounded-xl">
+          <p className="text-slate-400 mb-4">Log in om je voortgang bij te houden.</p>
+          <Link href="/login"><Button>Inloggen of registreren</Button></Link>
+        </div>
+      )}
     </div>
-  );
+  )
 }
