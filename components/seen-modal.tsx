@@ -80,11 +80,13 @@ export default function SeenModal({
           <div className="space-y-1">
             <label className="text-xs text-slate-400 uppercase tracking-wide">Datum</label>
             <Popover open={calOpen} onOpenChange={setCalOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full justify-start gap-2 bg-slate-800 border-slate-700 text-white">
-                  <CalendarIcon size={14} />
-                  {format(date, 'd MMMM yyyy', { locale: nl })}
-                </Button>
+              <PopoverTrigger
+                render={
+                  <Button variant="outline" className="w-full justify-start gap-2 bg-slate-800 border-slate-700 text-white" />
+                }
+              >
+                <CalendarIcon size={14} />
+                {format(date, 'd MMMM yyyy', { locale: nl })}
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar

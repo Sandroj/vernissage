@@ -28,7 +28,9 @@ export default async function ArtworkDetailPage({ params }: { params: { id: stri
 
   return (
     <ArtworkDetailClient
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       artwork={artwork as any}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       initialSeen={seen as any}
       seenCount={artwork._count.seenBy}
       isLoggedIn={!!session?.user}

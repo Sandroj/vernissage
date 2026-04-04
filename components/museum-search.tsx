@@ -29,17 +29,19 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          className="w-full justify-start gap-2 text-left font-normal bg-slate-900 border-slate-700"
-        >
-          <MapPin size={14} className="text-slate-400 flex-shrink-0" />
-          <span className={value ? 'text-white' : 'text-slate-400'}>
-            {value || 'Zoek museum of typ locatie...'}
-          </span>
-        </Button>
+      <PopoverTrigger
+        render={
+          <Button
+            variant="outline"
+            role="combobox"
+            className="w-full justify-start gap-2 text-left font-normal bg-slate-900 border-slate-700"
+          />
+        }
+      >
+        <MapPin size={14} className="text-slate-400 flex-shrink-0" />
+        <span className={value ? 'text-white' : 'text-slate-400'}>
+          {value || 'Zoek museum of typ locatie...'}
+        </span>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-[320px]" align="start">
         <Command>

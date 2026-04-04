@@ -1,5 +1,5 @@
 'use client'
-import { Share2, Link2, Twitter, Instagram, Mail } from 'lucide-react'
+import { Share2, Link2, X, Camera, Mail } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,35 +24,28 @@ export default function ShareMenu({ url, title }: ShareMenuProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Share2 size={15} /> Delen
-        </Button>
+      <DropdownMenuTrigger render={<Button variant="outline" size="sm" className="gap-2" />}>
+        <Share2 size={15} /> Delen
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={copyLink} className="gap-2">
           <Link2 size={15} /> Kopieer link
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2"
-          >
-            <Twitter size={15} /> Deel op Twitter/X
-          </a>
+        <DropdownMenuItem
+          render={<a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`} target="_blank" rel="noopener noreferrer" />}
+          className="gap-2"
+        >
+          <X size={15} /> Deel op Twitter/X
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <a
-            href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullUrl)}`}
-            className="flex items-center gap-2"
-          >
-            <Mail size={15} /> Deel via e-mail
-          </a>
+        <DropdownMenuItem
+          render={<a href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullUrl)}`} />}
+          className="gap-2"
+        >
+          <Mail size={15} /> Deel via e-mail
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => { navigator.clipboard.writeText(fullUrl); toast('Link gekopieerd voor Instagram bio') }}
           className="gap-2">
-          <Instagram size={15} /> Kopieer voor Instagram
+          <Camera size={15} /> Kopieer voor Instagram
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

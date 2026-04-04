@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
 import ShareMenu from '@/components/share-menu'
@@ -22,6 +21,7 @@ interface ArtworkDetailClientProps {
     artist: { id: number; name: string; slug: string }
     museum?: { name: string; city: string; country: string } | null
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialSeen: any | null
   seenCount: number
   isLoggedIn: boolean
@@ -47,6 +47,7 @@ export default function ArtworkDetailClient({
     const res = await fetch('/api/seen')
     if (res.ok) {
       const all = await res.json()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updated = all.find((s: any) => s.artworkId === artwork.id)
       setSeen(updated ?? null)
       if (!seen && updated) setCurrentSeenCount((c) => c + 1)

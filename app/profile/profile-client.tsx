@@ -12,7 +12,7 @@ interface ProfileClientProps {
   hasPassword: boolean
 }
 
-export default function ProfileClient({ user, seenCount, hasPassword }: ProfileClientProps) {
+export default function ProfileClient({ user, seenCount, hasPassword: _hasPassword }: ProfileClientProps) {
   const [name, setName] = useState(user.name ?? '')
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)

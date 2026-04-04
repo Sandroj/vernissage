@@ -14,6 +14,7 @@ export default async function DashboardPage() {
   })
 
   const seenCounts: Record<number, number> = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recentSeen: any[] = []
 
   if (session?.user?.id) {

@@ -37,6 +37,7 @@ export default async function ArtistDetailPage({
   return (
     <ArtistDetailClient
       artist={artist}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       seenMap={seenMap as any}
       isLoggedIn={!!session?.user}
     />

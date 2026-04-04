@@ -3,6 +3,16 @@ import { useState } from 'react'
 import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
 
+interface ArtworkWithMuseum {
+  id: number
+  title: string
+  year_start?: number | null
+  image_local_path?: string | null
+  image_url?: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
+}
+
 interface Artist {
   id: number
   name: string
@@ -12,11 +22,12 @@ interface Artist {
   nationality?: string | null
   bio?: string | null
   portrait_url?: string | null
-  artworks: any[]
+  artworks: ArtworkWithMuseum[]
 }
 
 interface ArtistDetailClientProps {
   artist: Artist
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seenMap: Record<number, any>
   isLoggedIn: boolean
 }
@@ -32,6 +43,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
     const res = await fetch('/api/seen')
     if (res.ok) {
       const all = await res.json()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map: Record<number, any> = {}
       for (const s of all) {
         if (artist.artworks.some((a) => a.id === s.artworkId)) {
