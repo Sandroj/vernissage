@@ -32,7 +32,7 @@ export default async function ArtistDetailPage({
       })
     : []
 
-  const seenMap = Object.fromEntries(seenRecords.map((s) => [s.artworkId, s]))
+  const seenMap = Object.fromEntries(seenRecords.map((s: { artworkId: number; [key: string]: unknown }) => [s.artworkId, s]))
 
   return (
     <ArtistDetailClient

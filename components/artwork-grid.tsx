@@ -37,12 +37,10 @@ function Dropdown<T extends string>({
   value,
   onChange,
   options,
-  _label,
 }: {
   value: T
   onChange: (v: T) => void
   options: { value: T; label: string }[]
-  _label?: string
 }) {
   return (
     <div className="relative">
@@ -137,12 +135,12 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
 
         {/* Dropdowns */}
         <div className="flex flex-wrap gap-2">
-          <Dropdown value={filterSeen} onChange={setFilterSeen} options={seenOptions} label="Gezien" />
+          <Dropdown value={filterSeen} onChange={setFilterSeen} options={seenOptions} />
           {types.length > 1 && (
-            <Dropdown value={filterType} onChange={setFilterType} options={typeOptions} label="Type" />
+            <Dropdown value={filterType} onChange={setFilterType} options={typeOptions} />
           )}
           {museums.length > 1 && (
-            <Dropdown value={filterMuseum} onChange={setFilterMuseum} options={museumOptions} label="Museum" />
+            <Dropdown value={filterMuseum} onChange={setFilterMuseum} options={museumOptions} />
           )}
         </div>
       </div>
