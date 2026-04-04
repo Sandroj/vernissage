@@ -1,11 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Native modules mogen niet worden gebundeld door webpack — ze worden geladen via Node.js
-  experimental: {
-    serverComponentsExternalPackages: [
-      'better-sqlite3',
-      '@prisma/adapter-better-sqlite3',
-    ],
+  serverExternalPackages: [
+    'better-sqlite3',
+    '@prisma/adapter-better-sqlite3',
+  ],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Vertel webpack: laad deze native modules via Node.js, niet bundelen
+      const externals = Array.isArray(config.externals) ? config.externals : []
+      config.externals = [
+        ...externals,
+        'better-sqlite3',
+        '@prisma/adapter-better-sqlite3',
+      ]
+    }
+    return config
   },
 }
 
