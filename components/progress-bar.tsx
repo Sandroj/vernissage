@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 interface ProgressBarProps {
-  value: number   // 0–100
+  value: number
   seen: number
   total: number
   className?: string
@@ -11,24 +11,29 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ value, seen, total, className, animate = true }: ProgressBarProps) {
-  const [display, setDisplay] = useState(animate ? Math.max(0, value - 5) : value)
+  const [display, setDisplay] = useState(animate ? 0 : value)
 
   useEffect(() => {
     if (!animate) return
-    const timer = setTimeout(() => setDisplay(value), 50)
+    const timer = setTimeout(() => setDisplay(value), 100)
     return () => clearTimeout(timer)
   }, [value, animate])
 
   return (
-    <div className={cn('space-y-1', className)}>
-      <div className="flex justify-between text-xs text-slate-400">
-        <span>{seen} van {total} gezien</span>
-        <span>{Math.round(value)}%</span>
+    <div className={cn('space-y-1.5', className)}>
+      <div className="flex justify-between text-xs">
+        <span className="text-zinc-400">{seen} van {total} gezien</span>
+        <span className={cn('font-medium', value > 0 ? 'text-indigo-400' : 'text-zinc-600')}>{Math.round(value)}%</span>
       </div>
-      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
         <div
-          className="h-full bg-indigo-500 rounded-full transition-all duration-700 ease-out"
-          style={{ width: `${display}%` }}
+          className="h-full rounded-full transition-all duration-700 ease-out"
+          style={{
+            width: `${display}%`,
+            background: display > 0
+              ? 'linear-gradient(90deg, #6366f1, #8b5cf6)'
+              : 'transparent'
+          }}
         />
       </div>
     </div>

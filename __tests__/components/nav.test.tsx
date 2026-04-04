@@ -6,6 +6,10 @@ jest.mock('next-auth/react', () => ({
   signOut: jest.fn(),
 }))
 
+jest.mock('next/navigation', () => ({
+  usePathname: () => '/',
+}))
+
 jest.mock('next/link', () => ({ children, href }: any) => <a href={href}>{children}</a>)
 
 jest.mock('@/components/ui/button', () => ({

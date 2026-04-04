@@ -9,6 +9,7 @@ interface ArtworkWithMuseum {
   year_start?: number | null
   image_local_path?: string | null
   image_url?: string | null
+  museum?: { id: number; name: string; city: string } | null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
@@ -39,6 +40,12 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   const total = artist.artworks.length
   const pct = total > 0 ? (seenCount / total) * 100 : 0
 
+  const years = artist.birth_year
+    ? artist.death_year
+      ? `${artist.birth_year} – ${artist.death_year}`
+      : `Geboren ${artist.birth_year}`
+    : null
+
   async function refresh() {
     const res = await fetch('/api/seen')
     if (res.ok) {
@@ -56,35 +63,51 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
 
   return (
     <div>
-      {/* Hero banner */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 mb-8">
-        <div className="flex items-start gap-6">
-          <div className="w-20 h-20 rounded-full bg-slate-700 overflow-hidden flex-shrink-0">
+      {/* Artist hero */}
+      <div className="relative mb-10 bg-gradient-to-b from-zinc-900/80 to-transparent rounded-2xl p-6 sm:p-8 border border-white/5">
+        <div className="flex flex-col sm:flex-row items-start gap-6">
+          {/* Portrait */}
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-zinc-800 overflow-hidden flex-shrink-0 ring-1 ring-white/10">
             {artist.portrait_url ? (
               <img src={artist.portrait_url} alt={artist.name} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-slate-400">
+              <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-zinc-600">
                 {artist.name[0]}
               </div>
             )}
           </div>
+
+          {/* Info */}
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-white mb-1">{artist.name}</h1>
-            <p className="text-slate-400 text-sm mb-3">
-              {[artist.nationality, artist.birth_year && artist.death_year
-                ? `${artist.birth_year}–${artist.death_year}`
-                : artist.birth_year ? `geb. ${artist.birth_year}` : null
-              ].filter(Boolean).join(' · ')}
-            </p>
-            <ProgressBar
-              value={pct}
-              seen={seenCount}
-              total={total}
-              animate={true}
-              className="max-w-md"
-            />
+            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-1">{artist.name}</h1>
+            {(artist.nationality || years) && (
+              <p className="text-zinc-400 text-sm mb-4">
+                {[artist.nationality, years].filter(Boolean).join(' · ')}
+              </p>
+            )}
+
+            {/* Progress */}
+            <div className="max-w-sm mb-4">
+              <ProgressBar value={pct} seen={seenCount} total={total} animate={true} />
+            </div>
+
+            {/* Stats row */}
+            <div className="flex gap-4 text-sm">
+              <div>
+                <span className="text-2xl font-bold text-white">{total}</span>
+                <span className="text-zinc-500 ml-1.5">werken</span>
+              </div>
+              {seenCount > 0 && (
+                <div>
+                  <span className="text-2xl font-bold text-indigo-400">{seenCount}</span>
+                  <span className="text-zinc-500 ml-1.5">gezien</span>
+                </div>
+              )}
+            </div>
+
+            {/* Bio */}
             {artist.bio && (
-              <p className="text-slate-300 text-sm mt-3 leading-relaxed line-clamp-3">{artist.bio}</p>
+              <p className="text-zinc-400 text-sm mt-4 leading-relaxed max-w-2xl line-clamp-3">{artist.bio}</p>
             )}
           </div>
         </div>

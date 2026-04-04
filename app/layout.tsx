@@ -5,7 +5,10 @@ import Providers from '@/components/session-provider'
 import Nav from '@/components/nav'
 import { Toaster } from 'sonner'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
 
 export const metadata: Metadata = {
   title: 'ArtTracker',
@@ -14,14 +17,24 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl">
-      <body className={`${inter.className} bg-slate-950 text-slate-100 min-h-screen`}>
+    <html lang="nl" className={inter.variable}>
+      <body className="min-h-screen antialiased">
         <Providers>
           <Nav />
-          <main className="max-w-6xl mx-auto px-4 py-6">
+          <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
             {children}
           </main>
-          <Toaster />
+          <Toaster
+            theme="dark"
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: '#18181b',
+                border: '1px solid rgba(255,255,255,0.08)',
+                color: '#fafafa',
+              }
+            }}
+          />
         </Providers>
       </body>
     </html>
