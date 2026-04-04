@@ -37,12 +37,12 @@ function Dropdown<T extends string>({
   value,
   onChange,
   options,
-  label,
+  _label,
 }: {
   value: T
   onChange: (v: T) => void
   options: { value: T; label: string }[]
-  label: string
+  _label?: string
 }) {
   return (
     <div className="relative">
