@@ -4,14 +4,6 @@ import { authOptions } from '@/lib/auth'
 import ArtistCard from '@/components/artist-card'
 import ArtistsSearch from '@/components/artists-search'
 
-// Bekendste werk per kunstenaar (op slug)
-const FEATURED_IMAGES: Record<string, string> = {
-  'vincent-van-gogh': '/images/artworks/vangogh-1399.jpg',   // Sunflowers
-  'gustav-klimt': '/images/artworks/klimt-extra-4028.jpg',   // The Kiss
-  'claude-monet': '/images/artworks/monet-197.jpg',           // Impression, sunrise
-  'wassily-kandinsky': '/images/artworks/work-50.jpg',        // Composition VIII
-}
-
 export default async function ArtistsPage({
   searchParams,
 }: {
@@ -62,7 +54,7 @@ export default async function ArtistsPage({
             key={artist.id}
             artist={artist}
             seenCount={seenCounts[artist.id] ?? 0}
-            featuredImage={FEATURED_IMAGES[artist.slug] ?? artist.artworks[0]?.image_local_path ?? artist.artworks[0]?.image_url ?? null}
+            featuredImage={artist.artworks[0]?.image_url ?? artist.artworks[0]?.image_local_path ?? null}
           />
         ))}
         {artists.length === 0 && (

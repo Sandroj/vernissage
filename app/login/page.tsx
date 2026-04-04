@@ -130,16 +130,25 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-400">
-          {mode === 'login' ? 'Nog geen account?' : 'Al een account?'}{' '}
-          <button
-            type="button"
-            className="text-indigo-400 hover:underline"
-            onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError('') }}
-          >
-            {mode === 'login' ? 'Registreer hier' : 'Inloggen'}
-          </button>
-        </p>
+        <div className="text-center space-y-2">
+          <p className="text-sm text-slate-400">
+            {mode === 'login' ? 'Nog geen account?' : 'Al een account?'}{' '}
+            <button
+              type="button"
+              className="text-indigo-400 hover:underline"
+              onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError('') }}
+            >
+              {mode === 'login' ? 'Registreer hier' : 'Inloggen'}
+            </button>
+          </p>
+          {mode === 'login' && (
+            <p className="text-sm">
+              <a href="/reset-password" className="text-slate-500 hover:text-slate-300 hover:underline">
+                Wachtwoord vergeten?
+              </a>
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )
