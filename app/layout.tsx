@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/session-provider'
 import Nav from '@/components/nav'
+import { Toaster } from 'sonner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="max-w-6xl mx-auto px-4 py-6">
             {children}
           </main>
+          <Toaster />
         </Providers>
       </body>
     </html>
