@@ -86,7 +86,7 @@ async function main() {
 
     // Werk
     const existing = await prisma.artwork.findFirst({
-      where: { artistId: artist.id, title: row.title, year_start: row.year_start },
+      where: { image_local_path: `/images/artworks/work-${row.work_id}.jpg` },
     })
 
     if (existing) {
