@@ -25,6 +25,9 @@ async function main() {
   fs.mkdirSync(IMAGES_DEST, { recursive: true })
 
   // 2. Lees Kandinsky data uit source SQLite
+  if (!fs.existsSync(SQLITE_SOURCE)) {
+    throw new Error(`Source database not found: ${SQLITE_SOURCE}`)
+  }
   const sourceDb = new BetterSqlite3(SQLITE_SOURCE, { readonly: true })
   const rows = sourceDb.prepare('SELECT * FROM works').all() as any[]
   sourceDb.close()
@@ -129,7 +132,9 @@ function inferCountry(city: string): string {
     Oslo: 'Noorwegen',
     Copenhagen: 'Denemarken',
   }
-  return map[city] ?? 'Onbekend'
+  const result = map[city]
+  if (!result) console.warn(`  ! Onbekend land voor stad: ${city}`)
+  return result ?? 'Onbekend'
 }
 
 main()
