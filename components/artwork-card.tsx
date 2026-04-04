@@ -11,9 +11,12 @@ interface Artwork {
   title: string
   year_start?: number | null
   type_normalized?: string | null
+  medium_raw?: string | null
+  dimensions_raw?: string | null
   image_local_path?: string | null
   image_url?: string | null
   museum?: { name: string; city: string } | null
+  artist?: { name: string; slug: string } | null
 }
 
 interface SeenRecord {
@@ -47,7 +50,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
             : 'ring-1 ring-white/5 hover:ring-white/15'
         )}
       >
-        {/* Image — clicking goes to artwork detail */}
+        {/* Image — klikken gaat naar artwork detail */}
         <Link href={`/artworks/${artwork.id}`} className="block w-full h-full">
           <img
             src={imgSrc}
@@ -60,7 +63,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
           />
         </Link>
 
-        {/* Gezien indicator — subtle indigo shimmer top-left */}
+        {/* Gezien indicator */}
         {seen && (
           <div className="absolute top-2 left-2 bg-indigo-500/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1">
             <CheckCircle2 size={10} className="text-white" />
@@ -68,9 +71,9 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
           </div>
         )}
 
-        {/* Hover overlay — two actions */}
+        {/* Hover overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-2 gap-1.5">
-          {/* Preview button */}
+          {/* Preview knop */}
           <button
             onClick={(e) => { e.preventDefault(); setLightboxOpen(true) }}
             className="w-full flex items-center justify-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white text-xs py-1.5 rounded-md transition-colors"
@@ -78,7 +81,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
             <Eye size={11} /> Bekijken
           </button>
 
-          {/* Seen button — only when logged in */}
+          {/* Gezien knop */}
           {isLoggedIn && (
             <button
               onClick={(e) => { e.preventDefault(); setModalOpen(true) }}
@@ -95,9 +98,24 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox met metadata */}
       {lightboxOpen && (
-        <Lightbox src={imgSrc} alt={artwork.title} onClose={() => setLightboxOpen(false)} />
+        <Lightbox
+          src={imgSrc}
+          alt={artwork.title}
+          onClose={() => setLightboxOpen(false)}
+          meta={{
+            title: artwork.title,
+            artist: artwork.artist?.name,
+            artistSlug: artwork.artist?.slug,
+            year: artwork.year_start,
+            medium: artwork.medium_raw,
+            dimensions: artwork.dimensions_raw,
+            museum: artwork.museum?.name,
+            museumCity: artwork.museum?.city,
+            artworkHref: `/artworks/${artwork.id}`,
+          }}
+        />
       )}
 
       {/* Seen modal */}

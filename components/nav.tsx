@@ -14,6 +14,7 @@ export default function Nav() {
 
   const links = [
     { href: '/artists', label: 'Kunstenaars' },
+    // { href: '/museums', label: 'Musea' }, // TODO: wereldkaart nog in ontwikkeling
     { href: '/discover', label: 'Ontdekken' },
     ...(session ? [{ href: '/profile', label: 'Profiel' }] : []),
   ]

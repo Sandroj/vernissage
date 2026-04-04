@@ -7,6 +7,8 @@ interface ArtworkWithMuseum {
   id: number
   title: string
   year_start?: number | null
+  medium_raw?: string | null
+  dimensions_raw?: string | null
   image_local_path?: string | null
   image_url?: string | null
   museum?: { id: number; name: string; city: string } | null
@@ -115,7 +117,10 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
 
       {/* Werkenraster */}
       <ArtworkGrid
-        artworks={artist.artworks}
+        artworks={artist.artworks.map((a) => ({
+          ...a,
+          artist: { name: artist.name, slug: artist.slug },
+        }))}
         seenMap={seenMap}
         isLoggedIn={isLoggedIn}
         onRefresh={refresh}

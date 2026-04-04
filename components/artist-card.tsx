@@ -11,11 +11,13 @@ interface ArtistCardProps {
     death_year?: number | null
     portrait_url?: string | null
     _count: { artworks: number }
+    artworks: { image_local_path?: string | null; image_url?: string | null }[]
   }
   seenCount: number
+  featuredImage?: string | null
 }
 
-export default function ArtistCard({ artist, seenCount }: ArtistCardProps) {
+export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistCardProps) {
   const total = artist._count.artworks
   const pct = total > 0 ? (seenCount / total) * 100 : 0
   const years = artist.birth_year
@@ -24,15 +26,21 @@ export default function ArtistCard({ artist, seenCount }: ArtistCardProps) {
       : `geb. ${artist.birth_year}`
     : null
 
+  const imgSrc = featuredImage ?? null
+
   return (
     <Link
       href={`/artists/${artist.slug}`}
       className="group bg-zinc-900 rounded-xl p-5 hover:bg-zinc-800/80 transition-all duration-200 block border border-white/5 hover:border-white/10"
     >
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-12 h-12 rounded-full bg-zinc-800 overflow-hidden flex-shrink-0 ring-2 ring-white/10 group-hover:ring-indigo-500/40 transition-all">
-          {artist.portrait_url ? (
-            <img src={artist.portrait_url} alt={artist.name} className="w-full h-full object-cover" />
+        <div className="w-16 h-16 rounded-xl bg-zinc-800 overflow-hidden flex-shrink-0 ring-2 ring-white/10 group-hover:ring-indigo-500/40 transition-all">
+          {imgSrc ? (
+            <img
+              src={imgSrc}
+              alt={`${artist.name} – bekendste werk`}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-lg font-bold text-zinc-500">
               {artist.name[0]}

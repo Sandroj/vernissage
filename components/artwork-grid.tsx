@@ -1,16 +1,19 @@
 'use client'
 import { useState, useMemo } from 'react'
 import ArtworkCard from '@/components/artwork-card'
-import { cn } from '@/lib/utils'
+import { Search, ChevronDown } from 'lucide-react'
 
 interface Artwork {
   id: number
   title: string
   year_start?: number | null
   type_normalized?: string | null
+  medium_raw?: string | null
+  dimensions_raw?: string | null
   image_local_path?: string | null
   image_url?: string | null
   museum?: { id: number; name: string; city: string } | null
+  artist?: { name: string; slug: string } | null
 }
 
 interface SeenRecord {
@@ -27,46 +30,59 @@ interface ArtworkGridProps {
   artworks: Artwork[]
   seenMap: Record<number, SeenRecord>
   isLoggedIn: boolean
-  onRefresh: () => void
+  onRefresh?: (() => void) | undefined
 }
 
-function FilterButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function Dropdown<T extends string>({
+  value,
+  onChange,
+  options,
+  label,
+}: {
+  value: T
+  onChange: (v: T) => void
+  options: { value: T; label: string }[]
+  label: string
+}) {
   return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150',
-        active
-          ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/30'
-          : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
-      )}
-    >
-      {children}
-    </button>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as T)}
+        className="appearance-none bg-zinc-800 border border-white/10 text-zinc-300 text-xs rounded-lg pl-3 pr-8 py-1.5 focus:outline-none focus:border-indigo-500/60 cursor-pointer transition-colors hover:bg-zinc-700 hover:border-white/20"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+      <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+    </div>
   )
 }
 
 export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }: ArtworkGridProps) {
+  const [filterTitle, setFilterTitle] = useState('')
   const [filterType, setFilterType] = useState('all')
   const [filterSeen, setFilterSeen] = useState<'all' | 'seen' | 'unseen'>('all')
   const [filterMuseum, setFilterMuseum] = useState('all')
 
-  // Get unique types from artworks
+  // Unique types
   const types = useMemo(() => {
-    const set = new Set(artworks.map(a => a.type_normalized).filter(Boolean))
+    const set = new Set(artworks.map((a) => a.type_normalized).filter(Boolean))
     return Array.from(set) as string[]
   }, [artworks])
 
-  // Get unique museums
+  // Unique museums
   const museums = useMemo(() => {
     const map = new Map<number, string>()
     for (const a of artworks) {
-      if (a.museum) map.set(a.museum.id, `${a.museum.name}, ${a.museum.city}`)
+      if (a.museum) map.set(a.museum.id, a.museum.name)
     }
     return Array.from(map.entries())
   }, [artworks])
 
   const filtered = artworks.filter((a) => {
+    if (filterTitle && !a.title.toLowerCase().includes(filterTitle.toLowerCase())) return false
     if (filterType !== 'all' && a.type_normalized !== filterType) return false
     if (filterSeen === 'seen' && !seenMap[a.id]) return false
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
@@ -75,6 +91,22 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
   })
 
   const seenCount = Object.keys(seenMap).length
+
+  const seenOptions: { value: 'all' | 'seen' | 'unseen'; label: string }[] = [
+    { value: 'all', label: 'Alle werken' },
+    { value: 'seen', label: 'Gezien' },
+    { value: 'unseen', label: 'Niet gezien' },
+  ]
+
+  const typeOptions = [
+    { value: 'all', label: 'Alle types' },
+    ...types.map((t) => ({ value: t, label: t })),
+  ]
+
+  const museumOptions = [
+    { value: 'all', label: 'Alle musea' },
+    ...museums.slice(0, 12).map(([id, name]) => ({ value: id.toString(), label: name.length > 30 ? name.substring(0, 28) + '…' : name })),
+  ]
 
   return (
     <div className="space-y-4">
@@ -89,37 +121,30 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
         <span className="text-xs text-slate-500">{filtered.length} zichtbaar</span>
       </div>
 
-      {/* Filters */}
-      <div className="space-y-2">
-        {/* Seen filter */}
-        <div className="flex flex-wrap gap-2">
-          <FilterButton active={filterSeen === 'all'} onClick={() => setFilterSeen('all')}>Alle</FilterButton>
-          <FilterButton active={filterSeen === 'seen'} onClick={() => setFilterSeen('seen')}>Gezien</FilterButton>
-          <FilterButton active={filterSeen === 'unseen'} onClick={() => setFilterSeen('unseen')}>Niet gezien</FilterButton>
+      {/* Search + Filters */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        {/* Titel zoeken */}
+        <div className="relative flex-1 max-w-xs">
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+          <input
+            type="text"
+            value={filterTitle}
+            onChange={(e) => setFilterTitle(e.target.value)}
+            placeholder="Zoek op titel…"
+            className="w-full bg-zinc-800 border border-white/10 text-zinc-300 placeholder:text-zinc-600 text-xs rounded-lg pl-8 pr-3 py-1.5 focus:outline-none focus:border-indigo-500/60 transition-colors"
+          />
         </div>
 
-        {/* Type filter */}
-        {types.length > 1 && (
-          <div className="flex flex-wrap gap-2">
-            <FilterButton active={filterType === 'all'} onClick={() => setFilterType('all')}>Alle types</FilterButton>
-            {types.map((t) => (
-              <FilterButton key={t} active={filterType === t} onClick={() => setFilterType(t)}>{t}</FilterButton>
-            ))}
-          </div>
-        )}
-
-        {/* Museum filter */}
-        {museums.length > 1 && (
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-xs text-slate-500 mr-1">Museum:</span>
-            <FilterButton active={filterMuseum === 'all'} onClick={() => setFilterMuseum('all')}>Alle</FilterButton>
-            {museums.slice(0, 8).map(([id, name]) => (
-              <FilterButton key={id} active={filterMuseum === id.toString()} onClick={() => setFilterMuseum(id.toString())}>
-                {name.split(',')[0]}
-              </FilterButton>
-            ))}
-          </div>
-        )}
+        {/* Dropdowns */}
+        <div className="flex flex-wrap gap-2">
+          <Dropdown value={filterSeen} onChange={setFilterSeen} options={seenOptions} label="Gezien" />
+          {types.length > 1 && (
+            <Dropdown value={filterType} onChange={setFilterType} options={typeOptions} label="Type" />
+          )}
+          {museums.length > 1 && (
+            <Dropdown value={filterMuseum} onChange={setFilterMuseum} options={museumOptions} label="Museum" />
+          )}
+        </div>
       </div>
 
       {/* Grid */}
@@ -129,7 +154,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
             key={artwork.id}
             artwork={artwork}
             seen={seenMap[artwork.id] ?? null}
-            onSeenChange={onRefresh}
+            onSeenChange={onRefresh ?? (() => {})}
             isLoggedIn={isLoggedIn}
           />
         ))}

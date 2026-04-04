@@ -25,6 +25,8 @@ model Museum {
   city     String
   country  String
   website  String?
+  lat      Float?
+  lng      Float?
   artworks Artwork[]
 }
 
@@ -41,9 +43,11 @@ model Artwork {
   image_url        String?
   image_local_path String?
   source_url       String?
+  source_name      String?
   artist           Artist   @relation(fields: [artistId], references: [id])
   museum           Museum?  @relation(fields: [museumId], references: [id])
   seenBy           Seen[]
+  reports          Report[]
 
   @@index([artistId])
   @@index([museumId])
@@ -62,6 +66,7 @@ model User {
   sessions      Session[]
   seen          Seen[]
   votes         ArtistVote[]
+  reports       Report[]
 }
 
 model Account {
@@ -124,4 +129,18 @@ model ArtistVote {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, artistName])
+}
+
+model Report {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  artworkId Int
+  message   String
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@index([artworkId])
+  @@index([userId])
 }
