@@ -32,5 +32,5 @@ export async function GET() {
     select: { artistName: true },
   })
 
-  return NextResponse.json(votes.map((v) => v.artistName))
+  return NextResponse.json(votes.map((v: { artistName: string }) => v.artistName))
 }
