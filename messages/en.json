@@ -162,7 +162,14 @@
     "errAlreadyRegistered": "This email address is already registered. Sign in with your password.",
     "errRegisterFailed": "Registration failed",
     "errCreatedButLogin": "Account created but sign-in failed. Please try signing in.",
-    "errInvalid": "Incorrect email address or password"
+    "errInvalid": "Incorrect email address or password",
+    "authErrors": {
+      "OAuthAccountNotLinked": "This email is already linked to a different sign-in method. Try again — the accounts will now be linked.",
+      "OAuthCallback": "Signing in with Google failed on return. Please try again.",
+      "OAuthSignin": "Google sign-in is not configured.",
+      "AccessDenied": "Access denied.",
+      "Default": "Sign-in failed. Please try again."
+    }
   },
   "Reset": {
     "loading": "Loading...",
@@ -234,5 +241,17 @@
     "rights": "You can change your name and privacy setting yourself on your profile page. To have your account and all associated data deleted, email <email></email> — we'll take care of it within 30 days.",
     "cookiesTitle": "Cookies",
     "cookies": "We only use functional cookies: a session cookie to keep you signed in and a cookie that remembers your language choice. No tracking, no analytics."
+  },
+  "Countries": {
+    "Duitsland": "Germany",
+    "Frankrijk": "France",
+    "Nederland": "Netherlands",
+    "Onbekend": "Unknown",
+    "Oostenrijk": "Austria",
+    "Rusland": "Russia",
+    "Spanje": "Spain",
+    "Verenigd Koninkrijk": "United Kingdom",
+    "Verenigde Staten": "United States",
+    "Zweden": "Sweden"
   }
 }

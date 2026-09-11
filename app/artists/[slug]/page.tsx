@@ -1,4 +1,5 @@
-import { prisma, hasImage } from '@/lib/prisma'
+import { prisma, hasImage, localizeArtist } from '@/lib/prisma'
+import { getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { notFound } from 'next/navigation'
@@ -10,6 +11,7 @@ export default async function ArtistDetailPage({
   params: { slug: string }
 }) {
   const session = await getServerSession(authOptions)
+  const locale = await getLocale()
 
   const artist = await prisma.artist.findUnique({
     where: { slug: params.slug },
@@ -37,7 +39,7 @@ export default async function ArtistDetailPage({
 
   return (
     <ArtistDetailClient
-      artist={artist}
+      artist={localizeArtist(artist, locale)}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       seenMap={seenMap as any}
       isLoggedIn={!!session?.user}

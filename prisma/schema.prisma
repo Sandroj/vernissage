@@ -13,7 +13,9 @@ model Artist {
   birth_year   Int?
   death_year   Int?
   nationality  String?
+  nationality_en String?
   bio          String?
+  bio_en       String?
   portrait_url String?
   createdAt    DateTime  @default(now())
   artworks     Artwork[]

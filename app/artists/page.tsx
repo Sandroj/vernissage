@@ -1,5 +1,5 @@
-import { prisma, hasImage } from '@/lib/prisma'
-import { getTranslations } from 'next-intl/server'
+import { prisma, hasImage, localizeArtist } from '@/lib/prisma'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import ArtistCard from '@/components/artist-card'
@@ -12,6 +12,7 @@ export default async function ArtistsPage({
 }) {
   const session = await getServerSession(authOptions)
   const t = await getTranslations('Artists')
+  const locale = await getLocale()
   const q = searchParams.q ?? ''
 
   const artists = await prisma.artist.findMany({
@@ -54,7 +55,7 @@ export default async function ArtistsPage({
         {artists.map((artist) => (
           <ArtistCard
             key={artist.id}
-            artist={artist}
+            artist={localizeArtist(artist, locale)}
             seenCount={seenCounts[artist.id] ?? 0}
             featuredImage={artist.artworks[0]?.image_local_path ?? artist.artworks[0]?.image_url ?? null}
           />

@@ -14,6 +14,8 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+      // Google verifieert e-mail; koppel aan bestaand wachtwoord-account met hetzelfde adres
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: 'E-mail',

@@ -47,6 +47,8 @@ interface MuseumDetailClientProps {
 export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, isLoggedIn, artists }: MuseumDetailClientProps) {
   const [seenMap, setSeenMap] = useState(initialSeenMap)
   const t = useTranslations('Museums')
+  const tc = useTranslations('Countries')
+  const country = museum.country && tc.has(museum.country) ? tc(museum.country) : museum.country
 
   const seenCount = Object.keys(seenMap).length
   const total = museum.artworks.length
@@ -78,7 +80,7 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">{museum.name}</h1>
             <p className="text-zinc-500 text-sm mb-4">
-              {museum.city}{museum.country ? `, ${museum.country}` : ''}
+              {museum.city}{country ? `, ${country}` : ''}
               {museum.website && (
                 <>
                   {' · '}

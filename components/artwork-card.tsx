@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { Check, CheckCircle2 } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
-import Lightbox from '@/components/lightbox'
 import { cn, proxyImg } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 
@@ -38,7 +38,6 @@ interface ArtworkCardProps {
 export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }: ArtworkCardProps) {
   const t = useTranslations('Card')
   const [modalOpen, setModalOpen] = useState(false)
-  const [lightboxOpen, setLightboxOpen] = useState(false)
   const [imgError, setImgError] = useState(false)
   const rawSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const imgSrc = proxyImg(rawSrc)
@@ -55,8 +54,8 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
             : 'ring-1 ring-white/5 hover:ring-white/15'
         )}
       >
-        {/* Image — klikken opent preview */}
-        <button type="button" onClick={() => setLightboxOpen(true)} className="block w-full h-full p-0 border-0 bg-transparent text-left">
+        {/* Image — klikken gaat naar de detailpagina */}
+        <Link href={`/artworks/${artwork.id}`} className="block w-full h-full">
           <img
             src={imgSrc}
             onError={() => setImgError(true)}
@@ -67,7 +66,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
             )}
             loading="lazy"
           />
-        </button>
+        </Link>
 
         {/* Gezien indicator */}
         {seen && (
@@ -95,26 +94,6 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
           )}
         </div>
       </div>
-
-      {/* Lightbox met metadata */}
-      {lightboxOpen && rawSrc && (
-        <Lightbox
-          src={proxyImg(rawSrc, 1600) ?? rawSrc}
-          alt={artwork.title}
-          onClose={() => setLightboxOpen(false)}
-          meta={{
-            title: artwork.title,
-            artist: artwork.artist?.name,
-            artistSlug: artwork.artist?.slug,
-            year: artwork.year_start,
-            medium: artwork.medium_raw,
-            dimensions: artwork.dimensions_raw,
-            museum: artwork.museum?.name,
-            museumCity: artwork.museum?.city,
-            artworkHref: `/artworks/${artwork.id}`,
-          }}
-        />
-      )}
 
       {/* Seen modal */}
       {isLoggedIn && (

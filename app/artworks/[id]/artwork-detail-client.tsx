@@ -39,6 +39,7 @@ export default function ArtworkDetailClient({
   isLoggedIn,
 }: ArtworkDetailClientProps) {
   const t = useTranslations('Artwork')
+  const tc = useTranslations('Countries')
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [seen, setSeen] = useState(initialSeen)
@@ -165,7 +166,7 @@ export default function ArtworkDetailClient({
                       </Link>
                     </p>
                     <p className="text-zinc-500 text-xs mt-0.5">
-                      {[artwork.museum.city, artwork.museum.country].filter(Boolean).join(', ')}
+                      {[artwork.museum.city, artwork.museum.country && tc.has(artwork.museum.country) ? tc(artwork.museum.country) : artwork.museum.country].filter(Boolean).join(', ')}
                     </p>
                   </div>
                   {isLoggedIn && (

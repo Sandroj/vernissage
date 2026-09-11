@@ -18,6 +18,7 @@ const MuseumMap = dynamic(() => import('@/components/museum-map'), {
 export default async function MuseumsPage() {
   const session = await getServerSession(authOptions)
   const t = await getTranslations('Museums')
+  const tc = await getTranslations('Countries')
   const locale = await getLocale()
 
   // Haal alle musea op — filter daarna in JS op coördinaten + artworks
@@ -58,7 +59,7 @@ export default async function MuseumsPage() {
     id: m.id,
     name: m.name,
     city: m.city,
-    country: m.country,
+    country: m.country === 'Onbekend' ? '' : tc.has(m.country) ? tc(m.country) : m.country,
     lat: m.lat as number,
     lng: m.lng as number,
     artworkCount: m._count.artworks,

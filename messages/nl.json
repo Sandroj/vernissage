@@ -162,7 +162,14 @@
     "errAlreadyRegistered": "Dit e-mailadres is al geregistreerd. Log in met je wachtwoord.",
     "errRegisterFailed": "Registratie mislukt",
     "errCreatedButLogin": "Account aangemaakt maar inloggen mislukt. Probeer in te loggen.",
-    "errInvalid": "Onjuist e-mailadres of wachtwoord"
+    "errInvalid": "Onjuist e-mailadres of wachtwoord",
+    "authErrors": {
+      "OAuthAccountNotLinked": "Dit e-mailadres is al gekoppeld aan een ander inlogtype. Probeer het opnieuw — de accounts worden nu gekoppeld.",
+      "OAuthCallback": "Inloggen via Google is mislukt bij het terugkeren. Probeer het opnieuw.",
+      "OAuthSignin": "Google-login is niet geconfigureerd.",
+      "AccessDenied": "Toegang geweigerd.",
+      "Default": "Inloggen mislukt. Probeer het opnieuw."
+    }
   },
   "Reset": {
     "loading": "Laden...",
@@ -234,5 +241,17 @@
     "rights": "Je kunt je naam en privacy-instelling zelf aanpassen op je profielpagina. Wil je je account en alle bijbehorende gegevens laten verwijderen, stuur dan een e-mail naar <email></email> — dat regelen we binnen 30 dagen.",
     "cookiesTitle": "Cookies",
     "cookies": "We gebruiken alleen functionele cookies: een sessiecookie om je ingelogd te houden en een cookie die je taalkeuze onthoudt. Geen tracking, geen analytics."
+  },
+  "Countries": {
+    "Duitsland": "Duitsland",
+    "Frankrijk": "Frankrijk",
+    "Nederland": "Nederland",
+    "Onbekend": "Onbekend",
+    "Oostenrijk": "Oostenrijk",
+    "Rusland": "Rusland",
+    "Spanje": "Spanje",
+    "Verenigd Koninkrijk": "Verenigd Koninkrijk",
+    "Verenigde Staten": "Verenigde Staten",
+    "Zweden": "Zweden"
   }
 }
