@@ -3,11 +3,13 @@ import { useRouter, usePathname } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
 import { useTransition } from 'react'
+import { useTranslations } from 'next-intl'
 
 export default function ArtistsSearch({ defaultValue }: { defaultValue: string }) {
   const router = useRouter()
   const pathname = usePathname()
   const [, startTransition] = useTransition()
+  const t = useTranslations('Artists')
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const q = e.target.value
@@ -22,7 +24,7 @@ export default function ArtistsSearch({ defaultValue }: { defaultValue: string }
       <Input
         defaultValue={defaultValue}
         onChange={handleChange}
-        placeholder="Zoek op naam of nationaliteit..."
+        placeholder={t('searchPlaceholder')}
         className="pl-9 bg-slate-900 border-slate-700"
       />
     </div>

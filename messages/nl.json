@@ -1,0 +1,238 @@
+{
+  "Meta": {
+    "description": "Houd bij welke kunstwerken je hebt gezien"
+  },
+  "Nav": {
+    "artists": "Kunstenaars",
+    "museums": "Musea",
+    "discover": "Ontdekken",
+    "profile": "Profiel",
+    "signOut": "Uitloggen",
+    "signIn": "Inloggen",
+    "menu": "Menu"
+  },
+  "Home": {
+    "hello": "Hallo, {name}",
+    "progress": "Jij hebt {seen} van {total} werken gezien.",
+    "start": "Begin met het bijhouden van je kunstbezoeken.",
+    "tagline": "Bijhouden welke kunstwerken je ooit hebt gezien.",
+    "ctaTitle": "Maak een gratis account aan",
+    "ctaText": "Houd bij welke kunstwerken je hebt gezien, beoordeel ze en deel je voortgang.",
+    "ctaRegister": "Account aanmaken",
+    "ctaArtists": "Bekijk kunstenaars",
+    "artists": "Kunstenaars",
+    "allArtists": "Alle kunstenaars",
+    "recentlySeen": "Recent gezien"
+  },
+  "Artists": {
+    "title": "Kunstenaars",
+    "count": "{count, plural, =1 {1 kunstenaar} other {# kunstenaars}}",
+    "searchPlaceholder": "Zoek op naam of nationaliteit...",
+    "noResults": "Geen kunstenaars gevonden voor “{query}”",
+    "born": "geb. {year}",
+    "bornLong": "Geboren {year}",
+    "featuredAlt": "{name} – bekendste werk",
+    "works": "werken",
+    "seen": "gezien"
+  },
+  "Progress": {
+    "seenOf": "{seen} van {total} gezien"
+  },
+  "Grid": {
+    "works": "{count} werken",
+    "seen": "{count} gezien",
+    "visible": "{count} zichtbaar",
+    "searchPlaceholder": "Zoek op titel…",
+    "allWorks": "Alle werken",
+    "seenOnly": "Gezien",
+    "unseenOnly": "Niet gezien",
+    "allMuseums": "Alle musea",
+    "empty": "Geen werken gevonden met deze filters.",
+    "loadingMore": "Meer laden…",
+    "type": {
+      "painting": "Schilderijen",
+      "drawing": "Tekeningen & schetsen",
+      "watercolor": "Aquarellen",
+      "work on paper": "Werk op papier",
+      "print": "Prenten"
+    }
+  },
+  "Card": {
+    "seenBadge": "gezien",
+    "edit": "Bewerken",
+    "markSeen": "Markeer gezien"
+  },
+  "Lightbox": {
+    "close": "Sluiten",
+    "medium": "Medium",
+    "dimensions": "Afmetingen",
+    "location": "Locatie",
+    "fullDetails": "Bekijk volledige details"
+  },
+  "Artwork": {
+    "medium": "Medium",
+    "type": "Type",
+    "dimensions": "Afmetingen",
+    "location": "Locatie",
+    "reportWrong": "Onjuist?",
+    "reportTooltip": "Locatie onjuist melden",
+    "reportTitle": "Locatie melden als onjuist",
+    "reportPlaceholder": "Bijv: Dit werk hangt momenteel in het Rijksmuseum t/m juni 2026",
+    "send": "Verstuur",
+    "cancel": "Annuleren",
+    "reportSent": "Melding verstuurd, dank je!",
+    "saved": "Opgeslagen",
+    "source": "Bron: {name}",
+    "viewOriginal": "Bekijk originele pagina",
+    "loginToMark": "Inloggen om te markeren",
+    "seenEdit": "Gezien · Bewerken",
+    "markSeen": "Markeer als gezien",
+    "nobodyYet": "Nog niemand",
+    "seenBy": "{count, plural, =1 {1 persoon} other {# mensen}} gezien",
+    "typeValue": {
+      "painting": "Schilderij",
+      "drawing": "Tekening",
+      "watercolor": "Aquarel",
+      "work on paper": "Werk op papier",
+      "print": "Prent"
+    }
+  },
+  "SeenModal": {
+    "editTitle": "Bewerk",
+    "newTitle": "Markeer als gezien",
+    "date": "Datum",
+    "location": "Locatie",
+    "rating": "Waardering",
+    "notes": "Notitie",
+    "notesPlaceholder": "Wat vond je van dit werk?",
+    "photo": "Foto (optioneel)",
+    "photoUpload": "Foto maken of uploaden",
+    "photoUrlPlaceholder": "Of voeg een foto-URL in...",
+    "photoPreview": "Voorbeeld van upload",
+    "removePhoto": "Foto verwijderen",
+    "saving": "Opslaan...",
+    "save": "Opslaan"
+  },
+  "StarRating": {
+    "label": "Waardering",
+    "stars": "{count, plural, =1 {1 ster} other {# sterren}}"
+  },
+  "MuseumSearch": {
+    "placeholder": "Zoek museum...",
+    "trigger": "Zoek museum of typ locatie...",
+    "useAsLocation": "Gebruik “{query}” als locatie"
+  },
+  "Share": {
+    "share": "Delen",
+    "copyLink": "Kopieer link",
+    "copied": "Link gekopieerd",
+    "twitter": "Deel op Twitter/X",
+    "email": "Deel via e-mail",
+    "instagram": "Kopieer voor Instagram",
+    "copiedInstagram": "Link gekopieerd voor Instagram bio"
+  },
+  "Museums": {
+    "title": "Musea",
+    "subtitle": "{locations} locaties · {works} werken in de collectie",
+    "legendMuseum": "Museum",
+    "legendSeen": "Werk(en) gezien",
+    "legendHint": "· Klik op een pin om de museumpagina te openen",
+    "website": "Website",
+    "works": "werken",
+    "seen": "gezien",
+    "popupWorks": "{count} werken",
+    "popupSeen": "{count} gezien",
+    "backToMuseums": "Terug naar musea"
+  },
+  "Login": {
+    "signInSubtitle": "Inloggen op je account",
+    "registerSubtitle": "Nieuw account aanmaken",
+    "google": "Doorgaan met Google",
+    "or": "of",
+    "namePlaceholder": "Naam (optioneel)",
+    "emailPlaceholder": "E-mailadres",
+    "passwordPlaceholder": "Wachtwoord",
+    "busy": "Bezig...",
+    "signIn": "Inloggen",
+    "register": "Account aanmaken",
+    "noAccount": "Nog geen account?",
+    "haveAccount": "Al een account?",
+    "registerHere": "Registreer hier",
+    "forgot": "Wachtwoord vergeten?",
+    "errAlreadyRegistered": "Dit e-mailadres is al geregistreerd. Log in met je wachtwoord.",
+    "errRegisterFailed": "Registratie mislukt",
+    "errCreatedButLogin": "Account aangemaakt maar inloggen mislukt. Probeer in te loggen.",
+    "errInvalid": "Onjuist e-mailadres of wachtwoord"
+  },
+  "Reset": {
+    "loading": "Laden...",
+    "newTitle": "Nieuw wachtwoord",
+    "newSubtitle": "Kies een nieuw wachtwoord voor je account",
+    "toLogin": "Naar inloggen",
+    "mismatch": "Wachtwoorden komen niet overeen",
+    "genericError": "Er ging iets mis",
+    "changed": "Wachtwoord gewijzigd. Je kunt nu inloggen.",
+    "newPassword": "Nieuw wachtwoord",
+    "confirmPassword": "Bevestig wachtwoord",
+    "busy": "Bezig...",
+    "change": "Wachtwoord wijzigen",
+    "forgotTitle": "Wachtwoord vergeten",
+    "forgotSubtitle": "Voer je e-mailadres in om je wachtwoord te resetten",
+    "clickBelow": "Klik op de link hieronder om je wachtwoord te resetten:",
+    "resetLink": "Wachtwoord resetten",
+    "requested": "Als dit e-mailadres bekend is, kun je hieronder je wachtwoord resetten.",
+    "emailPlaceholder": "E-mailadres",
+    "reset": "Wachtwoord resetten",
+    "backToLogin": "Terug naar inloggen"
+  },
+  "Profile": {
+    "title": "Profiel",
+    "memberSince": "Lid sinds {date}",
+    "unknown": "Onbekend",
+    "seenCount": "{count} werken gezien",
+    "name": "Naam",
+    "namePlaceholder": "Jouw naam",
+    "email": "E-mail",
+    "publicTitle": "Gezien-items openbaar",
+    "publicText": "Anderen kunnen zien hoeveel mensen een werk hebben gezien",
+    "saving": "Opslaan...",
+    "save": "Profiel opslaan",
+    "saved": "Profiel opgeslagen",
+    "error": "Er ging iets mis",
+    "signOut": "Uitloggen"
+  },
+  "Discover": {
+    "title": "Welke kunstenaars wil jij in de app?",
+    "subtitle": "Klik op kunstenaars die je interessant vindt. We voegen de populairste als eerste toe.",
+    "previous": "← Vorige",
+    "next": "Volgende →",
+    "selected": "{count} geselecteerd",
+    "saving": "Opslaan...",
+    "save": "Opslaan ✓",
+    "skip": "Sla over"
+  },
+  "Locale": {
+    "label": "Taal",
+    "nl": "NL",
+    "en": "EN"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "updated": "Laatst bijgewerkt: 11 september 2026",
+    "intro": "Vernissage is een persoonlijke, niet-commerciële app om bij te houden welke kunstwerken je hebt gezien. Dit is wat we met je gegevens doen.",
+    "collectTitle": "Welke gegevens we bewaren",
+    "collect1": "Je e-mailadres en naam — om je account te herkennen. Log je in met Google, dan ontvangen we alleen je naam, e-mailadres en profielfoto; nooit je wachtwoord of andere Google-gegevens.",
+    "collect2": "De kunstwerken die je als gezien markeert, met de datum, locatie, waardering, notitie en optionele foto die je zelf invult.",
+    "collect3": "Je stemmen op kunstenaars die je in de app wilt zien.",
+    "useTitle": "Waarvoor we ze gebruiken",
+    "use1": "Alleen om de app te laten werken: je eigen overzicht tonen en je voortgang bijhouden.",
+    "use2": "Als je “Gezien-items openbaar” aanzet, zien andere gebruikers alleen hoeveel mensen een werk hebben gezien — nooit wie.",
+    "use3": "We verkopen of delen je gegevens niet met derden en gebruiken ze niet voor advertenties.",
+    "storageTitle": "Waar ze staan",
+    "storage": "De database draait bij Turso en de app bij Vercel, beide binnen de EU/VS onder hun standaard beveiliging. Kunstwerkafbeeldingen worden geladen via Cloudflare R2 en een beeldproxy (wsrv.nl); daarbij worden geen persoonsgegevens meegestuurd.",
+    "rightsTitle": "Je rechten",
+    "rights": "Je kunt je naam en privacy-instelling zelf aanpassen op je profielpagina. Wil je je account en alle bijbehorende gegevens laten verwijderen, stuur dan een e-mail naar <email></email> — dat regelen we binnen 30 dagen.",
+    "cookiesTitle": "Cookies",
+    "cookies": "We gebruiken alleen functionele cookies: een sessiecookie om je ingelogd te houden en een cookie die je taalkeuze onthoudt. Geen tracking, geen analytics."
+  }
+}

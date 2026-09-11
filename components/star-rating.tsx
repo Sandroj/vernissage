@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface StarRatingProps {
   value: number | null
@@ -10,9 +11,10 @@ interface StarRatingProps {
 
 export default function StarRating({ value, onChange }: StarRatingProps) {
   const [hover, setHover] = useState<number | null>(null)
+  const t = useTranslations('StarRating')
 
   return (
-    <div className="flex gap-1" role="group" aria-label="Waardering">
+    <div className="flex gap-1" role="group" aria-label={t('label')}>
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
@@ -21,7 +23,7 @@ export default function StarRating({ value, onChange }: StarRatingProps) {
           onMouseEnter={() => setHover(star)}
           onMouseLeave={() => setHover(null)}
           className="focus:outline-none"
-          aria-label={`${star} ster${star !== 1 ? 'ren' : ''}`}
+          aria-label={t('stars', { count: star })}
         >
           <Star
             size={20}

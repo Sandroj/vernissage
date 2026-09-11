@@ -3,17 +3,11 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import ArtworkCard from '@/components/artwork-card'
 import { Search, ChevronDown, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 const PAGE_SIZE = 200
 
 const TYPE_ORDER = ['painting', 'drawing', 'watercolor', 'work on paper', 'print']
-const TYPE_LABELS: Record<string, string> = {
-  painting: 'Schilderijen',
-  drawing: 'Tekeningen & schetsen',
-  watercolor: 'Aquarellen',
-  'work on paper': 'Werk op papier',
-  print: 'Prenten',
-}
 
 interface Artwork {
   id: number
@@ -71,6 +65,7 @@ function Dropdown<T extends string>({
 }
 
 export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }: ArtworkGridProps) {
+  const t = useTranslations('Grid')
   const [filterTitle, setFilterTitle] = useState('')
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(new Set())
   const [filterSeen, setFilterSeen] = useState<'all' | 'seen' | 'unseen'>('all')
@@ -95,10 +90,10 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
     )
   }, [withImage])
 
-  function toggleType(t: string) {
+  function toggleType(ty: string) {
     setHiddenTypes((prev) => {
       const next = new Set(prev)
-      if (next.has(t)) next.delete(t); else next.add(t)
+      if (next.has(ty)) next.delete(ty); else next.add(ty)
       return next
     })
     setVisibleCount(PAGE_SIZE)
@@ -141,13 +136,13 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
   const seenCount = Object.keys(seenMap).length
 
   const seenOptions: { value: 'all' | 'seen' | 'unseen'; label: string }[] = [
-    { value: 'all', label: 'Alle werken' },
-    { value: 'seen', label: 'Gezien' },
-    { value: 'unseen', label: 'Niet gezien' },
+    { value: 'all', label: t('allWorks') },
+    { value: 'seen', label: t('seenOnly') },
+    { value: 'unseen', label: t('unseenOnly') },
   ]
 
   const museumOptions = [
-    { value: 'all', label: 'Alle musea' },
+    { value: 'all', label: t('allMuseums') },
     ...museums.slice(0, 12).map(([id, name]) => ({ value: id.toString(), label: name.length > 30 ? name.substring(0, 28) + '…' : name })),
   ]
 
@@ -160,12 +155,12 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
       {/* Stats bar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-sm text-slate-400">
-          <span>{withImage.length} werken</span>
+          <span>{t('works', { count: withImage.length })}</span>
           {seenCount > 0 && (
-            <span className="text-indigo-400 font-medium">{seenCount} gezien</span>
+            <span className="text-indigo-400 font-medium">{t('seen', { count: seenCount })}</span>
           )}
         </div>
-        <span className="text-xs text-slate-500">{filtered.length} zichtbaar</span>
+        <span className="text-xs text-slate-500">{t('visible', { count: filtered.length })}</span>
       </div>
 
       {/* Search + Filters */}
@@ -176,7 +171,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
             type="text"
             value={filterTitle}
             onChange={(e) => { setFilterTitle(e.target.value); setVisibleCount(PAGE_SIZE) }}
-            placeholder="Zoek op titel…"
+            placeholder={t('searchPlaceholder')}
             className="w-full bg-zinc-800 border border-white/10 text-zinc-300 placeholder:text-zinc-600 text-xs rounded-lg pl-8 pr-3 py-1.5 focus:outline-none focus:border-indigo-500/60 transition-colors"
           />
         </div>
@@ -192,14 +187,14 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
       {/* Type-toggles: klik om een type te verbergen/tonen */}
       {types.length > 1 && (
         <div className="flex flex-wrap gap-1.5">
-          {types.map(([t, n]) => {
-            const on = !hiddenTypes.has(t)
+          {types.map(([ty, n]) => {
+            const on = !hiddenTypes.has(ty)
             return (
               <button
-                key={t}
+                key={ty}
                 type="button"
                 aria-pressed={on}
-                onClick={() => toggleType(t)}
+                onClick={() => toggleType(ty)}
                 className={cn(
                   'flex items-center gap-1.5 text-xs rounded-full pl-2.5 pr-3 py-1 border transition-colors',
                   on
@@ -208,7 +203,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
                 )}
               >
                 {on ? <Check size={11} /> : <span className="w-[11px]" />}
-                {TYPE_LABELS[t] ?? t}
+                {t.has(`type.${ty}`) ? t(`type.${ty}`) : ty}
                 <span className={on ? 'text-indigo-400/70' : 'text-zinc-600'}>{n}</span>
               </button>
             )
@@ -231,14 +226,14 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
 
       {filtered.length === 0 && (
         <div className="text-center py-16 text-slate-500">
-          <p>Geen werken gevonden met deze filters.</p>
+          <p>{t('empty')}</p>
         </div>
       )}
 
       {/* Sentinel: laadt automatisch meer bij scrollen */}
       {visibleCount < filtered.length && (
         <div ref={sentinelRef} className="text-center pt-4 text-xs text-zinc-600">
-          Meer laden…
+          {t('loadingMore')}
         </div>
       )}
     </div>

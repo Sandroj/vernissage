@@ -1,4 +1,5 @@
 import { prisma, hasImage } from '@/lib/prisma'
+import { getTranslations } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import ArtistCard from '@/components/artist-card'
@@ -10,6 +11,7 @@ export default async function ArtistsPage({
   searchParams: { q?: string }
 }) {
   const session = await getServerSession(authOptions)
+  const t = await getTranslations('Artists')
   const q = searchParams.q ?? ''
 
   const artists = await prisma.artist.findMany({
@@ -42,8 +44,8 @@ export default async function ArtistsPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Kunstenaars</h1>
-        <span className="text-slate-400 text-sm">{artists.length} kunstenaar{artists.length !== 1 ? 's' : ''}</span>
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
+        <span className="text-slate-400 text-sm">{t('count', { count: artists.length })}</span>
       </div>
 
       <ArtistsSearch defaultValue={q} />
@@ -59,7 +61,7 @@ export default async function ArtistsPage({
         ))}
         {artists.length === 0 && (
           <p className="text-slate-400 col-span-full text-center py-12">
-            Geen kunstenaars gevonden voor &ldquo;{q}&rdquo;
+            {t('noResults', { query: q })}
           </p>
         )}
       </div>

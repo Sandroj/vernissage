@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Building2, Globe } from 'lucide-react'
 import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
+import { useTranslations } from 'next-intl'
 
 interface ArtworkWithArtist {
   id: number
@@ -45,6 +46,7 @@ interface MuseumDetailClientProps {
 
 export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, isLoggedIn, artists }: MuseumDetailClientProps) {
   const [seenMap, setSeenMap] = useState(initialSeenMap)
+  const t = useTranslations('Museums')
 
   const seenCount = Object.keys(seenMap).length
   const total = museum.artworks.length
@@ -86,7 +88,7 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 hover:text-white transition-colors"
                   >
-                    <Globe size={11} /> Website
+                    <Globe size={11} /> {t('website')}
                   </a>
                 </>
               )}
@@ -101,12 +103,12 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
             <div className="flex gap-4 text-sm">
               <div>
                 <span className="text-2xl font-bold text-white">{total}</span>
-                <span className="text-zinc-500 ml-1.5">werken</span>
+                <span className="text-zinc-500 ml-1.5">{t('works')}</span>
               </div>
               {seenCount > 0 && (
                 <div>
                   <span className="text-2xl font-bold text-indigo-400">{seenCount}</span>
-                  <span className="text-zinc-500 ml-1.5">gezien</span>
+                  <span className="text-zinc-500 ml-1.5">{t('seen')}</span>
                 </div>
               )}
             </div>

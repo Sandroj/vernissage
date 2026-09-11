@@ -6,9 +6,11 @@ import ProgressBar from '@/components/progress-bar'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Palette } from 'lucide-react'
 import { proxyImg } from '@/lib/utils'
+import { getTranslations } from 'next-intl/server'
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
+  const t = await getTranslations('Home')
 
   const artists = await prisma.artist.findMany({
     include: { _count: { select: { artworks: { where: hasImage } } } },
@@ -53,16 +55,16 @@ export default async function DashboardPage() {
       <div>
         <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-2">
           {session?.user?.name
-            ? `Hallo, ${session.user.name.split(' ')[0]}`
+            ? t('hello', { name: session.user.name.split(' ')[0] })
             : 'Vernissage'
           }
         </h1>
         <p className="text-zinc-400 text-lg">
           {session
             ? totalSeen > 0
-              ? `Jij hebt ${totalSeen} van ${totalArtworks} werken gezien.`
-              : 'Begin met het bijhouden van je kunstbezoeken.'
-            : 'Bijhouden welke kunstwerken je ooit hebt gezien.'
+              ? t('progress', { seen: totalSeen, total: totalArtworks })
+              : t('start')
+            : t('tagline')
           }
         </p>
       </div>
@@ -71,17 +73,17 @@ export default async function DashboardPage() {
       {!session && (
         <div className="bg-gradient-to-r from-indigo-950/60 to-violet-950/60 rounded-2xl p-8 border border-indigo-500/20 text-center">
           <Palette size={40} className="text-indigo-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white mb-2">Maak een gratis account aan</h2>
+          <h2 className="text-xl font-semibold text-white mb-2">{t('ctaTitle')}</h2>
           <p className="text-zinc-400 mb-6 max-w-md mx-auto text-sm">
-            Houd bij welke kunstwerken je hebt gezien, beoordeel ze en deel je voortgang.
+            {t('ctaText')}
           </p>
           <div className="flex gap-3 justify-center">
             <Link href="/login?mode=register">
-              <Button className="bg-indigo-600 hover:bg-indigo-500 border-0">Account aanmaken</Button>
+              <Button className="bg-indigo-600 hover:bg-indigo-500 border-0">{t('ctaRegister')}</Button>
             </Link>
             <Link href="/artists">
               <Button variant="outline" className="border-white/10 text-white hover:bg-white/5">
-                Bekijk kunstenaars
+                {t('ctaArtists')}
               </Button>
             </Link>
           </div>
@@ -91,9 +93,9 @@ export default async function DashboardPage() {
       {/* Artists progress */}
       <div>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-semibold text-white">Kunstenaars</h2>
+          <h2 className="text-xl font-semibold text-white">{t('artists')}</h2>
           <Link href="/artists" className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-400 transition-colors">
-            Alle kunstenaars <ArrowRight size={14} />
+            {t('allArtists')} <ArrowRight size={14} />
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -123,7 +125,7 @@ export default async function DashboardPage() {
       {/* Recent seen */}
       {recentSeen.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold text-white mb-5">Recent gezien</h2>
+          <h2 className="text-xl font-semibold text-white mb-5">{t('recentlySeen')}</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
             {recentSeen.map((s) => (
               <Link key={s.id} href={`/artworks/${s.artworkId}`} className="group">

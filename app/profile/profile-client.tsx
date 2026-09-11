@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
 import { User, Mail, Eye, LogOut, CheckCircle2 } from 'lucide-react'
+import { useTranslations, useFormatter } from 'next-intl'
 
 interface ProfileClientProps {
   user: { id: string; name?: string | null; email: string; image?: string | null; seenPublic: boolean; createdAt: Date }
@@ -17,6 +18,8 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
   const [name, setName] = useState(user.name ?? '')
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)
+  const t = useTranslations('Profile')
+  const fmt = useFormatter()
 
   async function saveProfile() {
     setSaving(true)
@@ -26,8 +29,8 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
       body: JSON.stringify({ name, seenPublic }),
     })
     setSaving(false)
-    if (res.ok) toast.success('Profiel opgeslagen')
-    else toast.error('Er ging iets mis')
+    if (res.ok) toast.success(t('saved'))
+    else toast.error(t('error'))
   }
 
   const initials = (user.name ?? user.email)
@@ -37,17 +40,14 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
     .toUpperCase()
     .slice(0, 2)
 
-  const memberSince = new Date(user.createdAt).toLocaleDateString('nl-NL', {
-    month: 'long',
-    year: 'numeric',
-  })
+  const memberSince = fmt.dateTime(new Date(user.createdAt), { month: 'long', year: 'numeric' })
 
   return (
     <div className="max-w-lg">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-1">Profiel</h1>
-        <p className="text-zinc-500 text-sm">Lid sinds {memberSince}</p>
+        <h1 className="text-3xl font-bold text-white mb-1">{t('title')}</h1>
+        <p className="text-zinc-500 text-sm">{t('memberSince', { date: memberSince })}</p>
       </div>
 
       {/* Avatar + stat */}
@@ -60,11 +60,11 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
           )}
         </div>
         <div>
-          <p className="font-semibold text-white text-lg">{user.name ?? 'Onbekend'}</p>
+          <p className="font-semibold text-white text-lg">{user.name ?? t('unknown')}</p>
           <p className="text-zinc-500 text-sm">{user.email}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <CheckCircle2 size={13} className="text-indigo-400" />
-            <span className="text-indigo-400 text-sm font-medium">{seenCount} werken gezien</span>
+            <span className="text-indigo-400 text-sm font-medium">{t('seenCount', { count: seenCount })}</span>
           </div>
         </div>
       </div>
@@ -74,12 +74,12 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
         {/* Naam */}
         <div className="space-y-1.5">
           <label className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium uppercase tracking-wider">
-            <User size={11} /> Naam
+            <User size={11} /> {t('name')}
           </label>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Jouw naam"
+            placeholder={t('namePlaceholder')}
             className="bg-zinc-900 border-white/10 text-white placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-indigo-500/20"
           />
         </div>
@@ -87,7 +87,7 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
         {/* Email */}
         <div className="space-y-1.5">
           <label className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium uppercase tracking-wider">
-            <Mail size={11} /> E-mail
+            <Mail size={11} /> {t('email')}
           </label>
           <Input
             value={user.email}
@@ -101,9 +101,9 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
           <div className="flex items-start gap-3">
             <Eye size={16} className="text-zinc-400 mt-0.5 flex-shrink-0" />
             <div>
-              <p className="text-sm font-medium text-white">Gezien-items openbaar</p>
+              <p className="text-sm font-medium text-white">{t('publicTitle')}</p>
               <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
-                Anderen kunnen zien hoeveel mensen een werk hebben gezien
+                {t('publicText')}
               </p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
           disabled={saving}
           className="w-full bg-indigo-600 hover:bg-indigo-500 text-white border-0 h-11"
         >
-          {saving ? 'Opslaan...' : 'Profiel opslaan'}
+          {saving ? t('saving') : t('save')}
         </Button>
       </div>
 
@@ -130,7 +130,7 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
           onClick={() => signOut({ callbackUrl: '/login' })}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm text-red-400 border border-red-900/40 hover:bg-red-950/30 transition-colors"
         >
-          <LogOut size={14} /> Uitloggen
+          <LogOut size={14} /> {t('signOut')}
         </button>
       </div>
     </div>

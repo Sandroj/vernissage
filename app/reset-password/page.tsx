@@ -4,10 +4,12 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 export default function ResetPasswordPage() {
+  const t = useTranslations('Reset')
   return (
-    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center"><p className="text-slate-400">Laden...</p></div>}>
+    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center"><p className="text-slate-400">{t('loading')}</p></div>}>
       <ResetPasswordContent />
     </Suspense>
   )
@@ -17,6 +19,7 @@ function ResetPasswordContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const token = searchParams.get('token')
+  const t = useTranslations('Reset')
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -32,15 +35,15 @@ function ResetPasswordContent() {
       <div className="min-h-[70vh] flex items-center justify-center">
         <div className="w-full max-w-sm space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold">Nieuw wachtwoord</h1>
-            <p className="text-slate-400 mt-1 text-sm">Kies een nieuw wachtwoord voor je account</p>
+            <h1 className="text-2xl font-bold">{t('newTitle')}</h1>
+            <p className="text-slate-400 mt-1 text-sm">{t('newSubtitle')}</p>
           </div>
 
           {success ? (
             <div className="space-y-4">
               <p className="text-green-400 text-sm bg-green-950/30 px-3 py-2 rounded-lg">{success}</p>
               <Button className="w-full" onClick={() => router.push('/login')}>
-                Naar inloggen
+                {t('toLogin')}
               </Button>
             </div>
           ) : (
@@ -49,7 +52,7 @@ function ResetPasswordContent() {
                 e.preventDefault()
                 setError('')
                 if (password !== passwordConfirm) {
-                  setError('Wachtwoorden komen niet overeen')
+                  setError(t('mismatch'))
                   return
                 }
                 setLoading(true)
@@ -61,16 +64,16 @@ function ResetPasswordContent() {
                 const data = await res.json()
                 setLoading(false)
                 if (!res.ok) {
-                  setError(data.error ?? 'Er ging iets mis')
+                  setError(data.error ?? t('genericError'))
                 } else {
-                  setSuccess('Wachtwoord gewijzigd. Je kunt nu inloggen.')
+                  setSuccess(t('changed'))
                 }
               }}
               className="space-y-3"
             >
               <Input
                 type="password"
-                placeholder="Nieuw wachtwoord"
+                placeholder={t('newPassword')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -79,7 +82,7 @@ function ResetPasswordContent() {
               />
               <Input
                 type="password"
-                placeholder="Bevestig wachtwoord"
+                placeholder={t('confirmPassword')}
                 value={passwordConfirm}
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 required
@@ -90,7 +93,7 @@ function ResetPasswordContent() {
                 <p className="text-red-400 text-sm bg-red-950/30 px-3 py-2 rounded-lg">{error}</p>
               )}
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Bezig...' : 'Wachtwoord wijzigen'}
+                {loading ? t('busy') : t('change')}
               </Button>
             </form>
           )}
@@ -104,8 +107,8 @@ function ResetPasswordContent() {
     <div className="min-h-[70vh] flex items-center justify-center">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Wachtwoord vergeten</h1>
-          <p className="text-slate-400 mt-1 text-sm">Voer je e-mailadres in om je wachtwoord te resetten</p>
+          <h1 className="text-2xl font-bold">{t('forgotTitle')}</h1>
+          <p className="text-slate-400 mt-1 text-sm">{t('forgotSubtitle')}</p>
         </div>
 
         {success ? (
@@ -113,12 +116,12 @@ function ResetPasswordContent() {
             <p className="text-green-400 text-sm bg-green-950/30 px-3 py-2 rounded-lg">{success}</p>
             {resetUrl && (
               <div className="space-y-2">
-                <p className="text-slate-400 text-xs">Klik op de link hieronder om je wachtwoord te resetten:</p>
+                <p className="text-slate-400 text-xs">{t('clickBelow')}</p>
                 <a
                   href={resetUrl}
                   className="text-indigo-400 hover:underline text-sm break-all block bg-slate-900 px-3 py-2 rounded-lg"
                 >
-                  Wachtwoord resetten
+                  {t('resetLink')}
                 </a>
               </div>
             )}
@@ -137,9 +140,9 @@ function ResetPasswordContent() {
               const data = await res.json()
               setLoading(false)
               if (!res.ok) {
-                setError(data.error ?? 'Er ging iets mis')
+                setError(data.error ?? t('genericError'))
               } else {
-                setSuccess('Als dit e-mailadres bekend is, kun je hieronder je wachtwoord resetten.')
+                setSuccess(t('requested'))
                 if (data.resetUrl) setResetUrl(data.resetUrl)
               }
             }}
@@ -147,7 +150,7 @@ function ResetPasswordContent() {
           >
             <Input
               type="email"
-              placeholder="E-mailadres"
+              placeholder={t('emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -157,14 +160,14 @@ function ResetPasswordContent() {
               <p className="text-red-400 text-sm bg-red-950/30 px-3 py-2 rounded-lg">{error}</p>
             )}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Bezig...' : 'Wachtwoord resetten'}
+              {loading ? t('busy') : t('reset')}
             </Button>
           </form>
         )}
 
         <p className="text-center text-sm text-slate-400">
           <Link href="/login" className="text-indigo-400 hover:underline">
-            Terug naar inloggen
+            {t('backToLogin')}
           </Link>
         </p>
       </div>

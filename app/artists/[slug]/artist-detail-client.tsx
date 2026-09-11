@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
+import { useTranslations } from 'next-intl'
 
 interface ArtworkWithMuseum {
   id: number
@@ -37,6 +38,7 @@ interface ArtistDetailClientProps {
 
 export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, isLoggedIn }: ArtistDetailClientProps) {
   const [seenMap, setSeenMap] = useState(initialSeenMap)
+  const t = useTranslations('Artists')
 
   const seenCount = Object.keys(seenMap).length
   const total = artist.artworks.length
@@ -45,7 +47,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   const years = artist.birth_year
     ? artist.death_year
       ? `${artist.birth_year} – ${artist.death_year}`
-      : `Geboren ${artist.birth_year}`
+      : t('bornLong', { year: artist.birth_year })
     : null
 
   async function refresh() {
@@ -97,12 +99,12 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
             <div className="flex gap-4 text-sm">
               <div>
                 <span className="text-2xl font-bold text-white">{total}</span>
-                <span className="text-zinc-500 ml-1.5">werken</span>
+                <span className="text-zinc-500 ml-1.5">{t('works')}</span>
               </div>
               {seenCount > 0 && (
                 <div>
                   <span className="text-2xl font-bold text-indigo-400">{seenCount}</span>
-                  <span className="text-zinc-500 ml-1.5">gezien</span>
+                  <span className="text-zinc-500 ml-1.5">{t('seen')}</span>
                 </div>
               )}
             </div>

@@ -1,5 +1,6 @@
 import { prisma, hasImage } from '@/lib/prisma'
 import { proxyImg } from '@/lib/utils'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import dynamic from 'next/dynamic'
@@ -16,6 +17,8 @@ const MuseumMap = dynamic(() => import('@/components/museum-map'), {
 
 export default async function MuseumsPage() {
   const session = await getServerSession(authOptions)
+  const t = await getTranslations('Museums')
+  const locale = await getLocale()
 
   // Haal alle musea op — filter daarna in JS op coördinaten + artworks
   const allMuseums = await prisma.museum.findMany({
@@ -62,31 +65,32 @@ export default async function MuseumsPage() {
     previewImage: proxyImg(m.artworks[0]?.image_local_path ?? m.artworks[0]?.image_url) ?? null,
     seenCount: seenByMuseum[m.id] ?? 0,
   }))
+  const popupLabels = { works: t('works'), seen: t('seen') }
 
   return (
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-1">Musea</h1>
+        <h1 className="text-3xl font-bold text-white mb-1">{t('title')}</h1>
         <p className="text-zinc-500 text-sm">
-          {museums.length} locaties · {totalArtworks.toLocaleString('nl-NL')} werken in de collectie
+          {t('subtitle', { locations: museums.length, works: totalArtworks.toLocaleString(locale) })}
         </p>
       </div>
 
       {/* Kaart */}
-      <MuseumMap museums={pins} />
+      <MuseumMap museums={pins} labels={popupLabels} />
 
       {/* Legenda */}
       <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-zinc-500">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded border-2 border-white/25 bg-zinc-800" />
-          <span>Museum</span>
+          <span>{t('legendMuseum')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded border-2 border-indigo-500 bg-zinc-800" />
-          <span>Werk(en) gezien</span>
+          <span>{t('legendSeen')}</span>
         </div>
-        <span className="text-zinc-600">· Klik op een pin om de museumpagina te openen</span>
+        <span className="text-zinc-600">{t('legendHint')}</span>
       </div>
     </div>
   )

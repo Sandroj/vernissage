@@ -16,9 +16,10 @@ interface MuseumPin {
 
 interface MuseumMapProps {
   museums: MuseumPin[]
+  labels: { works: string; seen: string }
 }
 
-export default function MuseumMap({ museums }: MuseumMapProps) {
+export default function MuseumMap({ museums, labels }: MuseumMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<unknown>(null)
   const router = useRouter()
@@ -130,8 +131,8 @@ export default function MuseumMap({ museums }: MuseumMapProps) {
             <div style="font-weight: 600; color: #fff; font-size: 13px; margin-bottom: 2px; line-height: 1.3">${m.name}</div>
             <div style="color: #71717a; font-size: 11px; margin-bottom: 8px">${m.city}${m.country && m.country !== 'Onbekend' ? ', ' + m.country : ''}</div>
             <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px">
-              <span style="color:#a1a1aa">${m.artworkCount} werken</span>
-              ${m.seenCount > 0 ? `<span style="color:#818cf8;font-weight:600">${m.seenCount} gezien</span>` : ''}
+              <span style="color:#a1a1aa">${m.artworkCount} ${labels.works}</span>
+              ${m.seenCount > 0 ? `<span style="color:#818cf8;font-weight:600">${m.seenCount} ${labels.seen}</span>` : ''}
             </div>
           </div>
         `

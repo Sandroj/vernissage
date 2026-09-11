@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { X, ExternalLink } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface LightboxMeta {
   title: string
@@ -30,6 +31,7 @@ export default function Lightbox({ src, alt, onClose, meta }: LightboxProps) {
   }, [onClose])
 
   const hasMeta = !!meta
+  const t = useTranslations('Lightbox')
 
   return (
     <div
@@ -40,7 +42,7 @@ export default function Lightbox({ src, alt, onClose, meta }: LightboxProps) {
       <button
         className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10"
         onClick={onClose}
-        aria-label="Sluiten"
+        aria-label={t('close')}
       >
         <X size={24} />
       </button>
@@ -83,11 +85,11 @@ export default function Lightbox({ src, alt, onClose, meta }: LightboxProps) {
 
             {/* Meta rijen */}
             <div className="space-y-3 border-t border-white/10 pt-3">
-              {meta.medium && <MetaRow label="Medium" value={meta.medium} />}
-              {meta.dimensions && <MetaRow label="Afmetingen" value={meta.dimensions} />}
+              {meta.medium && <MetaRow label={t('medium')} value={meta.medium} />}
+              {meta.dimensions && <MetaRow label={t('dimensions')} value={meta.dimensions} />}
               {meta.museum && (
                 <div>
-                  <p className="text-zinc-500 text-xs uppercase tracking-widest mb-0.5">Locatie</p>
+                  <p className="text-zinc-500 text-xs uppercase tracking-widest mb-0.5">{t('location')}</p>
                   <p className="text-white text-sm">{meta.museum}</p>
                   {meta.museumCity && <p className="text-zinc-500 text-xs">{meta.museumCity}</p>}
                 </div>
@@ -102,7 +104,7 @@ export default function Lightbox({ src, alt, onClose, meta }: LightboxProps) {
                 className="mt-auto flex items-center gap-1.5 text-xs text-zinc-500 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-3 py-2 transition-colors"
               >
                 <ExternalLink size={12} />
-                Bekijk volledige details
+                {t('fullDetails')}
               </Link>
             )}
           </div>

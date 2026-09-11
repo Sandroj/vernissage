@@ -4,6 +4,7 @@ import { Check, CheckCircle2 } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
 import Lightbox from '@/components/lightbox'
 import { cn, proxyImg } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface Artwork {
   id: number
@@ -35,6 +36,7 @@ interface ArtworkCardProps {
 }
 
 export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }: ArtworkCardProps) {
+  const t = useTranslations('Card')
   const [modalOpen, setModalOpen] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [imgError, setImgError] = useState(false)
@@ -71,7 +73,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
         {seen && (
           <div className="absolute top-2 left-2 bg-indigo-500/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1 pointer-events-none">
             <CheckCircle2 size={10} className="text-white" />
-            <span className="text-white text-[10px] font-medium">gezien</span>
+            <span className="text-white text-[10px] font-medium">{t('seenBadge')}</span>
           </div>
         )}
 
@@ -88,7 +90,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
                   : 'bg-indigo-600 hover:bg-indigo-500'
               )}
             >
-              <Check size={11} /> {seen ? 'Bewerken' : 'Markeer gezien'}
+              <Check size={11} /> {seen ? t('edit') : t('markSeen')}
             </button>
           )}
         </div>

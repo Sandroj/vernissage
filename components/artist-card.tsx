@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import ProgressBar from '@/components/progress-bar'
 import { proxyImg } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface ArtistCardProps {
   artist: {
@@ -21,12 +22,13 @@ interface ArtistCardProps {
 }
 
 export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistCardProps) {
+  const t = useTranslations('Artists')
   const total = artist._count.artworks
   const pct = total > 0 ? (seenCount / total) * 100 : 0
   const years = artist.birth_year
     ? artist.death_year
       ? `${artist.birth_year}–${artist.death_year}`
-      : `geb. ${artist.birth_year}`
+      : t('born', { year: artist.birth_year })
     : null
 
   const [imgError, setImgError] = useState(false)
@@ -43,7 +45,7 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
             <img
               src={imgSrc}
               onError={() => setImgError(true)}
-              alt={`${artist.name} – bekendste werk`}
+              alt={t('featuredAlt', { name: artist.name })}
               className="w-full h-full object-cover"
             />
           ) : (

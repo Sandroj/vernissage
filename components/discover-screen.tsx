@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { Check } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 const SCREENS = [
   [
@@ -50,6 +51,7 @@ const SCREENS = [
 
 export default function DiscoverScreen({ initialVotes }: { initialVotes: string[] }) {
   const router = useRouter()
+  const t = useTranslations('Discover')
   const [screen, setScreen] = useState(0)
   const [selected, setSelected] = useState<Set<string>>(new Set(initialVotes))
   const [saving, setSaving] = useState(false)
@@ -80,8 +82,8 @@ export default function DiscoverScreen({ initialVotes }: { initialVotes: string[
   return (
     <div className="max-w-3xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold mb-2">Welke kunstenaars wil jij in de app?</h1>
-        <p className="text-slate-400 text-sm">Klik op kunstenaars die je interessant vindt. We voegen de populairste als eerste toe.</p>
+        <h1 className="text-2xl font-bold mb-2">{t('title')}</h1>
+        <p className="text-slate-400 text-sm">{t('subtitle')}</p>
       </div>
 
       {/* Voortgang dots */}
@@ -136,16 +138,16 @@ export default function DiscoverScreen({ initialVotes }: { initialVotes: string[
           onClick={() => setScreen((s) => s - 1)}
           className="border-slate-700"
         >
-          ← Vorige
+          {t('previous')}
         </Button>
-        <span className="text-slate-400 text-sm">{selected.size} geselecteerd</span>
+        <span className="text-slate-400 text-sm">{t('selected', { count: selected.size })}</span>
         {isLast ? (
           <Button onClick={handleFinish} disabled={saving}>
-            {saving ? 'Opslaan...' : 'Opslaan ✓'}
+            {saving ? t('saving') : t('save')}
           </Button>
         ) : (
           <Button onClick={() => setScreen((s) => s + 1)}>
-            Volgende →
+            {t('next')}
           </Button>
         )}
       </div>
@@ -154,7 +156,7 @@ export default function DiscoverScreen({ initialVotes }: { initialVotes: string[
         className="text-center text-slate-500 text-sm mt-4 cursor-pointer hover:text-slate-300"
         onClick={() => router.push('/')}
       >
-        Sla over
+        {t('skip')}
       </p>
     </div>
   )

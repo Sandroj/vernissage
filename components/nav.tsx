@@ -6,17 +6,20 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Menu, X, Palette } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
+import LocaleToggle from '@/components/locale-toggle'
 
 export default function Nav() {
   const { data: session } = useSession()
   const pathname = usePathname() ?? ''
   const [open, setOpen] = useState(false)
+  const t = useTranslations('Nav')
 
   const links = [
-    { href: '/artists', label: 'Kunstenaars' },
-    // { href: '/museums', label: 'Musea' }, // TODO: wereldkaart nog in ontwikkeling
-    { href: '/discover', label: 'Ontdekken' },
-    ...(session ? [{ href: '/profile', label: 'Profiel' }] : []),
+    { href: '/artists', label: t('artists') },
+    // { href: '/museums', label: t('museums') }, // TODO: wereldkaart nog in ontwikkeling
+    { href: '/discover', label: t('discover') },
+    ...(session ? [{ href: '/profile', label: t('profile') }] : []),
   ]
 
   return (
@@ -48,20 +51,24 @@ export default function Nav() {
               onClick={() => signOut({ callbackUrl: '/login' })}
               className="ml-2 px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
             >
-              Uitloggen
+              {t('signOut')}
             </button>
           ) : (
             <Link href="/login" className="ml-2">
               <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white border-0">
-                Inloggen
+                {t('signIn')}
               </Button>
             </Link>
           )}
+          <LocaleToggle className="ml-3" />
         </div>
 
-        <button className="md:hidden text-slate-400 hover:text-white p-1" onClick={() => setOpen(!open)}>
+        <div className="md:hidden flex items-center gap-2">
+          <LocaleToggle />
+          <button className="text-slate-400 hover:text-white p-1" onClick={() => setOpen(!open)} aria-label={t('menu')}>
           {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -86,11 +93,11 @@ export default function Nav() {
               className="px-3 py-2 rounded-lg text-sm text-slate-400 text-left hover:text-white"
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
-              Uitloggen
+              {t('signOut')}
             </button>
           ) : (
             <Link href="/login" className="px-3 py-2 text-sm text-indigo-400" onClick={() => setOpen(false)}>
-              Inloggen
+              {t('signIn')}
             </Link>
           )}
         </div>

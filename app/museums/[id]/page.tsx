@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import MuseumDetailClient from './museum-detail-client'
+import { getTranslations } from 'next-intl/server'
 
 export default async function MuseumDetailPage({
   params,
@@ -12,6 +13,7 @@ export default async function MuseumDetailPage({
   params: { id: string }
 }) {
   const session = await getServerSession(authOptions)
+  const t = await getTranslations('Museums')
   const museumId = Number(params.id)
   if (isNaN(museumId)) notFound()
 
@@ -55,7 +57,7 @@ export default async function MuseumDetailPage({
         href="/museums"
         className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-white text-sm mb-6 transition-colors"
       >
-        <ArrowLeft size={14} /> Terug naar musea
+        <ArrowLeft size={14} /> {t('backToMuseums')}
       </Link>
 
       <MuseumDetailClient

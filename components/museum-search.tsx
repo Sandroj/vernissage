@@ -4,6 +4,7 @@ import { Command, CommandInput, CommandList, CommandItem, CommandEmpty } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { MapPin } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Museum { id: number; name: string; city: string }
 
@@ -13,6 +14,7 @@ interface MuseumSearchProps {
 }
 
 export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
+  const t = useTranslations('MuseumSearch')
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Museum[]>([])
@@ -40,13 +42,13 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
       >
         <MapPin size={14} className="text-slate-400 flex-shrink-0" />
         <span className={value ? 'text-white' : 'text-slate-400'}>
-          {value || 'Zoek museum of typ locatie...'}
+          {value || t('trigger')}
         </span>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-[320px]" align="start">
         <Command>
           <CommandInput
-            placeholder="Zoek museum..."
+            placeholder={t('placeholder')}
             value={query}
             onValueChange={setQuery}
           />
@@ -56,7 +58,7 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
                 className="px-3 py-2 text-sm text-slate-300 w-full text-left hover:bg-slate-800"
                 onClick={() => { onChange(query); setOpen(false) }}
               >
-                Gebruik &ldquo;{query}&rdquo; als locatie
+                {t('useAsLocation', { query })}
               </button>
             </CommandEmpty>
             {results.map((m) => (

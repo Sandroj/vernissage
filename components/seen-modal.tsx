@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
-import { format } from 'date-fns'
-import { nl } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 import MuseumSearch from '@/components/museum-search'
 import StarRating from '@/components/star-rating'
+import { useTranslations, useFormatter } from 'next-intl'
 
 interface SeenModalProps {
   artworkId: number
@@ -44,6 +43,8 @@ export default function SeenModal({
   const [rating, setRating] = useState<number | null>(existingSeen?.rating ?? null)
   const [photoUrl, setPhotoUrl] = useState(existingSeen?.photo_url ?? '')
   const [saving, setSaving] = useState(false)
+  const t = useTranslations('SeenModal')
+  const fmt = useFormatter()
 
   async function handleSave() {
     setSaving(true)
@@ -69,7 +70,7 @@ export default function SeenModal({
       <DialogContent className="bg-zinc-950 border-white/10 sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-white">
-            {existingSeen ? 'Bewerk' : 'Markeer als gezien'}
+            {existingSeen ? t('editTitle') : t('newTitle')}
           </DialogTitle>
           <p className="text-zinc-500 text-sm">{artworkTitle}</p>
         </DialogHeader>
@@ -77,7 +78,7 @@ export default function SeenModal({
         <div className="space-y-4 pt-2">
           {/* Datum */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">Datum</label>
+            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('date')}</label>
             <Popover open={calOpen} onOpenChange={setCalOpen}>
               <PopoverTrigger
                 render={
@@ -85,7 +86,7 @@ export default function SeenModal({
                 }
               >
                 <CalendarIcon size={14} />
-                {format(date, 'd MMMM yyyy', { locale: nl })}
+                {fmt.dateTime(date, { day: 'numeric', month: 'long', year: 'numeric' })}
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
@@ -100,23 +101,23 @@ export default function SeenModal({
 
           {/* Locatie */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">Locatie</label>
+            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('location')}</label>
             <MuseumSearch value={location} onChange={setLocation} />
           </div>
 
           {/* Waardering */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">Waardering</label>
+            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('rating')}</label>
             <StarRating value={rating} onChange={setRating} />
           </div>
 
           {/* Notitie */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">Notitie</label>
+            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('notes')}</label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Wat vond je van dit werk?"
+              placeholder={t('notesPlaceholder')}
               className="bg-zinc-900 border-white/10 text-white resize-none placeholder:text-zinc-600"
               rows={3}
             />
@@ -124,7 +125,7 @@ export default function SeenModal({
 
           {/* Foto */}
           <div className="space-y-2">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">Foto (optioneel)</label>
+            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('photo')}</label>
 
             {/* File upload */}
             <div className="space-y-2">
@@ -142,15 +143,16 @@ export default function SeenModal({
                     reader.readAsDataURL(file)
                   }}
                 />
-                Foto maken of uploaden
+                {t('photoUpload')}
               </label>
 
               {photoUrl && (
                 <div className="relative">
-                  <img src={photoUrl} alt="Upload preview" className="w-full h-24 object-cover rounded-lg" />
+                  <img src={photoUrl} alt={t('photoPreview')} className="w-full h-24 object-cover rounded-lg" />
                   <button
                     type="button"
                     onClick={() => setPhotoUrl('')}
+                    aria-label={t('removePhoto')}
                     className="absolute top-1 right-1 bg-black/70 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-black/90"
                   >
                     ×
@@ -164,7 +166,7 @@ export default function SeenModal({
                   type="url"
                   value={photoUrl}
                   onChange={(e) => setPhotoUrl(e.target.value)}
-                  placeholder="Of voeg een foto-URL in..."
+                  placeholder={t('photoUrlPlaceholder')}
                   className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-indigo-500/50"
                 />
               )}
@@ -172,7 +174,7 @@ export default function SeenModal({
           </div>
 
           <Button onClick={handleSave} disabled={saving} className="w-full bg-indigo-600 hover:bg-indigo-500 border-0 text-white">
-            {saving ? 'Opslaan...' : 'Opslaan'}
+            {saving ? t('saving') : t('save')}
           </Button>
         </div>
       </DialogContent>

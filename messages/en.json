@@ -1,0 +1,238 @@
+{
+  "Meta": {
+    "description": "Keep track of the artworks you've seen"
+  },
+  "Nav": {
+    "artists": "Artists",
+    "museums": "Museums",
+    "discover": "Discover",
+    "profile": "Profile",
+    "signOut": "Sign out",
+    "signIn": "Sign in",
+    "menu": "Menu"
+  },
+  "Home": {
+    "hello": "Hello, {name}",
+    "progress": "You've seen {seen} of {total} works.",
+    "start": "Start tracking your museum visits.",
+    "tagline": "Keep track of every artwork you've ever seen.",
+    "ctaTitle": "Create a free account",
+    "ctaText": "Track which artworks you've seen, rate them and share your progress.",
+    "ctaRegister": "Create account",
+    "ctaArtists": "Browse artists",
+    "artists": "Artists",
+    "allArtists": "All artists",
+    "recentlySeen": "Recently seen"
+  },
+  "Artists": {
+    "title": "Artists",
+    "count": "{count, plural, =1 {1 artist} other {# artists}}",
+    "searchPlaceholder": "Search by name or nationality...",
+    "noResults": "No artists found for “{query}”",
+    "born": "b. {year}",
+    "bornLong": "Born {year}",
+    "featuredAlt": "{name} – best-known work",
+    "works": "works",
+    "seen": "seen"
+  },
+  "Progress": {
+    "seenOf": "{seen} of {total} seen"
+  },
+  "Grid": {
+    "works": "{count} works",
+    "seen": "{count} seen",
+    "visible": "{count} shown",
+    "searchPlaceholder": "Search by title…",
+    "allWorks": "All works",
+    "seenOnly": "Seen",
+    "unseenOnly": "Not seen",
+    "allMuseums": "All museums",
+    "empty": "No works match these filters.",
+    "loadingMore": "Loading more…",
+    "type": {
+      "painting": "Paintings",
+      "drawing": "Drawings & sketches",
+      "watercolor": "Watercolours",
+      "work on paper": "Works on paper",
+      "print": "Prints"
+    }
+  },
+  "Card": {
+    "seenBadge": "seen",
+    "edit": "Edit",
+    "markSeen": "Mark as seen"
+  },
+  "Lightbox": {
+    "close": "Close",
+    "medium": "Medium",
+    "dimensions": "Dimensions",
+    "location": "Location",
+    "fullDetails": "View full details"
+  },
+  "Artwork": {
+    "medium": "Medium",
+    "type": "Type",
+    "dimensions": "Dimensions",
+    "location": "Location",
+    "reportWrong": "Incorrect?",
+    "reportTooltip": "Report incorrect location",
+    "reportTitle": "Report location as incorrect",
+    "reportPlaceholder": "E.g.: This work is currently on loan to the Rijksmuseum until June 2026",
+    "send": "Send",
+    "cancel": "Cancel",
+    "reportSent": "Report sent, thank you!",
+    "saved": "Saved",
+    "source": "Source: {name}",
+    "viewOriginal": "View original page",
+    "loginToMark": "Sign in to mark as seen",
+    "seenEdit": "Seen · Edit",
+    "markSeen": "Mark as seen",
+    "nobodyYet": "Nobody yet",
+    "seenBy": "Seen by {count, plural, =1 {1 person} other {# people}}",
+    "typeValue": {
+      "painting": "Painting",
+      "drawing": "Drawing",
+      "watercolor": "Watercolour",
+      "work on paper": "Work on paper",
+      "print": "Print"
+    }
+  },
+  "SeenModal": {
+    "editTitle": "Edit",
+    "newTitle": "Mark as seen",
+    "date": "Date",
+    "location": "Location",
+    "rating": "Rating",
+    "notes": "Notes",
+    "notesPlaceholder": "What did you think of this work?",
+    "photo": "Photo (optional)",
+    "photoUpload": "Take or upload a photo",
+    "photoUrlPlaceholder": "Or paste a photo URL...",
+    "photoPreview": "Upload preview",
+    "removePhoto": "Remove photo",
+    "saving": "Saving...",
+    "save": "Save"
+  },
+  "StarRating": {
+    "label": "Rating",
+    "stars": "{count, plural, =1 {1 star} other {# stars}}"
+  },
+  "MuseumSearch": {
+    "placeholder": "Search museum...",
+    "trigger": "Search museum or type a location...",
+    "useAsLocation": "Use “{query}” as location"
+  },
+  "Share": {
+    "share": "Share",
+    "copyLink": "Copy link",
+    "copied": "Link copied",
+    "twitter": "Share on Twitter/X",
+    "email": "Share via email",
+    "instagram": "Copy for Instagram",
+    "copiedInstagram": "Link copied for your Instagram bio"
+  },
+  "Museums": {
+    "title": "Museums",
+    "subtitle": "{locations} locations · {works} works in the collection",
+    "legendMuseum": "Museum",
+    "legendSeen": "Work(s) seen",
+    "legendHint": "· Click a pin to open the museum page",
+    "website": "Website",
+    "works": "works",
+    "seen": "seen",
+    "popupWorks": "{count} works",
+    "popupSeen": "{count} seen",
+    "backToMuseums": "Back to museums"
+  },
+  "Login": {
+    "signInSubtitle": "Sign in to your account",
+    "registerSubtitle": "Create a new account",
+    "google": "Continue with Google",
+    "or": "or",
+    "namePlaceholder": "Name (optional)",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "busy": "Working...",
+    "signIn": "Sign in",
+    "register": "Create account",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "registerHere": "Register here",
+    "forgot": "Forgot password?",
+    "errAlreadyRegistered": "This email address is already registered. Sign in with your password.",
+    "errRegisterFailed": "Registration failed",
+    "errCreatedButLogin": "Account created but sign-in failed. Please try signing in.",
+    "errInvalid": "Incorrect email address or password"
+  },
+  "Reset": {
+    "loading": "Loading...",
+    "newTitle": "New password",
+    "newSubtitle": "Choose a new password for your account",
+    "toLogin": "Go to sign in",
+    "mismatch": "Passwords do not match",
+    "genericError": "Something went wrong",
+    "changed": "Password changed. You can now sign in.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "busy": "Working...",
+    "change": "Change password",
+    "forgotTitle": "Forgot password",
+    "forgotSubtitle": "Enter your email address to reset your password",
+    "clickBelow": "Click the link below to reset your password:",
+    "resetLink": "Reset password",
+    "requested": "If this email address is known, you can reset your password below.",
+    "emailPlaceholder": "Email address",
+    "reset": "Reset password",
+    "backToLogin": "Back to sign in"
+  },
+  "Profile": {
+    "title": "Profile",
+    "memberSince": "Member since {date}",
+    "unknown": "Unknown",
+    "seenCount": "{count} works seen",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "Email",
+    "publicTitle": "Seen items public",
+    "publicText": "Others can see how many people have seen a work",
+    "saving": "Saving...",
+    "save": "Save profile",
+    "saved": "Profile saved",
+    "error": "Something went wrong",
+    "signOut": "Sign out"
+  },
+  "Discover": {
+    "title": "Which artists would you like in the app?",
+    "subtitle": "Tap the artists you find interesting. We'll add the most popular ones first.",
+    "previous": "← Previous",
+    "next": "Next →",
+    "selected": "{count} selected",
+    "saving": "Saving...",
+    "save": "Save ✓",
+    "skip": "Skip"
+  },
+  "Locale": {
+    "label": "Language",
+    "nl": "NL",
+    "en": "EN"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "updated": "Last updated: 11 September 2026",
+    "intro": "Vernissage is a personal, non-commercial app for keeping track of the artworks you've seen. Here is what we do with your data.",
+    "collectTitle": "What we store",
+    "collect1": "Your email address and name — to recognise your account. If you sign in with Google, we only receive your name, email address and profile picture; never your password or any other Google data.",
+    "collect2": "The artworks you mark as seen, together with the date, location, rating, notes and optional photo you enter yourself.",
+    "collect3": "Your votes for artists you'd like to see added to the app.",
+    "useTitle": "What we use it for",
+    "use1": "Only to make the app work: showing your own overview and tracking your progress.",
+    "use2": "If you enable “Seen items public”, other users only see how many people have seen a work — never who.",
+    "use3": "We do not sell or share your data with third parties and do not use it for advertising.",
+    "storageTitle": "Where it lives",
+    "storage": "The database is hosted by Turso and the app by Vercel, under their standard security. Artwork images are loaded via Cloudflare R2 and an image proxy (wsrv.nl); no personal data is sent along with those requests.",
+    "rightsTitle": "Your rights",
+    "rights": "You can change your name and privacy setting yourself on your profile page. To have your account and all associated data deleted, email <email></email> — we'll take care of it within 30 days.",
+    "cookiesTitle": "Cookies",
+    "cookies": "We only use functional cookies: a session cookie to keep you signed in and a cookie that remembers your language choice. No tracking, no analytics."
+  }
+}

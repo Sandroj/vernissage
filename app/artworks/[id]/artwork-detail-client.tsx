@@ -8,6 +8,7 @@ import SeenModal from '@/components/seen-modal'
 import ShareMenu from '@/components/share-menu'
 import { cn, proxyImg } from '@/lib/utils'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 interface ArtworkDetailClientProps {
   artwork: {
@@ -37,6 +38,7 @@ export default function ArtworkDetailClient({
   seenCount,
   isLoggedIn,
 }: ArtworkDetailClientProps) {
+  const t = useTranslations('Artwork')
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [seen, setSeen] = useState(initialSeen)
@@ -58,7 +60,7 @@ export default function ArtworkDetailClient({
       setSeen(updated ?? null)
       if (!seen && updated) setCurrentSeenCount((c) => c + 1)
     }
-    toast('Opgeslagen')
+    toast(t('saved'))
   }
 
   async function submitReport() {
@@ -70,7 +72,7 @@ export default function ArtworkDetailClient({
     })
     setReportOpen(false)
     setReportMsg('')
-    toast('Melding verstuurd, dank je!')
+    toast(t('reportSent'))
   }
 
   return (
@@ -105,8 +107,8 @@ export default function ArtworkDetailClient({
 
           {/* Seen-knop onder afbeelding op mobiel */}
           <div className="flex items-center gap-3 mt-4 lg:hidden">
-            <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} />
-            <SeenCount count={currentSeenCount} />
+            <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
+            <SeenCount count={currentSeenCount} t={t} />
           </div>
         </div>
 
@@ -134,8 +136,8 @@ export default function ArtworkDetailClient({
 
           {/* Seen-knop — desktop */}
           <div className="hidden lg:flex items-center gap-3">
-            <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} />
-            <SeenCount count={currentSeenCount} />
+            <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
+            <SeenCount count={currentSeenCount} t={t} />
           </div>
 
           {/* Scheidingslijn */}
@@ -144,17 +146,17 @@ export default function ArtworkDetailClient({
           {/* Metadata lijst */}
           <div className="space-y-3">
             {artwork.medium_raw && (
-              <MetaRow label="Medium" value={artwork.medium_raw} />
+              <MetaRow label={t('medium')} value={artwork.medium_raw} />
             )}
             {artwork.type_normalized && (
-              <MetaRow label="Type" value={capitalize(artwork.type_normalized)} />
+              <MetaRow label={t('type')} value={t.has(`typeValue.${artwork.type_normalized}`) ? t(`typeValue.${artwork.type_normalized}`) : capitalize(artwork.type_normalized)} />
             )}
             {artwork.dimensions_raw && (
-              <MetaRow label="Afmetingen" value={artwork.dimensions_raw} />
+              <MetaRow label={t('dimensions')} value={artwork.dimensions_raw} />
             )}
             {artwork.museum && (
               <div>
-                <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1">Locatie</p>
+                <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1">{t('location')}</p>
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="text-white text-sm">
@@ -170,10 +172,10 @@ export default function ArtworkDetailClient({
                     <button
                       onClick={() => setReportOpen(!reportOpen)}
                       className="flex items-center gap-1 text-xs text-zinc-600 hover:text-amber-400 transition-colors shrink-0 mt-0.5"
-                      title="Locatie onjuist melden"
+                      title={t('reportTooltip')}
                     >
                       <AlertCircle size={12} />
-                      Onjuist?
+                      {t('reportWrong')}
                     </button>
                   )}
                 </div>
@@ -184,22 +186,22 @@ export default function ArtworkDetailClient({
           {/* Report form */}
           {reportOpen && (
             <div className="bg-amber-950/20 border border-amber-500/20 rounded-xl p-3.5 space-y-2.5">
-              <p className="text-amber-300 text-xs font-medium">Locatie melden als onjuist</p>
+              <p className="text-amber-300 text-xs font-medium">{t('reportTitle')}</p>
               <textarea
                 value={reportMsg}
                 onChange={(e) => setReportMsg(e.target.value)}
-                placeholder="Bijv: Dit werk hangt momenteel in het Rijksmuseum t/m juni 2026"
+                placeholder={t('reportPlaceholder')}
                 className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 text-xs text-white placeholder-zinc-600 resize-none focus:outline-none focus:ring-1 focus:ring-amber-500/50"
                 rows={3}
               />
               <div className="flex gap-2">
                 <Button size="sm" onClick={submitReport} disabled={!reportMsg.trim()}
                   className="bg-amber-600 hover:bg-amber-500 text-white border-0 h-7 text-xs">
-                  Verstuur
+                  {t('send')}
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => setReportOpen(false)}
                   className="text-zinc-400 hover:text-white h-7 text-xs">
-                  Annuleren
+                  {t('cancel')}
                 </Button>
               </div>
             </div>
@@ -213,7 +215,7 @@ export default function ArtworkDetailClient({
             {artwork.source_name && (
               <div className="flex items-center gap-1.5 text-zinc-600 text-xs">
                 <Database size={11} />
-                <span>Bron: {artwork.source_name}</span>
+                <span>{t('source', { name: artwork.source_name })}</span>
               </div>
             )}
             {artwork.source_url && (
@@ -224,7 +226,7 @@ export default function ArtworkDetailClient({
                 className="flex items-center gap-1.5 text-zinc-600 hover:text-zinc-400 text-xs transition-colors"
               >
                 <ExternalLink size={11} />
-                Bekijk originele pagina
+                {t('viewOriginal')}
               </a>
             )}
           </div>
@@ -244,12 +246,14 @@ export default function ArtworkDetailClient({
   )
 }
 
-function SeenButton({ seen, isLoggedIn, onOpen }: { seen: unknown; isLoggedIn: boolean; onOpen: () => void }) { // eslint-disable-line @typescript-eslint/no-explicit-any
+type T = ReturnType<typeof useTranslations<'Artwork'>>
+
+function SeenButton({ seen, isLoggedIn, onOpen, t }: { seen: unknown; isLoggedIn: boolean; onOpen: () => void; t: T }) {
   if (!isLoggedIn) {
     return (
       <Link href="/login">
         <Button variant="outline" size="sm" className="border-white/10 text-white hover:bg-white/5 text-xs h-8">
-          Inloggen om te markeren
+          {t('loginToMark')}
         </Button>
       </Link>
     )
@@ -266,18 +270,14 @@ function SeenButton({ seen, isLoggedIn, onOpen }: { seen: unknown; isLoggedIn: b
       )}
     >
       {!!seen && <Check size={12} />}
-      {seen ? 'Gezien · Bewerken' : 'Markeer als gezien'}
+      {seen ? t('seenEdit') : t('markSeen')}
     </Button>
   )
 }
 
-function SeenCount({ count }: { count: number }) {
-  if (count === 0) return <span className="text-zinc-600 text-xs">Nog niemand</span>
-  return (
-    <span className="text-zinc-500 text-xs">
-      {count === 1 ? '1 persoon' : `${count} mensen`} gezien
-    </span>
-  )
+function SeenCount({ count, t }: { count: number; t: T }) {
+  if (count === 0) return <span className="text-zinc-600 text-xs">{t('nobodyYet')}</span>
+  return <span className="text-zinc-500 text-xs">{t('seenBy', { count })}</span>
 }
 
 function MetaRow({ label, value }: { label: string; value: string }) {
