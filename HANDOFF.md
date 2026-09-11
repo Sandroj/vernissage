@@ -1,4 +1,4 @@
-# HANDOFF — arttracker
+# HANDOFF — Artlas
 
 > Levend statusbestand. Elke AI werkt dit bij vóór het stoppen, zodat de
 > volgende (Claude, Codex of Antigravity) naadloos verder kan. Kort en concreet:
@@ -32,7 +32,7 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   seed via `prisma/seed.ts`.
 
 ## Laatst gedaan (2026-09-11)
-- Tool-neutrale AI-flow opgezet in de arttracker-repo zelf (AGENTS.md +
+- Tool-neutrale AI-flow opgezet in de Artlas-repo zelf (AGENTS.md +
   symlinks CLAUDE.md/GEMINI.md, deze HANDOFF, .gitignore aangevuld).
 - Getrackte `.DS_Store`-bestanden uit versiebeheer gehaald (stonden al in
   .gitignore) zodat de diff-weergave schoon is.
@@ -42,8 +42,8 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 
 ## Valkuilen / let op
 - **Live op Vercel:** groot werk op een branch, niet direct op `main` pushen.
-- Twee geneste repo's: `art/` (buitenste) en deze `arttracker/`. Orca per
-  worktree op déze repo richten.
+- Twee geneste repo's: `art/` (buitenste) en deze `arttracker/` (Artlas). Orca per
+  worktree op déze repo richten. Map heet nog `arttracker/` — alleen interne naam is Artlas.
 - Verifieer met `npm run build` (draait `prisma generate` mee) — een kale
   `tsc` checkt hier niet het echte pad.
 - Secrets alleen in `.env`/`.env.local` (gitignored) of Vercel env — nooit in

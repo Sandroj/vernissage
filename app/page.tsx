@@ -53,7 +53,7 @@ export default async function DashboardPage() {
         <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-2">
           {session?.user?.name
             ? `Hallo, ${session.user.name.split(' ')[0]}`
-            : 'ArtTracker'
+            : 'Artlas'
           }
         </h1>
         <p className="text-zinc-400 text-lg">
