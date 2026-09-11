@@ -45,8 +45,11 @@ function proxyImg(url: string | undefined, w = 600): string | undefined {
 export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }: ArtworkCardProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [imgError, setImgError] = useState(false)
   const rawSrc = artwork.image_url ?? artwork.image_local_path ?? undefined
   const imgSrc = proxyImg(rawSrc)
+
+  if (imgError) return null
 
   return (
     <>
@@ -62,6 +65,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
         <Link href={`/artworks/${artwork.id}`} className="block w-full h-full">
           <img
             src={imgSrc}
+            onError={() => setImgError(true)}
             alt={artwork.title}
             className={cn(
               'w-full h-full object-cover transition-all duration-300',
