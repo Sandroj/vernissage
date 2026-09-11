@@ -99,7 +99,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
       </div>
 
       {/* Lightbox met metadata */}
-      {lightboxOpen && (
+      {lightboxOpen && imgSrc && (
         <Lightbox
           src={imgSrc}
           alt={artwork.title}
