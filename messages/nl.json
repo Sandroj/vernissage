@@ -2,6 +2,21 @@
   "Meta": {
     "description": "Houd bij welke kunstwerken je hebt gezien"
   },
+  "Search": {
+    "open": "Zoeken",
+    "eyebrow": "Doorzoek de collectie",
+    "title": "Wat wil je zien?",
+    "placeholder": "Zoek werk, kunstenaar, museum, stad of F-nummer…",
+    "hint": "Bijvoorbeeld: Zonnebloemen, Amsterdam, Kröller-Müller of F458",
+    "submit": "Zoeken",
+    "resultsFor": "Resultaten voor ‘{query}’",
+    "summary": "{works} werken · {museums} musea",
+    "museumResults": "Musea en steden",
+    "artworkResults": "Kunstwerken",
+    "worksCount": "{count} werken",
+    "emptyTitle": "Nog niets gevonden",
+    "emptyText": "Probeer een andere titel, kunstenaar, stad, museumnaam of catalogusnummer."
+  },
   "Nav": {
     "artists": "Kunstenaars",
     "museums": "Musea",
@@ -16,6 +31,16 @@
     "progress": "Jij hebt {seen} van {total} werken gezien.",
     "start": "Begin met het bijhouden van je kunstbezoeken.",
     "tagline": "Bijhouden welke kunstwerken je ooit hebt gezien.",
+    "eyebrow": "Jouw persoonlijke kunstarchief",
+    "heroTitle": "Kunst die je bijblijft.",
+    "heroText": "Ontdek meesterwerken, vind waar ze te zien zijn en bouw een persoonlijk archief van alles wat je in het echt hebt meegemaakt.",
+    "explore": "Verken de collectie",
+    "works": "werken",
+    "seen": "door jou gezien",
+    "collectionEyebrow": "In de collectie",
+    "ctaEyebrow": "Maak het persoonlijk",
+    "ctaMuseums": "Vind musea",
+    "yourCollection": "Jouw collectie",
     "ctaTitle": "Maak een gratis account aan",
     "ctaText": "Houd bij welke kunstwerken je hebt gezien, beoordeel ze en deel je voortgang.",
     "ctaRegister": "Account aanmaken",
@@ -26,6 +51,9 @@
   },
   "Artists": {
     "title": "Kunstenaars",
+    "eyebrow": "De grote meesters",
+    "intro": "Duik in volledige oeuvres, ontdek onverwachte werken en houd bij welke je in het echt hebt ontmoet.",
+    "collection": "Kunstenaar in de collectie",
     "count": "{count, plural, =1 {1 kunstenaar} other {# kunstenaars}}",
     "searchPlaceholder": "Zoek op naam of nationaliteit...",
     "noResults": "Geen kunstenaars gevonden voor “{query}”",
@@ -39,6 +67,7 @@
     "seenOf": "{seen} van {total} gezien"
   },
   "Grid": {
+    "collection": "Alle werken",
     "works": "{count} werken",
     "seen": "{count} gezien",
     "visible": "{count} zichtbaar",
@@ -70,6 +99,7 @@
     "fullDetails": "Bekijk volledige details"
   },
   "Artwork": {
+    "catalogue": "Catalogusnummer",
     "medium": "Medium",
     "type": "Type",
     "dimensions": "Afmetingen",

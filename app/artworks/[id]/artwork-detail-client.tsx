@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, AlertCircle, ExternalLink, Database } from 'lucide-react'
+import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
@@ -25,6 +25,10 @@ interface ArtworkDetailClientProps {
     image_url?: string | null
     source_url?: string | null
     source_name?: string | null
+    catalogue_id?: string | null
+    alternate_titles?: string | null
+    location_confidence?: string | null
+    location_verified_at?: string | Date | null
     artist: { id: number; name: string; slug: string }
     museum?: { name: string; city: string; country: string } | null
   }
@@ -92,29 +96,29 @@ export default function ArtworkDetailClient({
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="mx-auto max-w-6xl pb-12">
       {/* Back */}
       <Link
         href={`/artists/${artwork.artist.slug}`}
-        className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-white text-sm mb-6 transition-colors group"
+        className="group mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-stone-500 transition-colors hover:text-[#4256cc]"
       >
         <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
         {artwork.artist.name}
       </Link>
 
       {/* Tweekoloms layout op desktop, gestapeld op mobiel */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-10">
 
         {/* LINKS: Afbeelding — altijd dominant */}
         <div>
           <div
-            className="rounded-2xl overflow-hidden bg-zinc-900 cursor-zoom-in border border-white/5 hover:border-white/10 transition-colors"
+            className="cursor-zoom-in overflow-hidden rounded-[2rem] bg-[#e5ded1] p-3 shadow-[0_30px_80px_rgba(68,52,30,.13)] ring-1 ring-black/8 transition hover:shadow-[0_35px_95px_rgba(68,52,30,.2)] sm:p-5"
             onClick={() => setLightboxOpen(true)}
           >
             <img
               src={imgSrc}
               alt={artwork.title}
-              className="w-full object-contain max-h-[75vh]"
+              className="max-h-[78vh] w-full rounded-[1.2rem] object-contain"
             />
           </div>
           {lightboxOpen && (
@@ -129,21 +133,21 @@ export default function ArtworkDetailClient({
         </div>
 
         {/* RECHTS: Alle metadata — compact en hiërarchisch */}
-        <div className="space-y-5">
+        <aside className="paper-card space-y-6 rounded-[2rem] p-6 sm:p-8 lg:sticky lg:top-24">
 
           {/* Titel + jaar */}
           <div>
             <div className="flex items-start justify-between gap-2">
-              <h1 className="text-xl font-bold text-white leading-snug">{artwork.title}</h1>
+              <h1 className="font-display text-4xl font-semibold leading-[1.02] text-stone-900">{artwork.title}</h1>
               <ShareMenu url={`/artworks/${artwork.id}`} title={`${artwork.title} — ${artwork.artist.name}`} />
             </div>
-            <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-400">
-              <Link href={`/artists/${artwork.artist.slug}`} className="hover:text-indigo-400 transition-colors font-medium">
+            <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-stone-500">
+              <Link href={`/artists/${artwork.artist.slug}`} className="font-semibold text-[#4256cc] transition-colors hover:text-[#3447b8]">
                 {artwork.artist.name}
               </Link>
               {yearLabel && (
                 <>
-                  <span className="text-zinc-600">·</span>
+                  <span className="text-stone-300">·</span>
                   <span>{yearLabel}</span>
                 </>
               )}
@@ -157,25 +161,26 @@ export default function ArtworkDetailClient({
           </div>
 
           {/* Scheidingslijn */}
-          <div className="border-t border-white/5" />
+          <div className="border-t border-black/8" />
 
           {/* Metadata lijst */}
           <div className="space-y-3">
+            {artwork.catalogue_id && <MetaRow label={t('catalogue')} value={artwork.catalogue_id} />}
             {artwork.medium_raw && (
               <MetaRow label={t('medium')} value={artwork.medium_raw} />
             )}
             {isLoggedIn ? (
               <div>
-                <p className="text-zinc-500 text-xs uppercase tracking-widest mb-0.5">{t('type')}</p>
+                <p className="mb-0.5 text-xs uppercase tracking-widest text-stone-400">{t('type')}</p>
                 <select
                   value={type}
                   onChange={(e) => changeType(e.target.value)}
                   title={t('typeEditHint')}
-                  className="bg-transparent text-white text-sm leading-snug -ml-0.5 pr-5 cursor-pointer hover:text-indigo-300 focus:outline-none appearance-none border-b border-dashed border-white/20"
+                  className="-ml-0.5 cursor-pointer appearance-none border-b border-dashed border-black/20 bg-transparent pr-5 text-sm leading-snug text-stone-900 hover:text-[#4256cc] focus:outline-none"
                 >
                   {!type && <option value="">—</option>}
                   {TYPES.map((v) => (
-                    <option key={v} value={v} className="bg-zinc-900">{t(`typeValue.${v}`)}</option>
+                    <option key={v} value={v} className="bg-white">{t(`typeValue.${v}`)}</option>
                   ))}
                 </select>
               </div>
@@ -187,22 +192,22 @@ export default function ArtworkDetailClient({
             )}
             {artwork.museum && (
               <div>
-                <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1">{t('location')}</p>
+                <p className="mb-2 text-xs uppercase tracking-widest text-stone-400">{t('location')}</p>
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="text-white text-sm">
-                      <Link href="#" className="hover:text-indigo-400 transition-colors">
+                    <p className="flex items-center gap-1.5 text-sm font-semibold text-stone-900"><MapPin size={13} className="text-[#ed694c]" />
+                      <span>
                         {artwork.museum.name}
-                      </Link>
+                      </span>
                     </p>
-                    <p className="text-zinc-500 text-xs mt-0.5">
+                    <p className="ml-5 mt-1 text-xs text-stone-500">
                       {[artwork.museum.city, artwork.museum.country && tc.has(artwork.museum.country) ? tc(artwork.museum.country) : artwork.museum.country].filter(Boolean).join(', ')}
                     </p>
                   </div>
                   {isLoggedIn && (
                     <button
                       onClick={() => setReportOpen(!reportOpen)}
-                      className="flex items-center gap-1 text-xs text-zinc-600 hover:text-amber-400 transition-colors shrink-0 mt-0.5"
+                      className="mt-0.5 flex shrink-0 items-center gap-1 text-xs text-stone-400 transition-colors hover:text-amber-600"
                       title={t('reportTooltip')}
                     >
                       <AlertCircle size={12} />
@@ -216,13 +221,13 @@ export default function ArtworkDetailClient({
 
           {/* Report form */}
           {reportOpen && (
-            <div className="bg-amber-950/20 border border-amber-500/20 rounded-xl p-3.5 space-y-2.5">
-              <p className="text-amber-300 text-xs font-medium">{t('reportTitle')}</p>
+            <div className="space-y-2.5 rounded-xl border border-amber-500/25 bg-amber-50 p-3.5">
+              <p className="text-xs font-medium text-amber-800">{t('reportTitle')}</p>
               <textarea
                 value={reportMsg}
                 onChange={(e) => setReportMsg(e.target.value)}
                 placeholder={t('reportPlaceholder')}
-                className="w-full bg-zinc-900 border border-white/10 rounded-lg p-2.5 text-xs text-white placeholder-zinc-600 resize-none focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+                className="w-full resize-none rounded-lg border border-black/10 bg-white p-2.5 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-amber-500/50"
                 rows={3}
               />
               <div className="flex gap-2">
@@ -231,7 +236,7 @@ export default function ArtworkDetailClient({
                   {t('send')}
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => setReportOpen(false)}
-                  className="text-zinc-400 hover:text-white h-7 text-xs">
+                  className="h-7 text-xs text-stone-500 hover:text-stone-900">
                   {t('cancel')}
                 </Button>
               </div>
@@ -239,12 +244,12 @@ export default function ArtworkDetailClient({
           )}
 
           {/* Scheidingslijn */}
-          <div className="border-t border-white/5" />
+          <div className="border-t border-black/8" />
 
           {/* Bron */}
           <div className="space-y-1.5">
             {artwork.source_name && (
-              <div className="flex items-center gap-1.5 text-zinc-600 text-xs">
+              <div className="flex items-center gap-1.5 text-xs text-stone-400">
                 <Database size={11} />
                 <span>{t('source', { name: artwork.source_name })}</span>
               </div>
@@ -254,7 +259,7 @@ export default function ArtworkDetailClient({
                 href={artwork.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-zinc-600 hover:text-zinc-400 text-xs transition-colors"
+                className="flex items-center gap-1.5 text-xs text-stone-400 transition-colors hover:text-[#4256cc]"
               >
                 <ExternalLink size={11} />
                 {t('viewOriginal')}
@@ -262,7 +267,7 @@ export default function ArtworkDetailClient({
             )}
           </div>
 
-        </div>
+        </aside>
       </div>
 
       <SeenModal
@@ -283,7 +288,7 @@ function SeenButton({ seen, isLoggedIn, onOpen, t }: { seen: unknown; isLoggedIn
   if (!isLoggedIn) {
     return (
       <Link href="/login">
-        <Button variant="outline" size="sm" className="border-white/10 text-white hover:bg-white/5 text-xs h-8">
+        <Button variant="outline" size="sm" className="h-9 rounded-full border-black/10 bg-white/60 px-4 text-xs text-stone-800 hover:bg-white">
           {t('loginToMark')}
         </Button>
       </Link>
@@ -296,8 +301,8 @@ function SeenButton({ seen, isLoggedIn, onOpen, t }: { seen: unknown; isLoggedIn
       className={cn(
         'gap-1.5 h-8 text-xs',
         seen
-          ? 'bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40'
-          : 'bg-indigo-600 hover:bg-indigo-500 text-white border-0'
+          ? 'border border-[#4256cc]/25 bg-[#e7e9fa] text-[#3447b8] hover:bg-[#dce0fa]'
+          : 'border-0 bg-[#ed694c] text-white hover:bg-[#db573c]'
       )}
     >
       {!!seen && <Check size={12} />}
@@ -307,15 +312,15 @@ function SeenButton({ seen, isLoggedIn, onOpen, t }: { seen: unknown; isLoggedIn
 }
 
 function SeenCount({ count, t }: { count: number; t: T }) {
-  if (count === 0) return <span className="text-zinc-600 text-xs">{t('nobodyYet')}</span>
-  return <span className="text-zinc-500 text-xs">{t('seenBy', { count })}</span>
+  if (count === 0) return <span className="text-xs text-stone-400">{t('nobodyYet')}</span>
+  return <span className="text-xs text-stone-500">{t('seenBy', { count })}</span>
 }
 
 function MetaRow({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-zinc-500 text-xs uppercase tracking-widest mb-0.5">{label}</p>
-      <p className="text-white text-sm leading-snug">{value}</p>
+      <p className="mb-0.5 text-xs uppercase tracking-widest text-stone-400">{label}</p>
+      <p className="text-sm leading-snug text-stone-900">{value}</p>
     </div>
   )
 }

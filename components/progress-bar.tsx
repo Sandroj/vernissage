@@ -24,16 +24,16 @@ export default function ProgressBar({ value, seen, total, className, animate = t
   return (
     <div className={cn('space-y-1.5', className)}>
       <div className="flex justify-between text-xs">
-        <span className="text-zinc-400">{t('seenOf', { seen, total })}</span>
-        <span className={cn('font-medium', value > 0 ? 'text-indigo-400' : 'text-zinc-600')}>{Math.round(value)}%</span>
+        <span className="text-stone-500">{t('seenOf', { seen, total })}</span>
+        <span className={cn('font-semibold', value > 0 ? 'text-[#4256cc]' : 'text-stone-400')}>{Math.round(value)}%</span>
       </div>
-      <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-black/10 rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-700 ease-out"
           style={{
             width: `${display}%`,
             background: display > 0
-              ? 'linear-gradient(90deg, #6366f1, #8b5cf6)'
+              ? 'linear-gradient(90deg, #4256cc, #746ddf 58%, #ed694c)'
               : 'transparent'
           }}
         />

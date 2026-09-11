@@ -4,6 +4,7 @@ import Link from 'next/link'
 import ProgressBar from '@/components/progress-bar'
 import { proxyImg } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
+import { ArrowUpRight } from 'lucide-react'
 
 interface ArtistCardProps {
   artist: {
@@ -37,31 +38,33 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
   return (
     <Link
       href={`/artists/${artist.slug}`}
-      className="group bg-zinc-900 rounded-xl p-5 hover:bg-zinc-800/80 transition-all duration-200 block border border-white/5 hover:border-white/10"
+      className="paper-card group relative block overflow-hidden rounded-[1.75rem] transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
     >
-      <div className="flex items-center gap-4 mb-4">
-        <div className="w-16 h-16 rounded-xl bg-zinc-800 overflow-hidden flex-shrink-0 ring-2 ring-white/10 group-hover:ring-indigo-500/40 transition-all">
+      <div className="relative aspect-[4/3] overflow-hidden bg-stone-200">
           {imgSrc ? (
             <img
               src={imgSrc}
               onError={() => setImgError(true)}
               alt={t('featuredAlt', { name: artist.name })}
-              className="w-full h-full object-cover"
+              className="size-full object-cover transition duration-700 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-lg font-bold text-zinc-500">
+            <div className="flex size-full items-center justify-center bg-[#e7e9fa] font-display text-6xl font-bold text-[#4256cc]/50">
               {artist.name[0]}
             </div>
           )}
-        </div>
-        <div className="min-w-0">
-          <h2 className="font-semibold text-white group-hover:text-indigo-200 transition-colors truncate">{artist.name}</h2>
-          <p className="text-zinc-500 text-xs mt-0.5">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        <span className="absolute right-4 top-4 grid size-9 place-items-center rounded-full bg-[#fffdf8]/90 text-stone-800 opacity-0 shadow-lg transition group-hover:opacity-100"><ArrowUpRight size={16} /></span>
+      </div>
+      <div className="p-5 sm:p-6">
+        <div className="mb-5 min-w-0">
+          <h2 className="font-display truncate text-3xl font-semibold text-stone-900 transition-colors group-hover:text-[#4256cc]">{artist.name}</h2>
+          <p className="mt-1 text-xs font-medium uppercase tracking-[.12em] text-stone-400">
             {[artist.nationality, years].filter(Boolean).join(' · ')}
           </p>
         </div>
+        <ProgressBar value={pct} seen={seenCount} total={total} animate={false} />
       </div>
-      <ProgressBar value={pct} seen={seenCount} total={total} animate={false} />
     </Link>
   )
 }

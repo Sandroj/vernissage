@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import ProgressBar from '@/components/progress-bar'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Palette } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, MapPin, Sparkles } from 'lucide-react'
 import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 
@@ -13,7 +13,15 @@ export default async function DashboardPage() {
   const t = await getTranslations('Home')
 
   const artists = await prisma.artist.findMany({
-    include: { _count: { select: { artworks: { where: hasImage } } } },
+    include: {
+      _count: { select: { artworks: { where: hasImage } } },
+      artworks: {
+        where: hasImage,
+        take: 2,
+        orderBy: { id: 'asc' },
+        select: { id: true, title: true, image_url: true, image_local_path: true },
+      },
+    },
     orderBy: { name: 'asc' },
   })
 
@@ -48,57 +56,57 @@ export default async function DashboardPage() {
 
   const totalSeen = Object.values(seenCounts).reduce((a, b) => a + b, 0)
   const totalArtworks = artists.reduce((a, b) => a + b._count.artworks, 0)
+  const heroWorks = artists.flatMap((artist) => artist.artworks.map((artwork) => ({ ...artwork, artist: artist.name }))).slice(0, 6)
 
   return (
-    <div className="space-y-12">
-      {/* Hero section */}
-      <div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-2">
-          {session?.user?.name
-            ? t('hello', { name: session.user.name.split(' ')[0] })
-            : 'Vernissage'
-          }
-        </h1>
-        <p className="text-zinc-400 text-lg">
-          {session
-            ? totalSeen > 0
-              ? t('progress', { seen: totalSeen, total: totalArtworks })
-              : t('start')
-            : t('tagline')
-          }
-        </p>
-      </div>
+    <div className="space-y-16 sm:space-y-24 pb-12">
+      <section className="relative overflow-hidden rounded-[2rem] bg-[#25231f] px-6 py-8 text-white sm:px-10 sm:py-12 lg:min-h-[570px] lg:px-14 lg:py-16">
+        <div className="absolute -left-24 top-1/2 size-72 -translate-y-1/2 rounded-full bg-[#ed694c]/25 blur-3xl" />
+        <div className="absolute right-20 top-0 size-72 rounded-full bg-[#5368df]/25 blur-3xl" />
+        <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_.95fr]">
+          <div className="max-w-2xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-medium text-white/75">
+              <Sparkles size={13} className="text-[#f4b548]" /> {t('eyebrow')}
+            </div>
+            <h1 className="font-display text-[clamp(3.6rem,8vw,7.7rem)] font-medium leading-[.82] text-[#fffaf0]">
+              {session?.user?.name ? t('hello', { name: session.user.name.split(' ')[0] }) : t('heroTitle')}
+            </h1>
+            <p className="mt-7 max-w-xl text-base leading-relaxed text-white/62 sm:text-lg">
+              {session ? (totalSeen > 0 ? t('progress', { seen: totalSeen, total: totalArtworks }) : t('start')) : t('heroText')}
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href="/artists"><Button className="h-12 rounded-full bg-[#ed694c] px-6 text-white hover:bg-[#db573c]">{t('explore')} <ArrowUpRight size={16} /></Button></Link>
+              {!session && <Link href="/login?mode=register"><Button variant="outline" className="h-12 rounded-full border-white/20 bg-white/5 px-6 text-white hover:bg-white/10">{t('ctaRegister')}</Button></Link>}
+            </div>
+            <div className="mt-12 flex gap-8 border-t border-white/12 pt-6 text-sm text-white/50">
+              <div><span className="block text-2xl font-semibold text-white">{totalArtworks.toLocaleString()}</span>{t('works')}</div>
+              <div><span className="block text-2xl font-semibold text-white">{artists.length}</span>{t('artists')}</div>
+              <div><span className="block text-2xl font-semibold text-white">{totalSeen}</span>{t('seen')}</div>
+            </div>
+          </div>
 
-      {/* Not logged in CTA */}
-      {!session && (
-        <div className="bg-gradient-to-r from-indigo-950/60 to-violet-950/60 rounded-2xl p-8 border border-indigo-500/20 text-center">
-          <Palette size={40} className="text-indigo-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white mb-2">{t('ctaTitle')}</h2>
-          <p className="text-zinc-400 mb-6 max-w-md mx-auto text-sm">
-            {t('ctaText')}
-          </p>
-          <div className="flex gap-3 justify-center">
-            <Link href="/login?mode=register">
-              <Button className="bg-indigo-600 hover:bg-indigo-500 border-0">{t('ctaRegister')}</Button>
-            </Link>
-            <Link href="/artists">
-              <Button variant="outline" className="border-white/10 text-white hover:bg-white/5">
-                {t('ctaArtists')}
-              </Button>
-            </Link>
+          <div className="grid h-[370px] grid-cols-2 grid-rows-2 gap-3 sm:h-[430px]">
+            {heroWorks.slice(0, 4).map((work, index) => (
+              <Link key={work.id} href={`/artworks/${work.id}`} className={`group relative overflow-hidden rounded-[1.4rem] ${index === 0 ? 'row-span-2' : ''}`}>
+                <img src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'} alt={work.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-12 opacity-0 transition group-hover:opacity-100">
+                  <p className="line-clamp-1 text-sm font-medium">{work.title}</p><p className="text-xs text-white/60">{work.artist}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
-      )}
+      </section>
 
       {/* Artists progress */}
-      <div>
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-semibold text-white">{t('artists')}</h2>
-          <Link href="/artists" className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-indigo-400 transition-colors">
+      <section>
+        <div className="mb-7 flex items-end justify-between">
+          <div><p className="eyebrow mb-2">{t('collectionEyebrow')}</p><h2 className="font-display text-4xl font-medium text-stone-900 sm:text-5xl">{t('artists')}</h2></div>
+          <Link href="/artists" className="flex items-center gap-1.5 text-sm font-medium text-stone-500 transition-colors hover:text-[#4256cc]">
             {t('allArtists')} <ArrowRight size={14} />
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {artists.map((artist) => {
             const seen = seenCounts[artist.id] ?? 0
             const total = artist._count.artworks
@@ -107,12 +115,15 @@ export default async function DashboardPage() {
               <Link
                 key={artist.id}
                 href={`/artists/${artist.slug}`}
-                className="group flex items-center gap-4 bg-zinc-900/80 rounded-xl p-4 border border-white/5 hover:border-white/10 hover:bg-zinc-900 transition-all"
+                className="paper-card group flex items-center gap-4 rounded-2xl p-5 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
+                <div className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
+                  {artist.artworks[0] && <img src={proxyImg(artist.artworks[0].image_local_path ?? artist.artworks[0].image_url) ?? ''} alt="" className="size-full object-cover transition duration-500 group-hover:scale-105" />}
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-white text-sm group-hover:text-indigo-200 transition-colors">{artist.name}</span>
-                    <span className="text-zinc-500 text-xs ml-4">{seen}/{total}</span>
+                    <span className="font-display text-xl font-semibold text-stone-900 transition-colors group-hover:text-[#4256cc]">{artist.name}</span>
+                    <span className="ml-4 text-xs text-stone-400">{seen}/{total}</span>
                   </div>
                   <ProgressBar value={pct} seen={seen} total={total} animate={false} />
                 </div>
@@ -120,27 +131,34 @@ export default async function DashboardPage() {
             )
           })}
         </div>
-      </div>
+      </section>
+
+      {!session && (
+        <section className="grid gap-6 overflow-hidden rounded-[2rem] bg-[#e7e9fa] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div><p className="eyebrow mb-2">{t('ctaEyebrow')}</p><h2 className="font-display text-4xl font-medium text-stone-900">{t('ctaTitle')}</h2><p className="mt-3 max-w-2xl text-stone-600">{t('ctaText')}</p></div>
+          <div className="flex flex-wrap gap-3"><Link href="/login?mode=register"><Button className="h-11 rounded-full bg-[#4256cc] px-6 text-white hover:bg-[#3447b8]">{t('ctaRegister')}</Button></Link><Link href="/museums"><Button variant="outline" className="h-11 rounded-full border-black/10 bg-white/60 px-6 text-stone-800"><MapPin size={15} /> {t('ctaMuseums')}</Button></Link></div>
+        </section>
+      )}
 
       {/* Recent seen */}
       {recentSeen.length > 0 && (
-        <div>
-          <h2 className="text-xl font-semibold text-white mb-5">{t('recentlySeen')}</h2>
+        <section>
+          <p className="eyebrow mb-2">{t('yourCollection')}</p><h2 className="font-display mb-6 text-4xl font-medium text-stone-900">{t('recentlySeen')}</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
             {recentSeen.map((s) => (
               <Link key={s.id} href={`/artworks/${s.artworkId}`} className="group">
-                <div className="aspect-square rounded-lg overflow-hidden bg-zinc-900 ring-1 ring-white/5 group-hover:ring-indigo-500/40 transition-all">
+                <div className="aspect-square overflow-hidden rounded-2xl bg-stone-200 shadow-sm ring-1 ring-black/5 transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
                   <img
                     src={s.artwork.image_local_path ?? proxyImg(s.artwork.image_url) ?? '/placeholder.jpg'}
                     alt={s.artwork.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <p className="text-xs text-zinc-500 mt-1 truncate group-hover:text-zinc-300 transition-colors">{s.artwork.title}</p>
+                <p className="mt-2 truncate text-xs text-stone-500 transition-colors group-hover:text-stone-900">{s.artwork.title}</p>
               </Link>
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   )

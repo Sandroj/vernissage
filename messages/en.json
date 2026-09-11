@@ -2,6 +2,21 @@
   "Meta": {
     "description": "Keep track of the artworks you've seen"
   },
+  "Search": {
+    "open": "Search",
+    "eyebrow": "Search the collection",
+    "title": "What would you like to see?",
+    "placeholder": "Search artwork, artist, museum, city or F-number…",
+    "hint": "Try Sunflowers, Amsterdam, Kröller-Müller or F458",
+    "submit": "Search",
+    "resultsFor": "Results for ‘{query}’",
+    "summary": "{works} artworks · {museums} museums",
+    "museumResults": "Museums and cities",
+    "artworkResults": "Artworks",
+    "worksCount": "{count} artworks",
+    "emptyTitle": "Nothing found yet",
+    "emptyText": "Try another title, artist, city, museum name or catalogue number."
+  },
   "Nav": {
     "artists": "Artists",
     "museums": "Museums",
@@ -16,6 +31,16 @@
     "progress": "You've seen {seen} of {total} works.",
     "start": "Start tracking your museum visits.",
     "tagline": "Keep track of every artwork you've ever seen.",
+    "eyebrow": "Your personal art archive",
+    "heroTitle": "Art that stays with you.",
+    "heroText": "Discover masterpieces, find where they can be seen and build a personal archive of everything you have experienced in real life.",
+    "explore": "Explore the collection",
+    "works": "artworks",
+    "seen": "seen by you",
+    "collectionEyebrow": "In the collection",
+    "ctaEyebrow": "Make it personal",
+    "ctaMuseums": "Find museums",
+    "yourCollection": "Your collection",
     "ctaTitle": "Create a free account",
     "ctaText": "Track which artworks you've seen, rate them and share your progress.",
     "ctaRegister": "Create account",
@@ -26,6 +51,9 @@
   },
   "Artists": {
     "title": "Artists",
+    "eyebrow": "The great masters",
+    "intro": "Dive into complete bodies of work, discover unexpected pieces and remember which ones you met in person.",
+    "collection": "Artist in the collection",
     "count": "{count, plural, =1 {1 artist} other {# artists}}",
     "searchPlaceholder": "Search by name or nationality...",
     "noResults": "No artists found for “{query}”",
@@ -39,6 +67,7 @@
     "seenOf": "{seen} of {total} seen"
   },
   "Grid": {
+    "collection": "All artworks",
     "works": "{count} works",
     "seen": "{count} seen",
     "visible": "{count} shown",
@@ -70,6 +99,7 @@
     "fullDetails": "View full details"
   },
   "Artwork": {
+    "catalogue": "Catalogue number",
     "medium": "Medium",
     "type": "Type",
     "dimensions": "Dimensions",

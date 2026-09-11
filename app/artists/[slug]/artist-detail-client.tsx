@@ -3,6 +3,8 @@ import { useState } from 'react'
 import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
 import { useTranslations } from 'next-intl'
+import { ArrowDown } from 'lucide-react'
+import { proxyImg } from '@/lib/utils'
 
 interface ArtworkWithMuseum {
   id: number
@@ -43,6 +45,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   const seenCount = Object.keys(seenMap).length
   const total = artist.artworks.length
   const pct = total > 0 ? (seenCount / total) * 100 : 0
+  const cover = proxyImg(artist.artworks.find((a) => a.image_url || a.image_local_path)?.image_local_path ?? artist.artworks.find((a) => a.image_url || a.image_local_path)?.image_url)
 
   const years = artist.birth_year
     ? artist.death_year
@@ -66,16 +69,18 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   }
 
   return (
-    <div>
+    <div className="pb-12">
       {/* Artist hero */}
-      <div className="relative mb-10 bg-gradient-to-b from-zinc-900/80 to-transparent rounded-2xl p-6 sm:p-8 border border-white/5">
-        <div className="flex flex-col sm:flex-row items-start gap-6">
+      <div className="relative mb-10 min-h-[430px] overflow-hidden rounded-[2rem] bg-[#25231f] p-6 text-white sm:p-9 lg:p-12">
+        {cover && <img src={cover} alt="" className="absolute inset-0 size-full object-cover opacity-25 blur-[1px]" />}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#24211d] via-[#24211d]/88 to-[#24211d]/30" />
+        <div className="relative flex min-h-[350px] flex-col justify-end gap-7 sm:flex-row sm:items-end sm:justify-start">
           {/* Portrait */}
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-zinc-800 overflow-hidden flex-shrink-0 ring-1 ring-white/10">
+          <div className="size-28 shrink-0 overflow-hidden rounded-[1.4rem] bg-white/10 ring-1 ring-white/20 sm:size-36">
             {artist.portrait_url ? (
               <img src={artist.portrait_url} alt={artist.name} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-zinc-600">
+              <div className="flex size-full items-center justify-center font-display text-5xl font-bold text-white/40">
                 {artist.name[0]}
               </div>
             )}
@@ -83,42 +88,42 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
 
           {/* Info */}
           <div className="flex-1 min-w-0">
-            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-1">{artist.name}</h1>
+            <p className="mb-3 text-xs font-bold uppercase tracking-[.18em] text-[#f4b548]">{t('collection')}</p>
+            <h1 className="font-display mb-2 text-5xl font-medium leading-none text-[#fffaf0] sm:text-7xl">{artist.name}</h1>
             {(artist.nationality || years) && (
-              <p className="text-zinc-400 text-sm mb-4">
+              <p className="mb-5 text-sm text-white/55">
                 {[artist.nationality, years].filter(Boolean).join(' · ')}
               </p>
             )}
 
             {/* Progress */}
-            <div className="max-w-sm mb-4">
+            <div className="mb-5 max-w-md [&_span]:text-white/65">
               <ProgressBar value={pct} seen={seenCount} total={total} animate={true} />
             </div>
 
             {/* Stats row */}
-            <div className="flex gap-4 text-sm">
+            <div className="flex gap-7 text-sm">
               <div>
-                <span className="text-2xl font-bold text-white">{total}</span>
-                <span className="text-zinc-500 ml-1.5">{t('works')}</span>
+                <span className="text-2xl font-bold text-white">{total}</span><span className="ml-1.5 text-white/45">{t('works')}</span>
               </div>
               {seenCount > 0 && (
                 <div>
-                  <span className="text-2xl font-bold text-indigo-400">{seenCount}</span>
-                  <span className="text-zinc-500 ml-1.5">{t('seen')}</span>
+                  <span className="text-2xl font-bold text-[#f4b548]">{seenCount}</span><span className="ml-1.5 text-white/45">{t('seen')}</span>
                 </div>
               )}
             </div>
 
             {/* Bio */}
             {artist.bio && (
-              <p className="text-zinc-400 text-sm mt-4 leading-relaxed max-w-2xl line-clamp-3">{artist.bio}</p>
+              <p className="mt-5 line-clamp-3 max-w-2xl text-sm leading-relaxed text-white/60">{artist.bio}</p>
             )}
           </div>
+          <a href="#works" className="absolute bottom-0 right-0 hidden size-12 place-items-center rounded-full border border-white/15 bg-white/8 text-white/70 transition hover:bg-white/15 sm:grid"><ArrowDown size={18} /></a>
         </div>
       </div>
 
       {/* Werkenraster */}
-      <ArtworkGrid
+      <div id="works"><ArtworkGrid
         artworks={artist.artworks.map((a) => ({
           ...a,
           artist: { name: artist.name, slug: artist.slug },
@@ -126,7 +131,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
         seenMap={seenMap}
         isLoggedIn={isLoggedIn}
         onRefresh={refresh}
-      />
+      /></div>
     </div>
   )
 }

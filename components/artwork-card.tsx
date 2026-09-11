@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, CheckCircle2 } from 'lucide-react'
+import { Check, CheckCircle2, MapPin } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
 import { cn, proxyImg } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
@@ -13,6 +13,8 @@ interface Artwork {
   type_normalized?: string | null
   medium_raw?: string | null
   dimensions_raw?: string | null
+  catalogue_id?: string | null
+  alternate_titles?: string | null
   image_local_path?: string | null
   image_url?: string | null
   museum?: { name: string; city: string } | null
@@ -46,14 +48,8 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
 
   return (
     <>
-      <div
-        className={cn(
-          'relative group rounded-lg overflow-hidden bg-zinc-900 aspect-square transition-all duration-200',
-          seen
-            ? 'ring-2 ring-indigo-500/70 shadow-lg shadow-indigo-500/10'
-            : 'ring-1 ring-white/5 hover:ring-white/15'
-        )}
-      >
+      <article className="group min-w-0">
+      <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-1 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl', seen ? 'ring-[#4256cc]/55' : 'ring-black/5')}>
         {/* Image — klikken gaat naar de detailpagina */}
         <Link href={`/artworks/${artwork.id}`} className="block w-full h-full">
           <img
@@ -61,7 +57,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
             onError={() => setImgError(true)}
             alt={artwork.title}
             className={cn(
-              'w-full h-full object-cover transition-all duration-300',
+              'size-full object-cover transition-all duration-700',
               seen ? 'brightness-90' : 'group-hover:scale-[1.03]'
             )}
             loading="lazy"
@@ -70,23 +66,23 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
 
         {/* Gezien indicator */}
         {seen && (
-          <div className="absolute top-2 left-2 bg-indigo-500/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1 pointer-events-none">
+          <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1 rounded-full bg-[#4256cc]/92 px-2.5 py-1 backdrop-blur-sm">
             <CheckCircle2 size={10} className="text-white" />
             <span className="text-white text-[10px] font-medium">{t('seenBadge')}</span>
           </div>
         )}
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-2 gap-1.5 pointer-events-none">
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-end gap-1.5 bg-gradient-to-t from-black/75 via-transparent to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           {/* Gezien knop */}
           {isLoggedIn && (
             <button
               onClick={() => setModalOpen(true)}
               className={cn(
-                'w-full flex items-center justify-center gap-1.5 text-white text-xs py-1.5 rounded-md transition-colors pointer-events-auto',
+                'pointer-events-auto flex w-full items-center justify-center gap-1.5 rounded-full py-2 text-xs font-semibold text-white transition-colors',
                 seen
-                  ? 'bg-indigo-600/80 hover:bg-indigo-600'
-                  : 'bg-indigo-600 hover:bg-indigo-500'
+                  ? 'bg-[#4256cc]/90 hover:bg-[#3447b8]'
+                  : 'bg-[#ed694c] hover:bg-[#db573c]'
               )}
             >
               <Check size={11} /> {seen ? t('edit') : t('markSeen')}
@@ -94,6 +90,12 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
           )}
         </div>
       </div>
+      <Link href={`/artworks/${artwork.id}`} className="block px-1 pt-3">
+        <h3 className="line-clamp-2 font-display text-[1.08rem] font-semibold leading-tight text-stone-900 transition group-hover:text-[#4256cc]">{artwork.title}</h3>
+        <p className="mt-1 truncate text-[11px] font-medium uppercase tracking-[.08em] text-stone-400">{[artwork.artist?.name, artwork.year_start].filter(Boolean).join(' · ')}</p>
+        {artwork.museum && <p className="mt-1.5 flex items-center gap-1 truncate text-xs text-stone-500"><MapPin size={11} className="shrink-0 text-[#ed694c]" /> {artwork.museum.city || artwork.museum.name}</p>}
+      </Link>
+      </article>
 
       {/* Seen modal */}
       {isLoggedIn && (

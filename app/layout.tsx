@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import Providers from '@/components/session-provider'
 import Nav from '@/components/nav'
@@ -7,8 +7,8 @@ import { Toaster } from 'sonner'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
 
-const inter = Inter({
-  subsets: ['latin'],
+const geist = localFont({
+  src: './fonts/GeistVF.woff',
   variable: '--font-sans',
 })
 
@@ -20,22 +20,22 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   return (
-    <html lang={locale} className={inter.variable}>
+    <html lang={locale} className={geist.variable}>
       <body className="min-h-screen antialiased">
         <NextIntlClientProvider>
         <Providers>
           <Nav />
-          <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-10">
             {children}
           </main>
           <Toaster
-            theme="dark"
+            theme="light"
             position="bottom-right"
             toastOptions={{
               style: {
-                background: '#18181b',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#fafafa',
+                background: '#fffdf8',
+                border: '1px solid rgba(52,45,34,.12)',
+                color: '#24211c',
               }
             }}
           />

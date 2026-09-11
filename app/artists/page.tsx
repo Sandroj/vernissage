@@ -43,15 +43,15 @@ export default async function ArtistsPage({
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <span className="text-slate-400 text-sm">{t('count', { count: artists.length })}</span>
+    <div className="pb-12">
+      <div className="mb-9 grid gap-5 md:grid-cols-[1fr_320px] md:items-end">
+        <div><p className="eyebrow mb-3">{t('eyebrow')}</p><h1 className="font-display text-6xl font-medium leading-none text-stone-900 sm:text-7xl">{t('title')}</h1><p className="mt-4 max-w-xl text-stone-500">{t('intro')}</p></div>
+        <span className="justify-self-start rounded-full bg-[#ed694c] px-4 py-2 text-sm font-semibold text-white md:justify-self-end">{t('count', { count: artists.length })}</span>
       </div>
 
       <ArtistsSearch defaultValue={q} />
 
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {artists.map((artist) => (
           <ArtistCard
             key={artist.id}
@@ -61,7 +61,7 @@ export default async function ArtistsPage({
           />
         ))}
         {artists.length === 0 && (
-          <p className="text-slate-400 col-span-full text-center py-12">
+          <p className="col-span-full py-16 text-center text-stone-500">
             {t('noResults', { query: q })}
           </p>
         )}

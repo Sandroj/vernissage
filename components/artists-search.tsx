@@ -19,13 +19,13 @@ export default function ArtistsSearch({ defaultValue }: { defaultValue: string }
   }
 
   return (
-    <div className="relative">
-      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+    <div className="paper-card relative rounded-2xl">
+      <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4256cc]" />
       <Input
         defaultValue={defaultValue}
         onChange={handleChange}
         placeholder={t('searchPlaceholder')}
-        className="pl-9 bg-slate-900 border-slate-700"
+        className="h-13 rounded-2xl border-0 bg-transparent pl-11 text-stone-900 shadow-none placeholder:text-stone-400 focus-visible:ring-[#4256cc]/30"
       />
     </div>
   )

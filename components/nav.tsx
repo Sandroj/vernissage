@@ -4,10 +4,11 @@ import { useSession, signOut } from 'next-auth/react'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Menu, X, Palette } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 import LocaleToggle from '@/components/locale-toggle'
+import GlobalSearch from '@/components/global-search'
 
 export default function Nav() {
   const { data: session } = useSession()
@@ -17,18 +18,20 @@ export default function Nav() {
 
   const links = [
     { href: '/artists', label: t('artists') },
-    // { href: '/museums', label: t('museums') }, // TODO: wereldkaart nog in ontwikkeling
+    { href: '/museums', label: t('museums') },
     { href: '/discover', label: t('discover') },
     ...(session ? [{ href: '/profile', label: t('profile') }] : []),
   ]
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/[0.06] backdrop-blur-xl bg-[#09090b]/80">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-white hover:opacity-80 transition-opacity">
-          <Palette size={18} className="text-indigo-400" />
-          <span>Vernissage</span>
+    <nav className="sticky top-0 z-50 border-b border-black/[0.07] bg-[#f8f3e9]/82 backdrop-blur-2xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[68px] flex items-center justify-between gap-5">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 text-stone-950 transition-opacity hover:opacity-70">
+          <span className="grid size-8 place-items-center rounded-full bg-[#ed694c] text-sm font-black text-white shadow-sm">V</span>
+          <span className="font-display text-xl font-semibold">Vernissage</span>
         </Link>
+
+        <GlobalSearch />
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-1">
@@ -37,10 +40,10 @@ export default function Nav() {
               key={l.href}
               href={l.href}
               className={cn(
-                'px-3 py-1.5 rounded-lg text-sm transition-colors',
+                'px-3 py-2 rounded-full text-sm font-medium transition-colors',
                 pathname.startsWith(l.href)
-                  ? 'text-white bg-white/10'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  ? 'text-[#4256cc] bg-[#e6e8fb]'
+                  : 'text-stone-600 hover:text-stone-950 hover:bg-black/5'
               )}
             >
               {l.label}
@@ -49,13 +52,13 @@ export default function Nav() {
           {session ? (
             <button
               onClick={() => signOut({ callbackUrl: '/login' })}
-              className="ml-2 px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+              className="ml-1 px-3 py-2 rounded-full text-sm text-stone-500 hover:text-stone-950 hover:bg-black/5 transition-colors"
             >
               {t('signOut')}
             </button>
           ) : (
             <Link href="/login" className="ml-2">
-              <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white border-0">
+              <Button size="sm" className="h-9 rounded-full bg-[#4256cc] px-4 text-white hover:bg-[#3447b8]">
                 {t('signIn')}
               </Button>
             </Link>
@@ -64,15 +67,16 @@ export default function Nav() {
         </div>
 
         <div className="md:hidden flex items-center gap-2">
+          <GlobalSearch compact />
           <LocaleToggle />
-          <button className="text-slate-400 hover:text-white p-1" onClick={() => setOpen(!open)} aria-label={t('menu')}>
+          <button className="grid size-9 place-items-center rounded-full border border-black/10 bg-white/70 text-stone-700" onClick={() => setOpen(!open)} aria-label={t('menu')}>
           {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-white/[0.06] px-4 py-3 flex flex-col gap-1 bg-[#09090b]">
+        <div className="md:hidden border-t border-black/[0.07] px-4 py-3 flex flex-col gap-1 bg-[#f8f3e9]">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -80,8 +84,8 @@ export default function Nav() {
               className={cn(
                 'px-3 py-2 rounded-lg text-sm transition-colors',
                 pathname.startsWith(l.href)
-                  ? 'text-white bg-white/10'
-                  : 'text-slate-300 hover:text-white hover:bg-white/5'
+                  ? 'text-[#4256cc] bg-[#e6e8fb]'
+                  : 'text-stone-700 hover:text-stone-950 hover:bg-black/5'
               )}
               onClick={() => setOpen(false)}
             >
@@ -90,13 +94,13 @@ export default function Nav() {
           ))}
           {session ? (
             <button
-              className="px-3 py-2 rounded-lg text-sm text-slate-400 text-left hover:text-white"
+              className="px-3 py-2 rounded-lg text-sm text-stone-500 text-left hover:text-stone-950"
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
               {t('signOut')}
             </button>
           ) : (
-            <Link href="/login" className="px-3 py-2 text-sm text-indigo-400" onClick={() => setOpen(false)}>
+            <Link href="/login" className="px-3 py-2 text-sm text-[#4256cc]" onClick={() => setOpen(false)}>
               {t('signIn')}
             </Link>
           )}
