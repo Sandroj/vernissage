@@ -24,7 +24,7 @@ export default function Nav() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-semibold text-white hover:opacity-80 transition-opacity">
           <Palette size={18} className="text-indigo-400" />
-          <span>Artlas</span>
+          <span>Vernissage</span>
         </Link>
 
         {/* Desktop links */}

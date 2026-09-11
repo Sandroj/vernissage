@@ -67,7 +67,7 @@ export default function LoginPage() {
     <div className="min-h-[70vh] flex items-center justify-center">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Artlas</h1>
+          <h1 className="text-2xl font-bold">Vernissage</h1>
           <p className="text-slate-400 mt-1 text-sm">
             {mode === 'login' ? 'Inloggen op je account' : 'Nieuw account aanmaken'}
           </p>

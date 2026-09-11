@@ -11,7 +11,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Artlas',
+  title: 'Vernissage',
   description: 'Houd bij welke kunstwerken je hebt gezien',
 }
 

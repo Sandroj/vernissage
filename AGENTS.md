@@ -37,7 +37,7 @@ waarheid; `HANDOFF.md` is het kompas.**
 
 <!-- ════════════════ EINDE AI-START — hieronder project-specifiek ════════════════ -->
 
-# Artlas — projectinstructies
+# Vernissage — projectinstructies
 
 <!-- Vul dit in voor dit specifieke project. De AI-START-flow hierboven staat
      los hiervan en hoef je niet aan te passen. -->
