@@ -46,3 +46,12 @@ next-env.d.ts
 
 # artwork uploads
 public/images/artworks/
+node_modules/
+.env
+.env.*
+*.log
+dist/
+build/
+__pycache__/
+.venv/
+venv/
