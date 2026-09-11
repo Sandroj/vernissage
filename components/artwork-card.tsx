@@ -38,7 +38,7 @@ interface ArtworkCardProps {
 export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }: ArtworkCardProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
-  const imgSrc = artwork.image_url ?? artwork.image_local_path ?? null
+  const imgSrc = artwork.image_url ?? artwork.image_local_path ?? undefined
 
   return (
     <>
