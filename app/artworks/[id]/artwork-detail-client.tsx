@@ -10,6 +10,8 @@ import { cn, proxyImg } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 
+const TYPES = ['painting', 'drawing', 'watercolor', 'work on paper', 'print']
+
 interface ArtworkDetailClientProps {
   artwork: {
     id: number
@@ -45,6 +47,7 @@ export default function ArtworkDetailClient({
   const [seen, setSeen] = useState(initialSeen)
   const [currentSeenCount, setCurrentSeenCount] = useState(seenCount)
   const [reportOpen, setReportOpen] = useState(false)
+  const [type, setType] = useState(artwork.type_normalized ?? '')
   const [reportMsg, setReportMsg] = useState('')
 
   const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url) ?? '/placeholder.jpg'
@@ -62,6 +65,18 @@ export default function ArtworkDetailClient({
       if (!seen && updated) setCurrentSeenCount((c) => c + 1)
     }
     toast(t('saved'))
+  }
+
+  async function changeType(next: string) {
+    const prev = type
+    setType(next)
+    const res = await fetch(`/api/artworks/${artwork.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type_normalized: next }),
+    })
+    if (res.ok) toast(t('typeSaved'))
+    else { setType(prev); toast.error(t('typeError')) }
   }
 
   async function submitReport() {
@@ -149,8 +164,23 @@ export default function ArtworkDetailClient({
             {artwork.medium_raw && (
               <MetaRow label={t('medium')} value={artwork.medium_raw} />
             )}
-            {artwork.type_normalized && (
-              <MetaRow label={t('type')} value={t.has(`typeValue.${artwork.type_normalized}`) ? t(`typeValue.${artwork.type_normalized}`) : capitalize(artwork.type_normalized)} />
+            {isLoggedIn ? (
+              <div>
+                <p className="text-zinc-500 text-xs uppercase tracking-widest mb-0.5">{t('type')}</p>
+                <select
+                  value={type}
+                  onChange={(e) => changeType(e.target.value)}
+                  title={t('typeEditHint')}
+                  className="bg-transparent text-white text-sm leading-snug -ml-0.5 pr-5 cursor-pointer hover:text-indigo-300 focus:outline-none appearance-none border-b border-dashed border-white/20"
+                >
+                  {!type && <option value="">—</option>}
+                  {TYPES.map((v) => (
+                    <option key={v} value={v} className="bg-zinc-900">{t(`typeValue.${v}`)}</option>
+                  ))}
+                </select>
+              </div>
+            ) : type && (
+              <MetaRow label={t('type')} value={t.has(`typeValue.${type}`) ? t(`typeValue.${type}`) : capitalize(type)} />
             )}
             {artwork.dimensions_raw && (
               <MetaRow label={t('dimensions')} value={artwork.dimensions_raw} />

@@ -95,7 +95,10 @@
       "watercolor": "Aquarel",
       "work on paper": "Werk op papier",
       "print": "Prent"
-    }
+    },
+    "typeSaved": "Type aangepast",
+    "typeError": "Type opslaan mislukt",
+    "typeEditHint": "Klik om het type te corrigeren"
   },
   "SeenModal": {
     "editTitle": "Bewerk",

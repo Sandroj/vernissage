@@ -95,7 +95,10 @@
       "watercolor": "Watercolour",
       "work on paper": "Work on paper",
       "print": "Print"
-    }
+    },
+    "typeSaved": "Type updated",
+    "typeError": "Could not save type",
+    "typeEditHint": "Click to correct the type"
   },
   "SeenModal": {
     "editTitle": "Edit",
