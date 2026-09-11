@@ -9,8 +9,8 @@ import dynamic from 'next/dynamic'
 const MuseumMap = dynamic(() => import('@/components/museum-map'), {
   ssr: false,
   loading: () => (
-    <div className="w-full rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center" style={{ height: '70vh', minHeight: 500 }}>
-      <div className="text-zinc-600 text-sm">Kaart laden…</div>
+    <div className="flex w-full items-center justify-center rounded-[1.5rem] bg-[#e7e1d6] ring-1 ring-black/5" style={{ height: '70vh', minHeight: 500 }}>
+      <div className="text-sm text-stone-500">Kaart laden…</div>
     </div>
   ),
 })
@@ -24,7 +24,7 @@ export default async function MuseumsPage() {
   // Haal alle musea op — filter daarna in JS op coördinaten + artworks
   const allMuseums = await prisma.museum.findMany({
     include: {
-      _count: { select: { artworks: { where: hasImage } } },
+      _count: { select: { artworks: true } },
       artworks: {
         take: 1,
         where: hasImage,
@@ -70,28 +70,29 @@ export default async function MuseumsPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-1">{t('title')}</h1>
-        <p className="text-zinc-500 text-sm">
+      <div className="mb-7 max-w-3xl">
+        <p className="eyebrow mb-3">{t('eyebrow')}</p>
+        <h1 className="font-display text-5xl font-medium tracking-tight text-stone-900 sm:text-6xl">{t('title')}</h1>
+        <p className="mt-3 text-sm leading-relaxed text-stone-500 sm:text-base">
           {t('subtitle', { locations: museums.length, works: totalArtworks.toLocaleString(locale) })}
         </p>
+        <p className="mt-2 text-xs leading-relaxed text-stone-400">{t('disclaimer')}</p>
       </div>
 
       {/* Kaart */}
       <MuseumMap museums={pins} labels={popupLabels} />
 
       {/* Legenda */}
-      <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+      <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-stone-500">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded border-2 border-white/25 bg-zinc-800" />
+          <div className="size-4 rounded border-[3px] border-[#fffaf0] bg-[#e7e1d6] shadow-sm" />
           <span>{t('legendMuseum')}</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded border-2 border-indigo-500 bg-zinc-800" />
+          <div className="size-4 rounded border-[3px] border-[#4256cc] bg-[#e7e1d6] shadow-sm" />
           <span>{t('legendSeen')}</span>
         </div>
-        <span className="text-zinc-600">{t('legendHint')}</span>
+        <span className="text-stone-400">{t('legendHint')}</span>
       </div>
     </div>
   )

@@ -3,8 +3,10 @@ import { useState } from 'react'
 import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
 import { useTranslations } from 'next-intl'
-import { ArrowDown } from 'lucide-react'
+import { ArrowDown, MapPin } from 'lucide-react'
 import { proxyImg } from '@/lib/utils'
+import MuseumMap, { type MuseumPin } from '@/components/museum-map'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 interface ArtworkWithMuseum {
   id: number
@@ -36,10 +38,12 @@ interface ArtistDetailClientProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seenMap: Record<number, any>
   isLoggedIn: boolean
+  museumPins: MuseumPin[]
 }
 
-export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, isLoggedIn }: ArtistDetailClientProps) {
+export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, isLoggedIn, museumPins }: ArtistDetailClientProps) {
   const [seenMap, setSeenMap] = useState(initialSeenMap)
+  const [mapOpen, setMapOpen] = useState(false)
   const t = useTranslations('Artists')
 
   const seenCount = Object.keys(seenMap).length
@@ -113,6 +117,17 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
               )}
             </div>
 
+            {museumPins.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setMapOpen(true)}
+                className="mt-5 inline-flex h-11 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/18"
+              >
+                <MapPin size={16} className="text-[#f4b548]" />
+                {t('mapButton', { count: museumPins.length })}
+              </button>
+            )}
+
             {/* Bio */}
             {artist.bio && (
               <p className="mt-5 line-clamp-3 max-w-2xl text-sm leading-relaxed text-white/60">{artist.bio}</p>
@@ -121,6 +136,26 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
           <a href="#works" className="absolute bottom-0 right-0 hidden size-12 place-items-center rounded-full border border-white/15 bg-white/8 text-white/70 transition hover:bg-white/15 sm:grid"><ArrowDown size={18} /></a>
         </div>
       </div>
+
+      <Dialog open={mapOpen} onOpenChange={setMapOpen}>
+        <DialogContent className="max-h-[calc(100vh-1.5rem)] overflow-y-auto rounded-[1.75rem] bg-[#fffaf0] p-3 text-stone-900 sm:max-w-5xl sm:p-5">
+          <DialogHeader className="px-2 pb-1 pr-10">
+            <DialogTitle className="font-display text-3xl font-semibold leading-tight sm:text-4xl">
+              {t('mapTitle', { name: artist.name })}
+            </DialogTitle>
+            <DialogDescription className="max-w-3xl text-xs leading-relaxed text-stone-500 sm:text-sm">
+              {t('mapDescription', { count: museumPins.length })}
+            </DialogDescription>
+          </DialogHeader>
+          {mapOpen && (
+            <MuseumMap
+              museums={museumPins}
+              labels={{ works: t('works'), seen: t('seen') }}
+              compact
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Werkenraster */}
       <div id="works"><ArtworkGrid

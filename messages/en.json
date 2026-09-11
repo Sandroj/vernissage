@@ -61,7 +61,10 @@
     "bornLong": "Born {year}",
     "featuredAlt": "{name} – best-known work",
     "works": "works",
-    "seen": "seen"
+    "seen": "seen",
+    "mapButton": "View {count, plural, =1 {1 location} other {# locations}} on map",
+    "mapTitle": "Where to find {name}",
+    "mapDescription": "{count, plural, =1 {One collection holder with works by this artist.} other {# collection holders with works by this artist.}} A work may temporarily be in storage or on loan."
   },
   "Progress": {
     "seenOf": "{seen} of {total} seen"
@@ -165,8 +168,10 @@
     "copiedInstagram": "Link copied for your Instagram bio"
   },
   "Museums": {
+    "eyebrow": "Art around the world",
     "title": "Museums",
     "subtitle": "{locations} locations · {works} works in the collection",
+    "disclaimer": "The map shows known collection holders. Works may temporarily be in storage or on loan.",
     "legendMuseum": "Museum",
     "legendSeen": "Work(s) seen",
     "legendHint": "· Click a pin to open the museum page",
