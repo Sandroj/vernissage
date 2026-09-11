@@ -5,6 +5,7 @@ import Link from 'next/link'
 import ProgressBar from '@/components/progress-bar'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Palette } from 'lucide-react'
+import { proxyImg } from '@/lib/utils'
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -128,7 +129,7 @@ export default async function DashboardPage() {
               <Link key={s.id} href={`/artworks/${s.artworkId}`} className="group">
                 <div className="aspect-square rounded-lg overflow-hidden bg-zinc-900 ring-1 ring-white/5 group-hover:ring-indigo-500/40 transition-all">
                   <img
-                    src={s.artwork.image_local_path ?? s.artwork.image_url ?? '/placeholder.jpg'}
+                    src={s.artwork.image_local_path ?? proxyImg(s.artwork.image_url) ?? '/placeholder.jpg'}
                     alt={s.artwork.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

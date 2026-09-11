@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
 import ShareMenu from '@/components/share-menu'
-import { cn } from '@/lib/utils'
+import { cn, proxyImg } from '@/lib/utils'
 import { toast } from 'sonner'
 
 interface ArtworkDetailClientProps {
@@ -44,7 +44,7 @@ export default function ArtworkDetailClient({
   const [reportOpen, setReportOpen] = useState(false)
   const [reportMsg, setReportMsg] = useState('')
 
-  const imgSrc = artwork.image_local_path ?? artwork.image_url ?? '/placeholder.jpg'
+  const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url) ?? '/placeholder.jpg'
   const yearLabel = artwork.year_end && artwork.year_end !== artwork.year_start
     ? `${artwork.year_start}–${artwork.year_end}`
     : artwork.year_start?.toString() ?? null

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Eye, Check, CheckCircle2 } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
 import Lightbox from '@/components/lightbox'
-import { cn } from '@/lib/utils'
+import { cn, proxyImg } from '@/lib/utils'
 
 interface Artwork {
   id: number
@@ -35,18 +35,11 @@ interface ArtworkCardProps {
   isLoggedIn: boolean
 }
 
-// Proxy remote images via wsrv.nl to bypass hotlink blocks
-function proxyImg(url: string | undefined, w = 600): string | undefined {
-  if (!url || url.startsWith('/')) return url
-  const stripped = url.replace(/^https?:\/\//, '')
-  return `https://wsrv.nl/?url=${stripped}&w=${w}&q=80&output=webp`
-}
-
 export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }: ArtworkCardProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [imgError, setImgError] = useState(false)
-  const rawSrc = artwork.image_url ?? artwork.image_local_path ?? undefined
+  const rawSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const imgSrc = proxyImg(rawSrc)
 
   if (imgError) return null

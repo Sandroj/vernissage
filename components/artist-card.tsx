@@ -1,5 +1,8 @@
+'use client'
+import { useState } from 'react'
 import Link from 'next/link'
 import ProgressBar from '@/components/progress-bar'
+import { proxyImg } from '@/lib/utils'
 
 interface ArtistCardProps {
   artist: {
@@ -26,7 +29,8 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
       : `geb. ${artist.birth_year}`
     : null
 
-  const imgSrc = featuredImage ?? null
+  const [imgError, setImgError] = useState(false)
+  const imgSrc = imgError ? null : proxyImg(featuredImage)
 
   return (
     <Link
@@ -38,6 +42,7 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
           {imgSrc ? (
             <img
               src={imgSrc}
+              onError={() => setImgError(true)}
               alt={`${artist.name} – bekendste werk`}
               className="w-full h-full object-cover"
             />

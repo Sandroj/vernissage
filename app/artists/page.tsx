@@ -54,7 +54,7 @@ export default async function ArtistsPage({
             key={artist.id}
             artist={artist}
             seenCount={seenCounts[artist.id] ?? 0}
-            featuredImage={artist.artworks[0]?.image_url ?? artist.artworks[0]?.image_local_path ?? null}
+            featuredImage={artist.artworks[0]?.image_local_path ?? artist.artworks[0]?.image_url ?? null}
           />
         ))}
         {artists.length === 0 && (

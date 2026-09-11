@@ -15,7 +15,7 @@ export default async function ArtistDetailPage({
     where: { slug: params.slug },
     include: {
       artworks: {
-        where: { image_url: { not: null } },
+        where: { OR: [{ image_url: { not: null } }, { image_local_path: { not: null } }] },
         include: { museum: true },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
       },
