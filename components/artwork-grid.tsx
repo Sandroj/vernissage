@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import ArtworkCard from '@/components/artwork-card'
 import { Search, ChevronDown } from 'lucide-react'
 
@@ -65,7 +65,9 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
   const [filterType, setFilterType] = useState('all')
   const [filterSeen, setFilterSeen] = useState<'all' | 'seen' | 'unseen'>('all')
   const [filterMuseum, setFilterMuseum] = useState('all')
+  const [paintingsOnly, setPaintingsOnly] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   // Only artworks with an image
   const withImage = useMemo(
@@ -91,14 +93,28 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
   const filtered = useMemo(() => withImage.filter((a) => {
     if (filterTitle && !a.title.toLowerCase().includes(filterTitle.toLowerCase())) return false
     if (filterType !== 'all' && a.type_normalized !== filterType) return false
+    if (paintingsOnly && a.type_normalized !== 'painting') return false
     if (filterSeen === 'seen' && !seenMap[a.id]) return false
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
     if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
     return true
-  }), [withImage, filterTitle, filterType, filterSeen, filterMuseum, seenMap])
+  }), [withImage, filterTitle, filterType, paintingsOnly, filterSeen, filterMuseum, seenMap])
 
   // Reset pagination when filters change
   const visible = filtered.slice(0, visibleCount)
+
+  // Automatisch meer laden bij scrollen voorbij het zichtbare aantal
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setVisibleCount((n) => n + PAGE_SIZE)
+      }
+    }, { rootMargin: '600px' })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [visible.length])
 
   const seenCount = Object.keys(seenMap).length
 
@@ -148,10 +164,21 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Dropdown value={filterSeen} onChange={handleFilterChange(setFilterSeen)} options={seenOptions} />
           {types.length > 1 && (
-            <Dropdown value={filterType} onChange={handleFilterChange(setFilterType)} options={typeOptions} />
+            <>
+              <Dropdown value={filterType} onChange={handleFilterChange(setFilterType)} options={typeOptions} />
+              <label className="flex items-center gap-1.5 bg-zinc-800 border border-white/10 text-zinc-300 text-xs rounded-lg pl-2.5 pr-3 py-1.5 cursor-pointer hover:bg-zinc-700 hover:border-white/20 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={paintingsOnly}
+                  onChange={(e) => { setPaintingsOnly(e.target.checked); setVisibleCount(PAGE_SIZE) }}
+                  className="accent-indigo-500"
+                />
+                Alleen schilderijen
+              </label>
+            </>
           )}
           {museums.length > 1 && (
             <Dropdown value={filterMuseum} onChange={handleFilterChange(setFilterMuseum)} options={museumOptions} />
@@ -178,15 +205,10 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
         </div>
       )}
 
-      {/* Toon meer */}
+      {/* Sentinel: laadt automatisch meer bij scrollen */}
       {visibleCount < filtered.length && (
-        <div className="text-center pt-4">
-          <button
-            onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
-            className="px-6 py-2 text-sm text-zinc-400 bg-zinc-800 hover:bg-zinc-700 border border-white/10 rounded-lg transition-colors"
-          >
-            Toon meer ({visibleCount} van {filtered.length})
-          </button>
+        <div ref={sentinelRef} className="text-center pt-4 text-xs text-zinc-600">
+          Meer laden…
         </div>
       )}
     </div>
