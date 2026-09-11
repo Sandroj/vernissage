@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma, hasImage } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import ArtistCard from '@/components/artist-card'
@@ -17,10 +17,10 @@ export default async function ArtistsPage({
       ? { OR: [{ name: { contains: q } }, { nationality: { contains: q } }] }
       : undefined,
     include: {
-      _count: { select: { artworks: true } },
+      _count: { select: { artworks: { where: hasImage } } },
       artworks: {
         take: 1,
-        where: { OR: [{ image_local_path: { not: null } }, { image_url: { not: null } }] },
+        where: hasImage,
         orderBy: { id: 'asc' },
         select: { image_local_path: true, image_url: true },
       },

@@ -1,4 +1,5 @@
-import { prisma } from '@/lib/prisma'
+import { prisma, hasImage } from '@/lib/prisma'
+import { proxyImg } from '@/lib/utils'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import dynamic from 'next/dynamic'
@@ -19,11 +20,11 @@ export default async function MuseumsPage() {
   // Haal alle musea op — filter daarna in JS op coördinaten + artworks
   const allMuseums = await prisma.museum.findMany({
     include: {
-      _count: { select: { artworks: true } },
+      _count: { select: { artworks: { where: hasImage } } },
       artworks: {
         take: 1,
-        where: { image_local_path: { not: null } },
-        select: { image_local_path: true },
+        where: hasImage,
+        select: { image_local_path: true, image_url: true },
         orderBy: { id: 'asc' },
       },
     },
@@ -58,7 +59,7 @@ export default async function MuseumsPage() {
     lat: m.lat as number,
     lng: m.lng as number,
     artworkCount: m._count.artworks,
-    previewImage: m.artworks[0]?.image_local_path ?? null,
+    previewImage: proxyImg(m.artworks[0]?.image_local_path ?? m.artworks[0]?.image_url) ?? null,
     seenCount: seenByMuseum[m.id] ?? 0,
   }))
 

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma, hasImage } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
@@ -11,7 +11,7 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
 
   const artists = await prisma.artist.findMany({
-    include: { _count: { select: { artworks: true } } },
+    include: { _count: { select: { artworks: { where: hasImage } } } },
     orderBy: { name: 'asc' },
   })
 

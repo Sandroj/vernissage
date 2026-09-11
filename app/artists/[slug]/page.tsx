@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma, hasImage } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { notFound } from 'next/navigation'
@@ -15,7 +15,7 @@ export default async function ArtistDetailPage({
     where: { slug: params.slug },
     include: {
       artworks: {
-        where: { OR: [{ image_url: { not: null } }, { image_local_path: { not: null } }] },
+        where: hasImage,
         include: { museum: true },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
       },
