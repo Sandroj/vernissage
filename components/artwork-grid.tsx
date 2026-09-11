@@ -1,9 +1,19 @@
 'use client'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import ArtworkCard from '@/components/artwork-card'
-import { Search, ChevronDown } from 'lucide-react'
+import { Search, ChevronDown, Check } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const PAGE_SIZE = 200
+
+const TYPE_ORDER = ['painting', 'drawing', 'watercolor', 'work on paper', 'print']
+const TYPE_LABELS: Record<string, string> = {
+  painting: 'Schilderijen',
+  drawing: 'Tekeningen & schetsen',
+  watercolor: 'Aquarellen',
+  'work on paper': 'Werk op papier',
+  print: 'Prenten',
+}
 
 interface Artwork {
   id: number
@@ -62,10 +72,9 @@ function Dropdown<T extends string>({
 
 export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }: ArtworkGridProps) {
   const [filterTitle, setFilterTitle] = useState('')
-  const [filterType, setFilterType] = useState('all')
+  const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(new Set())
   const [filterSeen, setFilterSeen] = useState<'all' | 'seen' | 'unseen'>('all')
   const [filterMuseum, setFilterMuseum] = useState('all')
-  const [paintingsOnly, setPaintingsOnly] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -75,11 +84,25 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
     [artworks]
   )
 
-  // Unique types
+  // Unique types, in vaste volgorde, met aantallen
   const types = useMemo(() => {
-    const set = new Set(withImage.map((a) => a.type_normalized).filter(Boolean))
-    return Array.from(set) as string[]
+    const counts = new Map<string, number>()
+    for (const a of withImage) {
+      if (a.type_normalized) counts.set(a.type_normalized, (counts.get(a.type_normalized) ?? 0) + 1)
+    }
+    return Array.from(counts.entries()).sort(
+      ([a], [b]) => (TYPE_ORDER.indexOf(a) + 1 || 99) - (TYPE_ORDER.indexOf(b) + 1 || 99)
+    )
   }, [withImage])
+
+  function toggleType(t: string) {
+    setHiddenTypes((prev) => {
+      const next = new Set(prev)
+      if (next.has(t)) next.delete(t); else next.add(t)
+      return next
+    })
+    setVisibleCount(PAGE_SIZE)
+  }
 
   // Unique museums
   const museums = useMemo(() => {
@@ -92,13 +115,12 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
 
   const filtered = useMemo(() => withImage.filter((a) => {
     if (filterTitle && !a.title.toLowerCase().includes(filterTitle.toLowerCase())) return false
-    if (filterType !== 'all' && a.type_normalized !== filterType) return false
-    if (paintingsOnly && a.type_normalized !== 'painting') return false
+    if (a.type_normalized && hiddenTypes.has(a.type_normalized)) return false
     if (filterSeen === 'seen' && !seenMap[a.id]) return false
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
     if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
     return true
-  }), [withImage, filterTitle, filterType, paintingsOnly, filterSeen, filterMuseum, seenMap])
+  }), [withImage, filterTitle, hiddenTypes, filterSeen, filterMuseum, seenMap])
 
   // Reset pagination when filters change
   const visible = filtered.slice(0, visibleCount)
@@ -122,11 +144,6 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
     { value: 'all', label: 'Alle werken' },
     { value: 'seen', label: 'Gezien' },
     { value: 'unseen', label: 'Niet gezien' },
-  ]
-
-  const typeOptions = [
-    { value: 'all', label: 'Alle types' },
-    ...types.map((t) => ({ value: t, label: t })),
   ]
 
   const museumOptions = [
@@ -166,25 +183,38 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
 
         <div className="flex flex-wrap items-center gap-2">
           <Dropdown value={filterSeen} onChange={handleFilterChange(setFilterSeen)} options={seenOptions} />
-          {types.length > 1 && (
-            <>
-              <Dropdown value={filterType} onChange={handleFilterChange(setFilterType)} options={typeOptions} />
-              <label className="flex items-center gap-1.5 bg-zinc-800 border border-white/10 text-zinc-300 text-xs rounded-lg pl-2.5 pr-3 py-1.5 cursor-pointer hover:bg-zinc-700 hover:border-white/20 transition-colors">
-                <input
-                  type="checkbox"
-                  checked={paintingsOnly}
-                  onChange={(e) => { setPaintingsOnly(e.target.checked); setVisibleCount(PAGE_SIZE) }}
-                  className="accent-indigo-500"
-                />
-                Alleen schilderijen
-              </label>
-            </>
-          )}
           {museums.length > 1 && (
             <Dropdown value={filterMuseum} onChange={handleFilterChange(setFilterMuseum)} options={museumOptions} />
           )}
         </div>
       </div>
+
+      {/* Type-toggles: klik om een type te verbergen/tonen */}
+      {types.length > 1 && (
+        <div className="flex flex-wrap gap-1.5">
+          {types.map(([t, n]) => {
+            const on = !hiddenTypes.has(t)
+            return (
+              <button
+                key={t}
+                type="button"
+                aria-pressed={on}
+                onClick={() => toggleType(t)}
+                className={cn(
+                  'flex items-center gap-1.5 text-xs rounded-full pl-2.5 pr-3 py-1 border transition-colors',
+                  on
+                    ? 'bg-indigo-600/20 border-indigo-500/40 text-indigo-200 hover:bg-indigo-600/30'
+                    : 'bg-zinc-800/60 border-white/10 text-zinc-500 line-through hover:text-zinc-300 hover:border-white/20'
+                )}
+              >
+                {on ? <Check size={11} /> : <span className="w-[11px]" />}
+                {TYPE_LABELS[t] ?? t}
+                <span className={on ? 'text-indigo-400/70' : 'text-zinc-600'}>{n}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {/* Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
