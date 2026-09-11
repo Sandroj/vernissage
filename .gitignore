@@ -40,6 +40,7 @@ next-env.d.ts
 # prisma
 *.db
 *.db-journal
+dev.db.bak-*
 
 # superpowers
 .superpowers/

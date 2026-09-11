@@ -46,6 +46,10 @@ model Artwork {
   image_local_path String?
   source_url       String?
   source_name      String?
+  catalogue_id     String?   @unique
+  alternate_titles String?
+  location_confidence String?
+  location_verified_at DateTime?
   artist           Artist   @relation(fields: [artistId], references: [id])
   museum           Museum?  @relation(fields: [museumId], references: [id])
   seenBy           Seen[]
@@ -53,6 +57,7 @@ model Artwork {
 
   @@index([artistId])
   @@index([museumId])
+  @@index([title])
 }
 
 model User {
