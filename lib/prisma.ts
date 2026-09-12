@@ -31,3 +31,8 @@ export function localizeArtist<T extends { bio?: string | null; bio_en?: string 
   if (locale !== 'en') return a
   return { ...a, bio: a.bio_en ?? a.bio, nationality: a.nationality_en ?? a.nationality }
 }
+
+export function localizeArtwork<T extends { attribution_note?: string | null; attribution_note_en?: string | null }>(a: T, locale: string): T {
+  if (locale !== 'en') return a
+  return { ...a, attribution_note: a.attribution_note_en ?? a.attribution_note }
+}

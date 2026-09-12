@@ -57,6 +57,7 @@ model Artwork {
   location_verified_at DateTime?
   attribution_status String?  @default("accepted")
   attribution_note String?
+  attribution_note_en String?
   artist           Artist   @relation(fields: [artistId], references: [id])
   museum           Museum?  @relation(fields: [museumId], references: [id])
   seenBy           Seen[]

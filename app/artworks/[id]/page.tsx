@@ -1,11 +1,13 @@
-import { prisma } from '@/lib/prisma'
+import { prisma, localizeArtwork } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { getLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import ArtworkDetailClient from './artwork-detail-client'
 
 export default async function ArtworkDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
+  const locale = await getLocale()
 
   const artwork = await prisma.artwork.findUnique({
     where: { id: parseInt(params.id) },
@@ -29,7 +31,7 @@ export default async function ArtworkDetailPage({ params }: { params: { id: stri
   return (
     <ArtworkDetailClient
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      artwork={artwork as any}
+      artwork={localizeArtwork(artwork, locale) as any}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       initialSeen={seen as any}
       seenCount={artwork._count.seenBy}
