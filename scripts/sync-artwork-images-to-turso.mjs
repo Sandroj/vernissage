@@ -95,6 +95,19 @@ async function main() {
   })
   console.log(`Turso now (${fields[0]}):`, stats.rows.map(r => `${r.value ?? 'NULL'}=${r.n}`).join(', '))
 
+  const coverage = await turso.execute({
+    sql: `SELECT COUNT(*) total,
+            SUM(CASE WHEN catalogue_id IS NOT NULL THEN 1 ELSE 0 END) canonical,
+            SUM(CASE WHEN catalogue_id IS NOT NULL AND image_url IS NOT NULL THEN 1 ELSE 0 END) canonical_with_image,
+            SUM(CASE WHEN catalogue_id IS NOT NULL AND image_url IS NULL AND image_local_path IS NULL THEN 1 ELSE 0 END) canonical_missing,
+            SUM(CASE WHEN catalogue_id IS NOT NULL AND type_normalized='painting' THEN 1 ELSE 0 END) paintings,
+            SUM(CASE WHEN catalogue_id IS NOT NULL AND type_normalized='painting' AND image_url IS NOT NULL THEN 1 ELSE 0 END) paintings_with_image,
+            SUM(CASE WHEN catalogue_id IS NOT NULL AND image_source_url IS NOT NULL THEN 1 ELSE 0 END) with_image_provenance
+          FROM Artwork w JOIN Artist a ON a.id = w.artistId WHERE a.name = ?`,
+    args: [artistName],
+  })
+  console.log('Turso coverage:', coverage.rows[0])
+
   turso.close()
   db.close()
 }

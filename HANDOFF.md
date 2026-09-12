@@ -8,7 +8,7 @@
 Next.js-app (App Router) voor het bijhouden van kunst: artiesten, kunstwerken en
 musea, met discover-, profiel- en admin-secties. Draait live op Vercel. Van Gogh
 Worldwide/De la Faille is het primaire Van Gogh-register: 2.135 zichtbare
-F-records, 883 schilderijen en 1.902 werken met beeld. `main` is schoon en gelijk
+F-records, 883 schilderijen en 2.048 werken met beeld. `main` is schoon en gelijk
 aan `origin/main`. Deze repo is nu Orca-klaar gemaakt: richt
 Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 `art/`-map.
@@ -41,6 +41,19 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 
 ## Laatst gedaan (2026-09-12)
 
+- Grondige missing-image-audit uitgevoerd voor alle 233 beeldloze canonieke
+  Van Gogh-records. 146 exact geïdentificeerde beelden zijn via VGM, KMM,
+  RKD/institutionele IIIF, Commons, Wikidata en VGGallery hersteld. Productie:
+  2.048/2.135 met beeld (95,9%); schilderijen 872/883 (98,8%). FVI `A dog`
+  gebruikt nu het officiële KMM-beeld voor KM 114.223.
+- Afbeeldingsprovenance staat in vier nullable Artwork-velden en is voor alle
+  146 nieuwe koppelingen naar Turso gesynchroniseerd. Nieuwe
+  `migrate-image-provenance-to-turso.mjs` migreert deze kolommen idempotent;
+  `sync-artwork-images-to-turso.mjs` rapporteert nu ook canonieke dekking.
+- Alle bestanden en SHA-256's gevalideerd; gedeelde afbeeldingen komen alleen
+  voor bij expliciet als zodanig gemarkeerde drukseries. Vier R2-steekproeven
+  geven HTTP 200 JPEG; `npm run build` slaagt.
+
 - Commit `0307cee` maakt de complete 2.135-records VGW-snapshot leidend voor
   Van Gogh. Centrale `primaryCatalogue`-filter sluit 990 bewaarde legacyrijen
   zonder F-nummer uit van publieke tellingen, grids, musea en zoeken.
@@ -53,9 +66,9 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   1.902 met R2-beeld. Live en lokaal bevestigd; `npm run build` slaagt.
 
 ## Volgende stap
-1. Herstel de resterende 195 VGW-records met officiële beeldrepresentatie zodra
-   Spinque IIIF niet meer HTTP 503 geeft; 38 andere records zijn officieel
-   beeldloos en horen een placeholder te houden.
+1. Houd de 87 resterende beeldloze records periodiek opnieuw tegen de bron aan:
+   50 hebben een historische VGW-reproductie maar geen werkende exact
+   herleidbare publieke bron; 37 missen ook in de bron bruikbare metadata.
 2. Vergelijk de actuele publieke VGW-telling (2.158) met de vaste 2.135
    De la Faille F-snapshot voordat eventuele nieuwe canonieke records worden
    toegevoegd.
