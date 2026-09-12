@@ -21,6 +21,7 @@ interface Artwork {
   alternate_titles?: string | null
   image_local_path?: string | null
   image_url?: string | null
+  attribution_status?: string | null
   museum?: { id: number; name: string; city: string } | null
   artist?: { name: string; slug: string } | null
 }

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, CheckCircle2, ImageOff, MapPin } from 'lucide-react'
+import { Check, CheckCircle2, HelpCircle, ImageOff, MapPin } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
 import { cn, proxyImg } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
@@ -17,6 +17,7 @@ interface Artwork {
   alternate_titles?: string | null
   image_local_path?: string | null
   image_url?: string | null
+  attribution_status?: string | null
   museum?: { name: string; city: string } | null
   artist?: { name: string; slug: string } | null
 }
@@ -74,6 +75,17 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
           <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1 rounded-full bg-[#4256cc]/92 px-2.5 py-1 backdrop-blur-sm">
             <CheckCircle2 size={10} className="text-white" />
             <span className="text-white text-[10px] font-medium">{t('seenBadge')}</span>
+          </div>
+        )}
+
+        {/* Omstreden toeschrijving */}
+        {artwork.attribution_status === 'disputed' && (
+          <div
+            title={t('disputedBadge')}
+            className="pointer-events-none absolute right-2.5 top-2.5 flex items-center gap-1 rounded-full bg-amber-500/92 px-2.5 py-1 backdrop-blur-sm"
+          >
+            <HelpCircle size={10} className="text-white" />
+            <span className="text-white text-[10px] font-medium">{t('disputedBadge')}</span>
           </div>
         )}
 

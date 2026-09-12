@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, ImageOff, MapPin } from 'lucide-react'
+import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, ImageOff, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
@@ -30,6 +30,8 @@ interface ArtworkDetailClientProps {
     alternate_titles?: string | null
     location_confidence?: string | null
     location_verified_at?: string | Date | null
+    attribution_status?: string | null
+    attribution_note?: string | null
     artist: { id: number; name: string; slug: string }
     museum?: { id: number; name: string; city: string; country: string } | null
   }
@@ -167,6 +169,19 @@ export default function ArtworkDetailClient({
             <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
             <SeenCount count={currentSeenCount} t={t} />
           </div>
+
+          {/* Omstreden toeschrijving */}
+          {artwork.attribution_status === 'disputed' && (
+            <div className="flex items-start gap-2 rounded-xl border border-amber-500/25 bg-amber-50 p-3.5 text-amber-800">
+              <HelpCircle size={15} className="mt-0.5 shrink-0" />
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold">{t('attributionDisputed')}</p>
+                {artwork.attribution_note && (
+                  <p className="text-xs leading-snug text-amber-700">{artwork.attribution_note}</p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Scheidingslijn */}
           <div className="border-t border-black/8" />

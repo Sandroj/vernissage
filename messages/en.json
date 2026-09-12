@@ -92,6 +92,7 @@
   },
   "Card": {
     "seenBadge": "seen",
+    "disputedBadge": "disputed",
     "edit": "Edit",
     "markSeen": "Mark as seen",
     "missingImage": "No image available"
@@ -104,8 +105,9 @@
     "fullDetails": "View full details"
   },
   "Artwork": {
-    "catalogue": "De la Faille number",
+    "catalogue": "Catalogue number",
     "jhCatalogue": "Hulsker number",
+    "attributionDisputed": "Attribution disputed",
     "medium": "Medium",
     "type": "Type",
     "dimensions": "Dimensions",

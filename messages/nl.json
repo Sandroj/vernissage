@@ -92,6 +92,7 @@
   },
   "Card": {
     "seenBadge": "gezien",
+    "disputedBadge": "omstreden",
     "edit": "Bewerken",
     "markSeen": "Markeer gezien",
     "missingImage": "Geen afbeelding beschikbaar"
@@ -104,8 +105,9 @@
     "fullDetails": "Bekijk volledige details"
   },
   "Artwork": {
-    "catalogue": "De la Faille-nummer",
+    "catalogue": "Catalogusnummer",
     "jhCatalogue": "Hulsker-nummer",
+    "attributionDisputed": "Toeschrijving omstreden",
     "medium": "Medium",
     "type": "Type",
     "dimensions": "Afmetingen",
