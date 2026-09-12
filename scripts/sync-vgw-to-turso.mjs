@@ -23,7 +23,7 @@ if (!env.TURSO_DATABASE_URL || !env.TURSO_AUTH_TOKEN) throw new Error('Turso cre
 
 const local = new Database(resolve(__dirname, '../dev.db'), { readonly: true })
 const turso = createClient({ url: env.TURSO_DATABASE_URL, authToken: env.TURSO_AUTH_TOKEN })
-const migrationName = '20260911223000_add_catalogue_search_fields'
+const migrationName = '20260912123000_add_jh_catalogue_id'
 const migrationPath = resolve(__dirname, `../prisma/migrations/${migrationName}/migration.sql`)
 
 async function ensureSchema() {
@@ -31,6 +31,7 @@ async function ensureSchema() {
   const existing = new Set(columns.rows.map(row => row.name))
   const additions = [
     ['catalogue_id', 'TEXT'],
+    ['jh_catalogue_id', 'TEXT'],
     ['alternate_titles', 'TEXT'],
     ['location_confidence', 'TEXT'],
     ['location_verified_at', 'DATETIME'],
@@ -40,6 +41,7 @@ async function ensureSchema() {
   }
   await turso.execute('CREATE UNIQUE INDEX IF NOT EXISTS Artwork_catalogue_id_key ON Artwork(catalogue_id)')
   await turso.execute('CREATE INDEX IF NOT EXISTS Artwork_title_idx ON Artwork(title)')
+  await turso.execute('CREATE INDEX IF NOT EXISTS Artwork_jh_catalogue_id_idx ON Artwork(jh_catalogue_id)')
 
   try {
     const known = await turso.execute({ sql: 'SELECT 1 FROM _prisma_migrations WHERE migration_name=? LIMIT 1', args: [migrationName] })
@@ -79,7 +81,7 @@ async function remoteMuseumId(museum) {
 async function main() {
   await ensureSchema()
   const rows = local.prepare(`
-    SELECT w.id, w.title, w.catalogue_id, w.alternate_titles, w.medium_raw,
+    SELECT w.id, w.title, w.catalogue_id, w.jh_catalogue_id, w.alternate_titles, w.medium_raw,
            w.dimensions_raw, w.source_url, w.source_name, w.location_confidence,
            w.location_verified_at, w.image_url, w.image_local_path,
            m.name museum_name, m.city museum_city, m.country museum_country
@@ -99,10 +101,10 @@ async function main() {
       museumId = museumCache.get(key)
     }
     await turso.execute({
-      sql: `UPDATE Artwork SET title=?, catalogue_id=?, alternate_titles=?, medium_raw=?,
+      sql: `UPDATE Artwork SET title=?, catalogue_id=?, jh_catalogue_id=?, alternate_titles=?, medium_raw=?,
         dimensions_raw=?, source_url=?, source_name=?, location_confidence=?,
         location_verified_at=?, museumId=?, image_url=?, image_local_path=? WHERE id=?`,
-      args: [row.title, row.catalogue_id, row.alternate_titles, row.medium_raw, row.dimensions_raw,
+      args: [row.title, row.catalogue_id, row.jh_catalogue_id, row.alternate_titles, row.medium_raw, row.dimensions_raw,
         row.source_url, row.source_name, row.location_confidence, row.location_verified_at,
         museumId, row.image_url, row.image_local_path, row.id],
     })
@@ -110,7 +112,7 @@ async function main() {
     if (updated % 100 === 0) console.log(`  ${updated}/${rows.length}`)
   }
   const stats = await turso.execute(`
-    SELECT COUNT(*) total, COUNT(catalogue_id) catalogued,
+    SELECT COUNT(*) total, COUNT(catalogue_id) catalogued, COUNT(jh_catalogue_id) with_jh,
       SUM(CASE WHEN museumId IS NOT NULL THEN 1 ELSE 0 END) located,
       SUM(CASE WHEN image_url IS NOT NULL OR image_local_path IS NOT NULL THEN 1 ELSE 0 END) with_image
     FROM Artwork w JOIN Artist a ON a.id=w.artistId WHERE a.name='Vincent van Gogh'

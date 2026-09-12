@@ -47,6 +47,7 @@ model Artwork {
   source_url       String?
   source_name      String?
   catalogue_id     String?   @unique
+  jh_catalogue_id  String?
   alternate_titles String?
   location_confidence String?
   location_verified_at DateTime?
@@ -58,6 +59,7 @@ model Artwork {
   @@index([artistId])
   @@index([museumId])
   @@index([title])
+  @@index([jh_catalogue_id])
 }
 
 model User {
