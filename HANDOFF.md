@@ -6,8 +6,10 @@
 
 ## Waar staan we
 Next.js-app (App Router) voor het bijhouden van kunst: artiesten, kunstwerken en
-musea, met discover-, profiel- en admin-secties. Draait live op Vercel. `main` is
-schoon en gelijk aan `origin/main`. Deze repo is nu Orca-klaar gemaakt: richt
+musea, met discover-, profiel- en admin-secties. Draait live op Vercel. Van Gogh
+Worldwide/De la Faille is het primaire Van Gogh-register: 2.135 zichtbare
+F-records, 883 schilderijen en 1.902 werken met beeld. `main` is schoon en gelijk
+aan `origin/main`. Deze repo is nu Orca-klaar gemaakt: richt
 Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 `art/`-map.
 
@@ -37,8 +39,26 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 - Getrackte `.DS_Store`-bestanden uit versiebeheer gehaald (stonden al in
   .gitignore) zodat de diff-weergave schoon is.
 
+## Laatst gedaan (2026-09-12)
+
+- Commit `0307cee` maakt de complete 2.135-records VGW-snapshot leidend voor
+  Van Gogh. Centrale `primaryCatalogue`-filter sluit 990 bewaarde legacyrijen
+  zonder F-nummer uit van publieke tellingen, grids, musea en zoeken.
+- Beeldloze canonieke records blijven zichtbaar met een placeholder en zijn
+  gewoon zoekbaar/markeerbaar. De kunstenaarspagina telt daardoor catalogus-
+  records in plaats van alleen afbeeldingen.
+- `scripts/sync-vgw-catalogue-to-turso.mjs` synchroniseert alle F-records op
+  `catalogue_id`, behoudt bestaande ids/relaties, voegt ontbrekende rijen toe
+  en verwijdert niets. Productie: 2.135 canoniek, 990 legacy, 883 paintings,
+  1.902 met R2-beeld. Live en lokaal bevestigd; `npm run build` slaagt.
+
 ## Volgende stap
-1. (bepaal je eerste taak — vraag Max of pak iets uit "Openstaand" hieronder)
+1. Herstel de resterende 195 VGW-records met officiële beeldrepresentatie zodra
+   Spinque IIIF niet meer HTTP 503 geeft; 38 andere records zijn officieel
+   beeldloos en horen een placeholder te houden.
+2. Vergelijk de actuele publieke VGW-telling (2.158) met de vaste 2.135
+   De la Faille F-snapshot voordat eventuele nieuwe canonieke records worden
+   toegevoegd.
 
 ## Valkuilen / let op
 - **Live op Vercel:** groot werk op een branch, niet direct op `main` pushen.
