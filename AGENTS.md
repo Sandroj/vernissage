@@ -45,6 +45,16 @@ waarheid; `HANDOFF.md` is het kompas.**
 ## Wat is dit
 Eén alinea: wat het project is, wie het gebruikt, live of prototype.
 
+## Catalogus- en beeldkwaliteit
+Vincent van Gogh is het ijkpunt voor iedere volgende kunstenaar: kies en
+documenteer één gezaghebbend hoofdregister, behoud alle canonieke werken ook als
+een beeld nog ontbreekt, en behandel ieder ontbrekend beeld als een actieve
+onderzoekstaak. Nieuwe afbeeldingen vereisen een exacte catalogus- of
+institutionele objectmatch en opgeslagen bron, rechtennotitie en ophaaldatum.
+De volledige verplichte workflow staat in de buitenste datarepo in
+`docs/catalogue-and-image-standard.md`; volg ook altijd het bestaande
+R2-upload → dev.db-update → gerichte Turso-sync-pad.
+
 ## Stack & structuur
 - Taal / framework:
 - Hoe draai je het lokaal:

@@ -26,7 +26,16 @@ if (!artistName) {
   console.error('Gebruik: node scripts/sync-artwork-images-to-turso.mjs "<artiestnaam>" [veld ...]')
   process.exit(1)
 }
-const ALLOWED_FIELDS = ['image_local_path', 'image_url', 'type_normalized', 'medium_raw']
+const ALLOWED_FIELDS = [
+  'image_local_path',
+  'image_url',
+  'image_source_url',
+  'image_source_name',
+  'image_rights',
+  'image_retrieved_at',
+  'type_normalized',
+  'medium_raw',
+]
 const fields = process.argv.length > 3 ? process.argv.slice(3) : ['image_local_path', 'image_url']
 const bad = fields.filter(f => !ALLOWED_FIELDS.includes(f))
 if (bad.length) {
