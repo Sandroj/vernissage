@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 import LocaleToggle from '@/components/locale-toggle'
 import GlobalSearch from '@/components/global-search'
+import { Logo } from '@/components/logo'
 
 export default function Nav() {
   const { data: session } = useSession()
@@ -26,9 +27,8 @@ export default function Nav() {
   return (
     <nav className="sticky top-0 z-50 border-b border-black/[0.07] bg-[#f8f3e9]/82 backdrop-blur-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[68px] flex items-center justify-between gap-5">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5 text-stone-950 transition-opacity hover:opacity-70">
-          <span className="grid size-8 place-items-center rounded-full bg-[#ed694c] text-sm font-black text-white shadow-sm">V</span>
-          <span className="font-display text-xl font-semibold">Vernissage</span>
+        <Link href="/" className="text-stone-950 transition-opacity hover:opacity-70">
+          <Logo size={32} />
         </Link>
 
         <GlobalSearch />

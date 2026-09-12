@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useTranslations } from 'next-intl'
+import { LogoMark } from '@/components/logo'
 
 export default function LoginPage() {
   return <Suspense><LoginForm /></Suspense>
@@ -75,6 +76,7 @@ function LoginForm() {
     <div className="min-h-[70vh] flex items-center justify-center">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
+          <LogoMark size={40} className="mx-auto mb-3" />
           <h1 className="text-2xl font-bold">Vernissage</h1>
           <p className="text-slate-400 mt-1 text-sm">
             {mode === 'login' ? t('signInSubtitle') : t('registerSubtitle')}
