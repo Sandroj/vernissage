@@ -36,11 +36,15 @@ interface SeenRecord {
   photo_url?: string | null
 }
 
+type SeenFilter = 'all' | 'seen' | 'unseen'
+
 interface ArtworkGridProps {
   artworks: Artwork[]
   seenMap: Record<number, SeenRecord>
   isLoggedIn: boolean
   onRefresh?: (() => void) | undefined
+  seenFilter?: SeenFilter
+  onSeenFilterChange?: (v: SeenFilter) => void
 }
 
 function Dropdown<T extends string>({
@@ -68,12 +72,15 @@ function Dropdown<T extends string>({
   )
 }
 
-export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }: ArtworkGridProps) {
+export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, seenFilter, onSeenFilterChange }: ArtworkGridProps) {
   const t = useTranslations('Grid')
   const [filterTitle, setFilterTitle] = useState('')
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(new Set())
-  const [filterSeen, setFilterSeen] = useState<'all' | 'seen' | 'unseen'>('all')
+  const [internalFilterSeen, setInternalFilterSeen] = useState<SeenFilter>('all')
+  const filterSeen = seenFilter ?? internalFilterSeen
+  const setFilterSeen = onSeenFilterChange ?? setInternalFilterSeen
   const [filterMuseum, setFilterMuseum] = useState('all')
+  const [showMissingImages, setShowMissingImages] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -97,6 +104,11 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
     setVisibleCount(PAGE_SIZE)
   }
 
+  const missingImageCount = useMemo(
+    () => artworks.filter((a) => !a.image_local_path && !a.image_url).length,
+    [artworks]
+  )
+
   // Unique museums
   const museums = useMemo(() => {
     const map = new Map<number, string>()
@@ -115,8 +127,9 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
     if (filterSeen === 'seen' && !seenMap[a.id]) return false
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
     if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
+    if (!showMissingImages && !a.image_local_path && !a.image_url) return false
     return true
-  }), [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, seenMap])
+  }), [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, showMissingImages, seenMap])
 
   // Reset pagination when filters change
   const visible = filtered.slice(0, visibleCount)
@@ -186,7 +199,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
       </div>
 
       {/* Type-toggles: klik om een type te verbergen/tonen */}
-      {types.length > 1 && (
+      {(types.length > 1 || missingImageCount > 0) && (
         <div className="flex flex-wrap gap-2">
           {types.map(([ty, n]) => {
             const on = !hiddenTypes.has(ty)
@@ -209,6 +222,23 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
               </button>
             )
           })}
+          {missingImageCount > 0 && (
+            <button
+              type="button"
+              aria-pressed={showMissingImages}
+              onClick={() => { setShowMissingImages((v) => !v); setVisibleCount(PAGE_SIZE) }}
+              className={cn(
+                'flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+                showMissingImages
+                  ? 'border-[#4256cc]/25 bg-[#e7e9fa] text-[#3447b8] hover:bg-[#dce0fa]'
+                  : 'border-black/10 bg-white/40 text-stone-400 line-through hover:text-stone-600'
+              )}
+            >
+              {showMissingImages ? <Check size={11} /> : <span className="w-[11px]" />}
+              {t('withoutImage')}
+              <span className={showMissingImages ? 'text-[#4256cc]/60' : 'text-stone-400'}>{missingImageCount}</span>
+            </button>
+          )}
         </div>
       )}
 

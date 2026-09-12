@@ -48,7 +48,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
   return (
     <>
       <article className="group min-w-0">
-      <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-1 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl', seen ? 'ring-[#4256cc]/55' : 'ring-black/5')}>
+      <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-2 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl', seen ? 'ring-[#4256cc]' : 'ring-black/5')}>
         {/* Image — klikken gaat naar de detailpagina */}
         <Link href={`/artworks/${artwork.id}`} className="block size-full">
           {imgSrc && !imgError ? (
@@ -58,7 +58,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
               alt={artwork.title}
               className={cn(
                 'size-full object-cover transition-all duration-700',
-                seen ? 'brightness-90' : 'group-hover:scale-[1.03]'
+                !seen && 'group-hover:scale-[1.03]'
               )}
               loading="lazy"
             />
@@ -72,9 +72,9 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
 
         {/* Gezien indicator */}
         {seen && (
-          <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1 rounded-full bg-[#4256cc]/92 px-2.5 py-1 backdrop-blur-sm">
-            <CheckCircle2 size={10} className="text-white" />
-            <span className="text-white text-[10px] font-medium">{t('seenBadge')}</span>
+          <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1.5 rounded-full bg-[#4256cc] px-3 py-1.5 shadow-md">
+            <CheckCircle2 size={13} className="text-white" />
+            <span className="text-white text-xs font-semibold">{t('seenBadge')}</span>
           </div>
         )}
 

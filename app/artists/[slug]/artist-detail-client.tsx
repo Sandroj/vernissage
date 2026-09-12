@@ -44,7 +44,13 @@ interface ArtistDetailClientProps {
 export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, isLoggedIn, museumPins }: ArtistDetailClientProps) {
   const [seenMap, setSeenMap] = useState(initialSeenMap)
   const [mapOpen, setMapOpen] = useState(false)
+  const [seenFilter, setSeenFilter] = useState<'all' | 'seen' | 'unseen'>('all')
   const t = useTranslations('Artists')
+
+  function showSeenWorks() {
+    setSeenFilter('seen')
+    document.getElementById('works')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   const seenCount = Object.keys(seenMap).length
   const total = artist.artworks.length
@@ -111,9 +117,13 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
                 <span className="text-2xl font-bold text-white">{total}</span><span className="ml-1.5 text-white/45">{t('works')}</span>
               </div>
               {seenCount > 0 && (
-                <div>
-                  <span className="text-2xl font-bold text-[#f4b548]">{seenCount}</span><span className="ml-1.5 text-white/45">{t('seen')}</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={showSeenWorks}
+                  className="rounded-md transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4b548]"
+                >
+                  <span className="text-2xl font-bold text-[#f4b548]">{seenCount}</span><span className="ml-1.5 text-white/45 underline decoration-white/25 underline-offset-4">{t('seen')}</span>
+                </button>
               )}
             </div>
 
@@ -168,6 +178,8 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
         seenMap={seenMap}
         isLoggedIn={isLoggedIn}
         onRefresh={refresh}
+        seenFilter={seenFilter}
+        onSeenFilterChange={setSeenFilter}
       /></div>
     </div>
   )
