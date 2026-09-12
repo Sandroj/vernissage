@@ -8,6 +8,24 @@ import { ArrowRight, ArrowUpRight, MapPin, Sparkles } from 'lucide-react'
 import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 
+// Handpicked instantly-recognizable works, one or two per artist, used for
+// the homepage hero carousel instead of an arbitrary "first N by id" pick.
+// Matched by title/artist rather than hardcoded ids, since ids can differ
+// between dev.db and Turso (see HANDOFF valkuilen) — a title just quietly
+// drops out of the carousel if it's ever renamed or removed.
+const FEATURED_HERO_WORKS = [
+  { artist: 'Vincent van Gogh', title: 'Sunflowers' },
+  { artist: 'Johannes Vermeer', title: 'Girl with a Pearl Earring' },
+  { artist: 'Claude Monet', title: 'Impression, sunrise' },
+  { artist: 'Gustav Klimt', title: 'The Kiss' },
+  { artist: 'Wassily Kandinsky', title: 'Composition VII' },
+  { artist: 'Vincent van Gogh', title: "Vincent's Bedroom" },
+  { artist: 'Johannes Vermeer', title: 'View of Delft' },
+  { artist: 'Claude Monet', title: 'Water Lilies (Nympheas)' },
+  { artist: 'Gustav Klimt', title: 'Portrait of Adele Bloch-Bauer I' },
+  { artist: 'Wassily Kandinsky', title: 'Yellow-Red-Blue' },
+]
+
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
   const t = await getTranslations('Home')
@@ -56,7 +74,17 @@ export default async function DashboardPage() {
 
   const totalSeen = Object.values(seenCounts).reduce((a, b) => a + b, 0)
   const totalArtworks = artists.reduce((a, b) => a + b._count.artworks, 0)
-  const heroWorks = artists.flatMap((artist) => artist.artworks.map((artwork) => ({ ...artwork, artist: artist.name }))).slice(0, 3)
+
+  const featuredRows = await prisma.artwork.findMany({
+    where: {
+      AND: [hasImage, { OR: FEATURED_HERO_WORKS.map((f) => ({ title: f.title, artist: { name: f.artist } })) }],
+    },
+    select: { id: true, title: true, image_url: true, image_local_path: true, artist: { select: { name: true } } },
+  })
+  const heroWorks = FEATURED_HERO_WORKS
+    .map((f) => featuredRows.find((r) => r.title === f.title && r.artist.name === f.artist))
+    .filter((r): r is NonNullable<typeof r> => Boolean(r))
+    .map((r) => ({ id: r.id, title: r.title, image_url: r.image_url, image_local_path: r.image_local_path, artist: r.artist.name }))
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-12">
@@ -85,12 +113,22 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid h-[370px] grid-cols-2 grid-rows-2 gap-3 sm:h-[430px]">
+          <div className="relative h-[370px] w-full overflow-hidden rounded-[1.6rem] sm:h-[430px]">
             {heroWorks.map((work, index) => (
-              <Link key={work.id} href={`/artworks/${work.id}`} className={`group relative overflow-hidden rounded-[1.4rem] ${index === 0 ? 'row-span-2' : ''}`}>
-                <img src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'} alt={work.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-12 opacity-0 transition group-hover:opacity-100">
-                  <p className="line-clamp-1 text-sm font-medium">{work.title}</p><p className="text-xs text-white/60">{work.artist}</p>
+              <Link
+                key={work.id}
+                href={`/artworks/${work.id}`}
+                className="hero-slide group absolute inset-0"
+                style={{ animationDelay: index === 0 ? '-3s' : `${index * 6}s` }}
+              >
+                <img
+                  src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'}
+                  alt={work.title}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent p-5 pt-20">
+                  <p className="line-clamp-1 text-base font-medium">{work.title}</p>
+                  <p className="text-xs text-white/60">{work.artist}</p>
                 </div>
               </Link>
             ))}

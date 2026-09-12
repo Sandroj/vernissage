@@ -80,7 +80,7 @@
     "seenOnly": "Gezien",
     "unseenOnly": "Niet gezien",
     "allMuseums": "Alle musea",
-    "withoutImage": "Beeld niet gevonden",
+    "withoutImage": "Werken zonder beeld",
     "empty": "Geen werken gevonden met deze filters.",
     "loadingMore": "Meer laden…",
     "type": {
@@ -187,7 +187,7 @@
     "collectionEyebrow": "Museumcollectie",
     "availableInApp": "beschikbaar in Vernissage",
     "linkedWorks": "gekoppeld",
-    "withoutImage": "{count, plural, =1 {Voor 1 gekoppeld werk is geen beeld gevonden, dus het staat nog niet in de galerij.} other {Voor # gekoppelde werken is geen beeld gevonden, dus ze staan nog niet in de galerij.}}",
+    "withoutImage": "{count, plural, =1 {1 gekoppeld werk heeft geen beeld en staat daarom nog niet in de galerij.} other {# gekoppelde werken hebben geen beeld en staan daarom nog niet in de galerij.}}",
     "noAvailableWorks": "Nog geen werken met afbeelding beschikbaar",
     "website": "Website",
     "works": "werken",

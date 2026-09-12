@@ -80,7 +80,7 @@
     "seenOnly": "Seen",
     "unseenOnly": "Not seen",
     "allMuseums": "All museums",
-    "withoutImage": "Image not found",
+    "withoutImage": "Works without image",
     "empty": "No works match these filters.",
     "loadingMore": "Loading more…",
     "type": {
@@ -187,7 +187,7 @@
     "collectionEyebrow": "Museum collection",
     "availableInApp": "available in Vernissage",
     "linkedWorks": "linked",
-    "withoutImage": "{count, plural, =1 {No image could be found for 1 linked work, so it isn't shown in the gallery yet.} other {No image could be found for # linked works, so they aren't shown in the gallery yet.}}",
+    "withoutImage": "{count, plural, =1 {1 linked work has no image and isn't shown in the gallery yet.} other {# linked works have no image and aren't shown in the gallery yet.}}",
     "noAvailableWorks": "No works with images available yet",
     "website": "Website",
     "works": "works",
