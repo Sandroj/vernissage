@@ -1,4 +1,4 @@
-import { prisma, hasImage } from '@/lib/prisma'
+import { prisma, hasImage, primaryCatalogue } from '@/lib/prisma'
 import { proxyImg } from '@/lib/utils'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
@@ -24,10 +24,10 @@ export default async function MuseumsPage() {
   // Haal alle musea op — filter daarna in JS op coördinaten + artworks
   const allMuseums = await prisma.museum.findMany({
     include: {
-      _count: { select: { artworks: true } },
+      _count: { select: { artworks: { where: primaryCatalogue } } },
       artworks: {
         take: 1,
-        where: hasImage,
+        where: { AND: [primaryCatalogue, hasImage] },
         select: { image_local_path: true, image_url: true },
         orderBy: { id: 'asc' },
       },
@@ -46,7 +46,7 @@ export default async function MuseumsPage() {
   if (session?.user?.id) {
     for (const museum of museums) {
       const count = await prisma.seen.count({
-        where: { userId: session.user.id, artwork: { museumId: museum.id } },
+        where: { userId: session.user.id, artwork: { museumId: museum.id, ...primaryCatalogue } },
       })
       seenByMuseum[museum.id] = count
     }

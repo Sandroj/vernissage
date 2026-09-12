@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, MapPin } from 'lucide-react'
+import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, ImageOff, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
@@ -55,7 +55,7 @@ export default function ArtworkDetailClient({
   const [type, setType] = useState(artwork.type_normalized ?? '')
   const [reportMsg, setReportMsg] = useState('')
 
-  const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url) ?? '/placeholder.jpg'
+  const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url)
   const yearLabel = artwork.year_end && artwork.year_end !== artwork.year_start
     ? `${artwork.year_start}–${artwork.year_end}`
     : artwork.year_start?.toString() ?? null
@@ -113,16 +113,23 @@ export default function ArtworkDetailClient({
         {/* LINKS: Afbeelding — altijd dominant */}
         <div>
           <div
-            className="cursor-zoom-in overflow-hidden rounded-[2rem] bg-[#e5ded1] p-3 shadow-[0_30px_80px_rgba(68,52,30,.13)] ring-1 ring-black/8 transition hover:shadow-[0_35px_95px_rgba(68,52,30,.2)] sm:p-5"
-            onClick={() => setLightboxOpen(true)}
+            className={cn('overflow-hidden rounded-[2rem] bg-[#e5ded1] p-3 shadow-[0_30px_80px_rgba(68,52,30,.13)] ring-1 ring-black/8 transition sm:p-5', imgSrc && 'cursor-zoom-in hover:shadow-[0_35px_95px_rgba(68,52,30,.2)]')}
+            onClick={() => imgSrc && setLightboxOpen(true)}
           >
-            <img
-              src={imgSrc}
-              alt={artwork.title}
-              className="max-h-[78vh] w-full rounded-[1.2rem] object-contain"
-            />
+            {imgSrc ? (
+              <img
+                src={imgSrc}
+                alt={artwork.title}
+                className="max-h-[78vh] w-full rounded-[1.2rem] object-contain"
+              />
+            ) : (
+              <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-[1.2rem] bg-[#ddd4c4] text-stone-500">
+                <ImageOff size={38} aria-hidden="true" />
+                <p className="text-sm font-medium">{t('missingImage')}</p>
+              </div>
+            )}
           </div>
-          {lightboxOpen && (
+          {lightboxOpen && imgSrc && (
             <Lightbox src={imgSrc} alt={artwork.title} onClose={() => setLightboxOpen(false)} />
           )}
 

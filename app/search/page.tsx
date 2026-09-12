@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowUpRight, Building2, MapPin, Search } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
-import { prisma, hasImage } from '@/lib/prisma'
+import { prisma, primaryCatalogue } from '@/lib/prisma'
 import { proxyImg } from '@/lib/utils'
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string } }) {
@@ -10,7 +10,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
   const artworks = q ? await prisma.artwork.findMany({
     where: {
       AND: [
-        hasImage,
+        primaryCatalogue,
         { OR: [
           { title: { contains: q } },
           { alternate_titles: { contains: q } },
@@ -28,7 +28,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
   }) : []
   const museums = q ? await prisma.museum.findMany({
     where: { OR: [{ name: { contains: q } }, { city: { contains: q } }, { country: { contains: q } }] },
-    include: { _count: { select: { artworks: { where: hasImage } } } },
+    include: { _count: { select: { artworks: { where: primaryCatalogue } } } },
     orderBy: { name: 'asc' },
     take: 12,
   }) : []
@@ -48,7 +48,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
 
       {museums.length > 0 && <section className="mb-14"><h2 className="font-display mb-5 text-3xl font-medium text-stone-900">{t('museumResults')}</h2><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{museums.map((museum) => <Link key={museum.id} href={`/museums/${museum.id}`} className="paper-card group flex items-center gap-4 rounded-2xl p-4 transition hover:-translate-y-1 hover:shadow-xl"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#e7e9fa] text-[#4256cc]"><Building2 size={19} /></span><span className="min-w-0"><strong className="block truncate text-sm text-stone-900">{museum.name}</strong><span className="mt-1 flex items-center gap-1 text-xs text-stone-500"><MapPin size={11} /> {[museum.city, museum.country].filter(Boolean).join(', ')} · {t('worksCount', { count: museum._count.artworks })}</span></span><ArrowUpRight size={15} className="ml-auto text-stone-300 transition group-hover:text-[#4256cc]" /></Link>)}</div></section>}
 
-      {artworks.length > 0 && <section><h2 className="font-display mb-5 text-3xl font-medium text-stone-900">{t('artworkResults')}</h2><div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4 lg:grid-cols-5">{artworks.map((artwork) => <Link key={artwork.id} href={`/artworks/${artwork.id}`} className="group min-w-0"><div className="aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-1 ring-black/5 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl"><img src={proxyImg(artwork.image_local_path ?? artwork.image_url) ?? '/placeholder.jpg'} alt={artwork.title} className="size-full object-cover transition duration-700 group-hover:scale-105" /></div><h3 className="font-display mt-3 line-clamp-2 text-lg font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{artwork.title}</h3><p className="mt-1 truncate text-[11px] font-medium uppercase tracking-[.08em] text-stone-400">{[artwork.artist.name, artwork.year_start, artwork.catalogue_id, artwork.jh_catalogue_id].filter(Boolean).join(' · ')}</p>{artwork.museum && <p className="mt-1.5 flex items-center gap-1 truncate text-xs text-stone-500"><MapPin size={11} className="text-[#ed694c]" /> {artwork.museum.city || artwork.museum.name}</p>}</Link>)}</div></section>}
+      {artworks.length > 0 && <section><h2 className="font-display mb-5 text-3xl font-medium text-stone-900">{t('artworkResults')}</h2><div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4 lg:grid-cols-5">{artworks.map((artwork) => <Link key={artwork.id} href={`/artworks/${artwork.id}`} className="group min-w-0"><div className="aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-1 ring-black/5 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl"><img src={proxyImg(artwork.image_local_path ?? artwork.image_url) ?? '/placeholder.svg'} alt={artwork.title} className="size-full object-cover transition duration-700 group-hover:scale-105" /></div><h3 className="font-display mt-3 line-clamp-2 text-lg font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{artwork.title}</h3><p className="mt-1 truncate text-[11px] font-medium uppercase tracking-[.08em] text-stone-400">{[artwork.artist.name, artwork.year_start, artwork.catalogue_id, artwork.jh_catalogue_id].filter(Boolean).join(' · ')}</p>{artwork.museum && <p className="mt-1.5 flex items-center gap-1 truncate text-xs text-stone-500"><MapPin size={11} className="text-[#ed694c]" /> {artwork.museum.city || artwork.museum.name}</p>}</Link>)}</div></section>}
 
       {q && artworks.length === 0 && museums.length === 0 && <div className="paper-card mx-auto max-w-xl rounded-[2rem] p-10 text-center"><Search className="mx-auto mb-4 text-stone-300" size={36} /><h2 className="font-display text-3xl text-stone-900">{t('emptyTitle')}</h2><p className="mt-2 text-sm text-stone-500">{t('emptyText')}</p></div>}
     </div>

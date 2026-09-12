@@ -52,12 +52,12 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
   const country = museum.country && tc.has(museum.country) ? tc(museum.country) : museum.country
 
   const availableArtworks = museum.artworks.filter((artwork) => artwork.image_url || artwork.image_local_path)
-  const availableIds = new Set(availableArtworks.map((artwork) => artwork.id))
-  const seenCount = Object.keys(seenMap).filter((id) => availableIds.has(Number(id))).length
+  const catalogueIds = new Set(museum.artworks.map((artwork) => artwork.id))
+  const seenCount = Object.keys(seenMap).filter((id) => catalogueIds.has(Number(id))).length
   const linkedTotal = museum.artworks.length
   const availableTotal = availableArtworks.length
   const withoutImage = linkedTotal - availableTotal
-  const pct = availableTotal > 0 ? (seenCount / availableTotal) * 100 : 0
+  const pct = linkedTotal > 0 ? (seenCount / linkedTotal) * 100 : 0
   const cover = proxyImg(availableArtworks[0]?.image_local_path ?? availableArtworks[0]?.image_url)
 
   async function refresh() {
@@ -98,7 +98,7 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
               </p>
 
               <div className="mb-5 max-w-sm [&_span]:text-white/65">
-                <ProgressBar value={pct} seen={seenCount} total={availableTotal} animate />
+                <ProgressBar value={pct} seen={seenCount} total={linkedTotal} animate />
               </div>
 
               <div className="flex flex-wrap gap-x-7 gap-y-3 text-sm">
@@ -128,8 +128,8 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
         </div>
       )}
 
-      {availableTotal > 0 ? (
-        <ArtworkGrid artworks={availableArtworks} seenMap={seenMap} isLoggedIn={isLoggedIn} onRefresh={refresh} />
+      {linkedTotal > 0 ? (
+        <ArtworkGrid artworks={museum.artworks} seenMap={seenMap} isLoggedIn={isLoggedIn} onRefresh={refresh} />
       ) : (
         <div className="paper-card rounded-[2rem] p-10 text-center text-stone-500">
           <ImageOff size={30} className="mx-auto mb-3 text-stone-300" />

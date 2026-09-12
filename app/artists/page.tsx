@@ -1,4 +1,4 @@
-import { prisma, hasImage, localizeArtist } from '@/lib/prisma'
+import { prisma, hasImage, localizeArtist, primaryCatalogue } from '@/lib/prisma'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -20,10 +20,10 @@ export default async function ArtistsPage({
       ? { OR: [{ name: { contains: q } }, { nationality: { contains: q } }] }
       : undefined,
     include: {
-      _count: { select: { artworks: { where: hasImage } } },
+      _count: { select: { artworks: { where: primaryCatalogue } } },
       artworks: {
         take: 1,
-        where: hasImage,
+        where: { AND: [primaryCatalogue, hasImage] },
         orderBy: { id: 'asc' },
         select: { image_local_path: true, image_url: true },
       },
@@ -36,7 +36,7 @@ export default async function ArtistsPage({
   if (session?.user?.id) {
     for (const artist of artists) {
       const count = await prisma.seen.count({
-        where: { userId: session.user.id, artwork: { artistId: artist.id } },
+        where: { userId: session.user.id, artwork: { artistId: artist.id, ...primaryCatalogue } },
       })
       seenCounts[artist.id] = count
     }

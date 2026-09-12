@@ -15,12 +15,15 @@ export default async function ArtistDetailPage({
   const session = await getServerSession(authOptions)
   const locale = await getLocale()
   const tc = await getTranslations('Countries')
+  const catalogueWhere = params.slug === 'vincent-van-gogh'
+    ? { catalogue_id: { not: null } }
+    : {}
 
   const artist = await prisma.artist.findUnique({
     where: { slug: params.slug },
     include: {
       artworks: {
-        where: hasImage,
+        where: catalogueWhere,
         include: { museum: true },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
       },
@@ -33,13 +36,13 @@ export default async function ArtistDetailPage({
     where: {
       lat: { not: null },
       lng: { not: null },
-      artworks: { some: { artistId: artist.id } },
+      artworks: { some: { artistId: artist.id, ...catalogueWhere } },
     },
     include: {
-      _count: { select: { artworks: { where: { artistId: artist.id } } } },
+      _count: { select: { artworks: { where: { artistId: artist.id, ...catalogueWhere } } } },
       artworks: {
         take: 1,
-        where: { artistId: artist.id, ...hasImage },
+        where: { artistId: artist.id, ...catalogueWhere, ...hasImage },
         select: { image_local_path: true, image_url: true },
         orderBy: { id: 'asc' },
       },

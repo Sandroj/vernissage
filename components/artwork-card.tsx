@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, CheckCircle2, MapPin } from 'lucide-react'
+import { Check, CheckCircle2, ImageOff, MapPin } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
 import { cn, proxyImg } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
@@ -44,24 +44,29 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
   const rawSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const imgSrc = proxyImg(rawSrc)
 
-  if (imgError) return null
-
   return (
     <>
       <article className="group min-w-0">
       <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-1 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl', seen ? 'ring-[#4256cc]/55' : 'ring-black/5')}>
         {/* Image — klikken gaat naar de detailpagina */}
-        <Link href={`/artworks/${artwork.id}`} className="block w-full h-full">
-          <img
-            src={imgSrc}
-            onError={() => setImgError(true)}
-            alt={artwork.title}
-            className={cn(
-              'size-full object-cover transition-all duration-700',
-              seen ? 'brightness-90' : 'group-hover:scale-[1.03]'
-            )}
-            loading="lazy"
-          />
+        <Link href={`/artworks/${artwork.id}`} className="block size-full">
+          {imgSrc && !imgError ? (
+            <img
+              src={imgSrc}
+              onError={() => setImgError(true)}
+              alt={artwork.title}
+              className={cn(
+                'size-full object-cover transition-all duration-700',
+                seen ? 'brightness-90' : 'group-hover:scale-[1.03]'
+              )}
+              loading="lazy"
+            />
+          ) : (
+            <span className="flex size-full flex-col items-center justify-center gap-2 bg-[#e7e1d6] px-4 text-center text-stone-400">
+              <ImageOff size={25} aria-hidden="true" />
+              <span className="text-[11px] font-medium uppercase tracking-[.08em]">{t('missingImage')}</span>
+            </span>
+          )}
         </Link>
 
         {/* Gezien indicator */}

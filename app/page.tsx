@@ -1,4 +1,4 @@
-import { prisma, hasImage } from '@/lib/prisma'
+import { prisma, hasImage, primaryCatalogue } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
@@ -14,9 +14,9 @@ export default async function DashboardPage() {
 
   const artists = await prisma.artist.findMany({
     include: {
-      _count: { select: { artworks: { where: hasImage } } },
+      _count: { select: { artworks: { where: primaryCatalogue } } },
       artworks: {
-        where: hasImage,
+        where: { AND: [primaryCatalogue, hasImage] },
         take: 2,
         orderBy: { id: 'asc' },
         select: { id: true, title: true, image_url: true, image_local_path: true },
@@ -41,11 +41,11 @@ export default async function DashboardPage() {
   if (session?.user?.id) {
     for (const artist of artists) {
       seenCounts[artist.id] = await prisma.seen.count({
-        where: { userId: session.user.id, artwork: { artistId: artist.id } },
+        where: { userId: session.user.id, artwork: { artistId: artist.id, ...primaryCatalogue } },
       })
     }
     const recent = await prisma.seen.findMany({
-      where: { userId: session.user.id },
+      where: { userId: session.user.id, artwork: primaryCatalogue },
       include: { artwork: { include: { artist: true } } },
       orderBy: { createdAt: 'desc' },
       take: 12,

@@ -93,7 +93,8 @@
   "Card": {
     "seenBadge": "gezien",
     "edit": "Bewerken",
-    "markSeen": "Markeer gezien"
+    "markSeen": "Markeer gezien",
+    "missingImage": "Geen afbeelding beschikbaar"
   },
   "Lightbox": {
     "close": "Sluiten",
@@ -118,6 +119,7 @@
     "cancel": "Annuleren",
     "reportSent": "Melding verstuurd, dank je!",
     "saved": "Opgeslagen",
+    "missingImage": "Geen afbeelding beschikbaar",
     "source": "Bron: {name}",
     "viewOriginal": "Bekijk originele pagina",
     "loginToMark": "Inloggen om te markeren",

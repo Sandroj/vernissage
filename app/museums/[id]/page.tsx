@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma, primaryCatalogue } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { notFound } from 'next/navigation'
@@ -21,6 +21,7 @@ export default async function MuseumDetailPage({
     where: { id: museumId },
     include: {
       artworks: {
+        where: primaryCatalogue,
         include: { artist: { select: { id: true, name: true, slug: true } } },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
       },
@@ -33,7 +34,7 @@ export default async function MuseumDetailPage({
     ? await prisma.seen.findMany({
         where: {
           userId: session.user.id,
-          artwork: { museumId },
+          artwork: { museumId, ...primaryCatalogue },
         },
       })
     : []

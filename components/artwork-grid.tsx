@@ -76,22 +76,16 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  // Only artworks with an image
-  const withImage = useMemo(
-    () => artworks.filter((a) => a.image_url || a.image_local_path),
-    [artworks]
-  )
-
   // Unique types, in vaste volgorde, met aantallen
   const types = useMemo(() => {
     const counts = new Map<string, number>()
-    for (const a of withImage) {
+    for (const a of artworks) {
       if (a.type_normalized) counts.set(a.type_normalized, (counts.get(a.type_normalized) ?? 0) + 1)
     }
     return Array.from(counts.entries()).sort(
       ([a], [b]) => (TYPE_ORDER.indexOf(a) + 1 || 99) - (TYPE_ORDER.indexOf(b) + 1 || 99)
     )
-  }, [withImage])
+  }, [artworks])
 
   function toggleType(ty: string) {
     setHiddenTypes((prev) => {
@@ -105,13 +99,13 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
   // Unique museums
   const museums = useMemo(() => {
     const map = new Map<number, string>()
-    for (const a of withImage) {
+    for (const a of artworks) {
       if (a.museum) map.set(a.museum.id, a.museum.name)
     }
     return Array.from(map.entries())
-  }, [withImage])
+  }, [artworks])
 
-  const filtered = useMemo(() => withImage.filter((a) => {
+  const filtered = useMemo(() => artworks.filter((a) => {
     if (filterTitle) {
       const haystack = [a.title, a.alternate_titles, a.catalogue_id, a.jh_catalogue_id, a.artist?.name, a.museum?.name, a.museum?.city].filter(Boolean).join(' ').toLowerCase()
       if (!haystack.includes(filterTitle.toLowerCase())) return false
@@ -121,7 +115,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
     if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
     return true
-  }), [withImage, filterTitle, hiddenTypes, filterSeen, filterMuseum, seenMap])
+  }), [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, seenMap])
 
   // Reset pagination when filters change
   const visible = filtered.slice(0, visibleCount)
@@ -160,7 +154,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
     <div className="space-y-6">
       {/* Stats bar */}
       <div className="flex items-end justify-between">
-        <div><p className="eyebrow mb-2">{t('collection')}</p><h2 className="font-display text-4xl font-medium text-stone-900 sm:text-5xl">{t('works', { count: withImage.length })}</h2>
+        <div><p className="eyebrow mb-2">{t('collection')}</p><h2 className="font-display text-4xl font-medium text-stone-900 sm:text-5xl">{t('works', { count: artworks.length })}</h2>
           {seenCount > 0 && (
             <span className="mt-1 block text-sm font-medium text-[#4256cc]">{t('seen', { count: seenCount })}</span>
           )}
