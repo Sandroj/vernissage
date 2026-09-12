@@ -56,7 +56,7 @@ export default async function DashboardPage() {
 
   const totalSeen = Object.values(seenCounts).reduce((a, b) => a + b, 0)
   const totalArtworks = artists.reduce((a, b) => a + b._count.artworks, 0)
-  const heroWorks = artists.flatMap((artist) => artist.artworks.map((artwork) => ({ ...artwork, artist: artist.name }))).slice(0, 6)
+  const heroWorks = artists.flatMap((artist) => artist.artworks.map((artwork) => ({ ...artwork, artist: artist.name }))).slice(0, 3)
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-12">
@@ -86,7 +86,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="grid h-[370px] grid-cols-2 grid-rows-2 gap-3 sm:h-[430px]">
-            {heroWorks.slice(0, 4).map((work, index) => (
+            {heroWorks.map((work, index) => (
               <Link key={work.id} href={`/artworks/${work.id}`} className={`group relative overflow-hidden rounded-[1.4rem] ${index === 0 ? 'row-span-2' : ''}`}>
                 <img src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'} alt={work.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-12 opacity-0 transition group-hover:opacity-100">

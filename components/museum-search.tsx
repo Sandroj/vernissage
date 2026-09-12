@@ -36,12 +36,12 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
           <Button
             variant="outline"
             role="combobox"
-            className="w-full justify-start gap-2 text-left font-normal bg-slate-900 border-slate-700"
+            className="w-full justify-start gap-2 text-left font-normal bg-white/70 border-black/10 text-stone-800 hover:bg-white"
           />
         }
       >
-        <MapPin size={14} className="text-slate-400 flex-shrink-0" />
-        <span className={value ? 'text-white' : 'text-slate-400'}>
+        <MapPin size={14} className="text-stone-400 flex-shrink-0" />
+        <span className={value ? 'text-stone-800' : 'text-stone-400'}>
           {value || t('trigger')}
         </span>
       </PopoverTrigger>
@@ -55,7 +55,7 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
           <CommandList>
             <CommandEmpty>
               <button
-                className="px-3 py-2 text-sm text-slate-300 w-full text-left hover:bg-slate-800"
+                className="px-3 py-2 text-sm text-stone-500 w-full text-left hover:bg-stone-100 rounded-lg"
                 onClick={() => { onChange(query); setOpen(false) }}
               >
                 {t('useAsLocation', { query })}
@@ -67,9 +67,9 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
                 value={`${m.name} ${m.city}`}
                 onSelect={() => { onChange(`${m.name}, ${m.city}`); setOpen(false) }}
               >
-                <MapPin size={13} className="mr-2 text-slate-400" />
+                <MapPin size={13} className="mr-2 text-stone-400" />
                 <span>{m.name}</span>
-                <span className="ml-auto text-slate-400 text-xs">{m.city}</span>
+                <span className="ml-auto text-stone-400 text-xs">{m.city}</span>
               </CommandItem>
             ))}
           </CommandList>

@@ -19,8 +19,10 @@ export default function OpengraphImage() {
         }}
       >
         <svg width="140" height="140" viewBox="0 0 32 32">
-          <circle cx="16" cy="16" r="15" fill="#ed694c" stroke="#4256cc" strokeWidth="1.5" />
-          <path d="M8,8 L12,8 L16,19 L20,8 L24,8 L16,25 Z" fill="#fffdf8" />
+          <circle cx="16" cy="16" r="15" fill="#fffdf8" stroke="#4256cc" strokeWidth="1.5" />
+          <path d="M9,14 L9,9 L14,9" stroke="#24211c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <path d="M23,18 L23,23 L18,23" stroke="#24211c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <circle cx="23.5" cy="23.5" r="3.6" fill="#ed694c" stroke="#fffdf8" strokeWidth="1.1" />
         </svg>
         <div style={{ display: 'flex', fontSize: 76, fontWeight: 600, color: '#24211c', letterSpacing: -2 }}>
           Vernissage

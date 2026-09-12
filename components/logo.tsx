@@ -1,8 +1,8 @@
 /**
- * Vernissage-merk: een coral rondel met een dik "V"-glyph en een dunne
- * kobalt ring — dezelfde twee accentkleuren die de rest van de app al
- * gebruikt (#ed694c / #4256cc). Puur SVG, dus scherp op elk formaat van
- * favicon tot hero.
+ * Vernissage-merk: twee lijsthoeken met de koraalrode "verkocht"-stip die
+ * galeries naast een geclaimd werk hangen — dezelfde huisstijlkleuren als de
+ * rest van de app (#ed694c / #4256cc). Puur SVG, dus scherp op elk formaat
+ * van favicon tot hero.
  */
 export function LogoMark({ size = 32, className }: { size?: number; className?: string }) {
   return (
@@ -15,8 +15,10 @@ export function LogoMark({ size = 32, className }: { size?: number; className?: 
       className={className}
       aria-hidden="true"
     >
-      <circle cx="16" cy="16" r="15" fill="#ed694c" stroke="#4256cc" strokeWidth="1.5" />
-      <path d="M8,8 L12,8 L16,19 L20,8 L24,8 L16,25 Z" fill="#fffdf8" />
+      <circle cx="16" cy="16" r="15" fill="#fffdf8" stroke="#4256cc" strokeWidth="1.5" />
+      <path d="M9,14 L9,9 L14,9" stroke="#24211c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M23,18 L23,23 L18,23" stroke="#24211c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="23.5" cy="23.5" r="3.6" fill="#ed694c" stroke="#fffdf8" strokeWidth="1.1" />
     </svg>
   )
 }

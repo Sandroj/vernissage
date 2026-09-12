@@ -31,7 +31,7 @@ export default function StarRating({ value, onChange }: StarRatingProps) {
               'transition-colors',
               (hover ?? value ?? 0) >= star
                 ? 'fill-amber-400 text-amber-400'
-                : 'text-slate-600'
+                : 'text-stone-300'
             )}
           />
         </button>

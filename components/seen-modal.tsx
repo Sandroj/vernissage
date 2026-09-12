@@ -67,25 +67,25 @@ export default function SeenModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-zinc-950 border-white/10 sm:max-w-md">
+      <DialogContent className="bg-[#faf6ee] border-black/10 sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">
+          <DialogTitle className="font-display text-2xl font-medium text-stone-900">
             {existingSeen ? t('editTitle') : t('newTitle')}
           </DialogTitle>
-          <p className="text-zinc-500 text-sm">{artworkTitle}</p>
+          <p className="text-stone-500 text-sm">{artworkTitle}</p>
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
           {/* Datum */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('date')}</label>
+            <label className="text-xs text-stone-500 uppercase tracking-widest">{t('date')}</label>
             <Popover open={calOpen} onOpenChange={setCalOpen}>
               <PopoverTrigger
                 render={
-                  <Button variant="outline" className="w-full justify-start gap-2 bg-zinc-900 border-white/10 text-white hover:bg-zinc-800" />
+                  <Button variant="outline" className="w-full justify-start gap-2 bg-white/70 border-black/10 text-stone-800 hover:bg-white" />
                 }
               >
-                <CalendarIcon size={14} />
+                <CalendarIcon size={14} className="text-stone-500" />
                 {fmt.dateTime(date, { day: 'numeric', month: 'long', year: 'numeric' })}
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -101,35 +101,35 @@ export default function SeenModal({
 
           {/* Locatie */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('location')}</label>
+            <label className="text-xs text-stone-500 uppercase tracking-widest">{t('location')}</label>
             <MuseumSearch value={location} onChange={setLocation} />
           </div>
 
           {/* Waardering */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('rating')}</label>
+            <label className="text-xs text-stone-500 uppercase tracking-widest">{t('rating')}</label>
             <StarRating value={rating} onChange={setRating} />
           </div>
 
           {/* Notitie */}
           <div className="space-y-1.5">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('notes')}</label>
+            <label className="text-xs text-stone-500 uppercase tracking-widest">{t('notes')}</label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder={t('notesPlaceholder')}
-              className="bg-zinc-900 border-white/10 text-white resize-none placeholder:text-zinc-600"
+              className="bg-white/70 border-black/10 text-stone-800 resize-none placeholder:text-stone-400"
               rows={3}
             />
           </div>
 
           {/* Foto */}
           <div className="space-y-2">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest">{t('photo')}</label>
+            <label className="text-xs text-stone-500 uppercase tracking-widest">{t('photo')}</label>
 
             {/* File upload */}
             <div className="space-y-2">
-              <label className="flex items-center justify-center gap-2 border border-dashed border-white/10 hover:border-white/20 rounded-xl p-4 cursor-pointer transition-colors text-sm text-zinc-500 hover:text-zinc-300">
+              <label className="flex items-center justify-center gap-2 border border-dashed border-black/15 hover:border-black/25 rounded-xl p-4 cursor-pointer transition-colors text-sm text-stone-500 hover:text-stone-700">
                 <input
                   type="file"
                   accept="image/*"
@@ -167,13 +167,13 @@ export default function SeenModal({
                   value={photoUrl}
                   onChange={(e) => setPhotoUrl(e.target.value)}
                   placeholder={t('photoUrlPlaceholder')}
-                  className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-indigo-500/50"
+                  className="w-full bg-white/70 border border-black/10 rounded-lg px-3 py-2 text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#4256cc]/40"
                 />
               )}
             </div>
           </div>
 
-          <Button onClick={handleSave} disabled={saving} className="w-full bg-indigo-600 hover:bg-indigo-500 border-0 text-white">
+          <Button onClick={handleSave} disabled={saving} className="w-full h-11 rounded-full bg-[#ed694c] hover:bg-[#db573c] border-0 text-white">
             {saving ? t('saving') : t('save')}
           </Button>
         </div>
