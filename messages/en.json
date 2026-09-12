@@ -64,7 +64,8 @@
     "seen": "seen",
     "mapButton": "View {count, plural, =1 {1 location} other {# locations}} on map",
     "mapTitle": "Where to find {name}",
-    "mapDescription": "{count, plural, =1 {One collection holder with works by this artist.} other {# collection holders with works by this artist.}} A work may temporarily be in storage or on loan."
+    "mapDescription": "{count, plural, =1 {One collection holder with works by this artist.} other {# collection holders with works by this artist.}} A work may temporarily be in storage or on loan.",
+    "openMuseum": "View museum"
   },
   "Progress": {
     "seenOf": "{seen} of {total} seen"

@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 
 export interface MuseumPin {
   id: number
@@ -29,7 +28,6 @@ function escapeHtml(value: string) {
 export default function MuseumMap({ museums, labels, compact = false }: MuseumMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<unknown>(null)
-  const router = useRouter()
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return
@@ -132,6 +130,7 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
 
         // Popup
         const popupContent = `
+          <a href="/museums/${m.id}" aria-label="${escapeHtml(labels.openMuseum)}: ${escapeHtml(m.name)}" style="display:block;text-decoration:none">
           <div style="
             background: #fffaf0;
             border: 1px solid rgba(65,55,43,0.12);
@@ -149,6 +148,7 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
             </div>
             <div style="margin-top:9px;color:#4256cc;font-size:11px;font-weight:700">${escapeHtml(labels.openMuseum)} →</div>
           </div>
+          </a>
         `
 
         marker.bindPopup(popupContent, {
@@ -158,11 +158,10 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
         })
 
         marker.on('click', () => {
-          router.push(`/museums/${m.id}`)
+          window.location.assign(`/museums/${m.id}`)
         })
 
         marker.on('mouseover', () => marker.openPopup())
-        marker.on('mouseout', () => marker.closePopup())
       })
 
       if (museums.length === 1) {

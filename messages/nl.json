@@ -64,7 +64,8 @@
     "seen": "gezien",
     "mapButton": "Bekijk {count, plural, =1 {1 locatie} other {# locaties}} op kaart",
     "mapTitle": "Waar je {name} kunt vinden",
-    "mapDescription": "{count, plural, =1 {Eén collectiehouder met werken van deze kunstenaar.} other {# collectiehouders met werken van deze kunstenaar.}} Een werk kan tijdelijk in depot of in bruikleen zijn."
+    "mapDescription": "{count, plural, =1 {Eén collectiehouder met werken van deze kunstenaar.} other {# collectiehouders met werken van deze kunstenaar.}} Een werk kan tijdelijk in depot of in bruikleen zijn.",
+    "openMuseum": "Bekijk museum"
   },
   "Progress": {
     "seenOf": "{seen} van {total} gezien"

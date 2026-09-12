@@ -121,6 +121,8 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
               <button
                 type="button"
                 onClick={() => setMapOpen(true)}
+                aria-haspopup="dialog"
+                aria-expanded={mapOpen}
                 className="mt-5 inline-flex h-11 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/18"
               >
                 <MapPin size={16} className="text-[#f4b548]" />
