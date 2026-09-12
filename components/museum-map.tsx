@@ -16,7 +16,7 @@ export interface MuseumPin {
 
 interface MuseumMapProps {
   museums: MuseumPin[]
-  labels: { works: string; seen: string }
+  labels: { works: string; seen: string; openMuseum: string }
   compact?: boolean
 }
 
@@ -123,7 +123,12 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
           popupAnchor: [0, -58],
         })
 
-        const marker = L.marker([m.lat, m.lng], { icon }).addTo(map)
+        const marker = L.marker([m.lat, m.lng], {
+          icon,
+          title: m.name,
+          alt: `${labels.openMuseum}: ${m.name}`,
+          keyboard: true,
+        }).addTo(map)
 
         // Popup
         const popupContent = `
@@ -142,6 +147,7 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
               <span style="color:#6f665b">${m.artworkCount} ${escapeHtml(labels.works)}</span>
               ${m.seenCount > 0 ? `<span style="color:#4256cc;font-weight:700">${m.seenCount} ${escapeHtml(labels.seen)}</span>` : ''}
             </div>
+            <div style="margin-top:9px;color:#4256cc;font-size:11px;font-weight:700">${escapeHtml(labels.openMuseum)} →</div>
           </div>
         `
 

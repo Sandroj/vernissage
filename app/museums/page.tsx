@@ -66,7 +66,7 @@ export default async function MuseumsPage() {
     previewImage: proxyImg(m.artworks[0]?.image_local_path ?? m.artworks[0]?.image_url) ?? null,
     seenCount: seenByMuseum[m.id] ?? 0,
   }))
-  const popupLabels = { works: t('works'), seen: t('seen') }
+  const popupLabels = { works: t('works'), seen: t('seen'), openMuseum: t('openMuseum') }
 
   return (
     <div>
@@ -82,18 +82,7 @@ export default async function MuseumsPage() {
       {/* Kaart */}
       <MuseumMap museums={pins} labels={popupLabels} />
 
-      {/* Legenda */}
-      <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-stone-500">
-        <div className="flex items-center gap-2">
-          <div className="size-4 rounded border-[3px] border-[#fffaf0] bg-[#e7e1d6] shadow-sm" />
-          <span>{t('legendMuseum')}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="size-4 rounded border-[3px] border-[#4256cc] bg-[#e7e1d6] shadow-sm" />
-          <span>{t('legendSeen')}</span>
-        </div>
-        <span className="text-stone-400">{t('legendHint')}</span>
-      </div>
+      <p className="mt-4 text-xs text-stone-400">{t('legendHint')}</p>
     </div>
   )
 }

@@ -55,7 +55,7 @@ export default async function MuseumDetailPage({
       {/* Back */}
       <Link
         href="/museums"
-        className="inline-flex items-center gap-1.5 text-zinc-500 hover:text-white text-sm mb-6 transition-colors"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-stone-500 transition-colors hover:text-[#4256cc]"
       >
         <ArrowLeft size={14} /> {t('backToMuseums')}
       </Link>

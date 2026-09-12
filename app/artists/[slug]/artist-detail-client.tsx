@@ -150,7 +150,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
           {mapOpen && (
             <MuseumMap
               museums={museumPins}
-              labels={{ works: t('works'), seen: t('seen') }}
+              labels={{ works: t('works'), seen: t('seen'), openMuseum: t('openMuseum') }}
               compact
             />
           )}

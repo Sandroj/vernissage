@@ -30,7 +30,7 @@ interface ArtworkDetailClientProps {
     location_confidence?: string | null
     location_verified_at?: string | Date | null
     artist: { id: number; name: string; slug: string }
-    museum?: { name: string; city: string; country: string } | null
+    museum?: { id: number; name: string; city: string; country: string } | null
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialSeen: any | null
@@ -195,11 +195,11 @@ export default function ArtworkDetailClient({
                 <p className="mb-2 text-xs uppercase tracking-widest text-stone-400">{t('location')}</p>
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="flex items-center gap-1.5 text-sm font-semibold text-stone-900"><MapPin size={13} className="text-[#ed694c]" />
-                      <span>
+                    <Link href={`/museums/${artwork.museum.id}`} title={t('viewMuseum')} className="flex items-center gap-1.5 text-sm font-semibold text-stone-900 transition hover:text-[#4256cc]"><MapPin size={13} className="text-[#ed694c]" />
+                      <span className="border-b border-transparent hover:border-[#4256cc]/30">
                         {artwork.museum.name}
                       </span>
-                    </p>
+                    </Link>
                     <p className="ml-5 mt-1 text-xs text-stone-500">
                       {[artwork.museum.city, artwork.museum.country && tc.has(artwork.museum.country) ? tc(artwork.museum.country) : artwork.museum.country].filter(Boolean).join(', ')}
                     </p>
