@@ -26,6 +26,7 @@ interface ArtworkDetailClientProps {
     source_url?: string | null
     source_name?: string | null
     catalogue_id?: string | null
+    jh_catalogue_id?: string | null
     alternate_titles?: string | null
     location_confidence?: string | null
     location_verified_at?: string | Date | null
@@ -166,6 +167,7 @@ export default function ArtworkDetailClient({
           {/* Metadata lijst */}
           <div className="space-y-3">
             {artwork.catalogue_id && <MetaRow label={t('catalogue')} value={artwork.catalogue_id} />}
+            {artwork.jh_catalogue_id && <MetaRow label={t('jhCatalogue')} value={artwork.jh_catalogue_id} />}
             {artwork.medium_raw && (
               <MetaRow label={t('medium')} value={artwork.medium_raw} />
             )}

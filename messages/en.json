@@ -6,8 +6,8 @@
     "open": "Search",
     "eyebrow": "Search the collection",
     "title": "What would you like to see?",
-    "placeholder": "Search artwork, artist, museum, city or F-number…",
-    "hint": "Try Sunflowers, Amsterdam, Kröller-Müller or F458",
+    "placeholder": "Search artwork, artist, museum, city, F- or JH-number…",
+    "hint": "Try Sunflowers, Amsterdam, F458 or JH1665",
     "submit": "Search",
     "resultsFor": "Results for ‘{query}’",
     "summary": "{works} artworks · {museums} museums",
@@ -103,7 +103,8 @@
     "fullDetails": "View full details"
   },
   "Artwork": {
-    "catalogue": "Catalogue number",
+    "catalogue": "De la Faille number",
+    "jhCatalogue": "Hulsker number",
     "medium": "Medium",
     "type": "Type",
     "dimensions": "Dimensions",

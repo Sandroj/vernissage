@@ -6,8 +6,8 @@
     "open": "Zoeken",
     "eyebrow": "Doorzoek de collectie",
     "title": "Wat wil je zien?",
-    "placeholder": "Zoek werk, kunstenaar, museum, stad of F-nummer…",
-    "hint": "Bijvoorbeeld: Zonnebloemen, Amsterdam, Kröller-Müller of F458",
+    "placeholder": "Zoek werk, kunstenaar, museum, stad, F- of JH-nummer…",
+    "hint": "Bijvoorbeeld: Zonnebloemen, Amsterdam, F458 of JH1665",
     "submit": "Zoeken",
     "resultsFor": "Resultaten voor ‘{query}’",
     "summary": "{works} werken · {museums} musea",
@@ -103,7 +103,8 @@
     "fullDetails": "Bekijk volledige details"
   },
   "Artwork": {
-    "catalogue": "Catalogusnummer",
+    "catalogue": "De la Faille-nummer",
+    "jhCatalogue": "Hulsker-nummer",
     "medium": "Medium",
     "type": "Type",
     "dimensions": "Afmetingen",

@@ -17,6 +17,7 @@ interface Artwork {
   medium_raw?: string | null
   dimensions_raw?: string | null
   catalogue_id?: string | null
+  jh_catalogue_id?: string | null
   alternate_titles?: string | null
   image_local_path?: string | null
   image_url?: string | null
@@ -112,7 +113,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh }
 
   const filtered = useMemo(() => withImage.filter((a) => {
     if (filterTitle) {
-      const haystack = [a.title, a.alternate_titles, a.catalogue_id, a.artist?.name, a.museum?.name, a.museum?.city].filter(Boolean).join(' ').toLowerCase()
+      const haystack = [a.title, a.alternate_titles, a.catalogue_id, a.jh_catalogue_id, a.artist?.name, a.museum?.name, a.museum?.city].filter(Boolean).join(' ').toLowerCase()
       if (!haystack.includes(filterTitle.toLowerCase())) return false
     }
     if (a.type_normalized && hiddenTypes.has(a.type_normalized)) return false
