@@ -6,7 +6,7 @@
     "open": "Zoeken",
     "eyebrow": "Doorzoek de collectie",
     "title": "Wat wil je zien?",
-    "placeholder": "Zoek werk, kunstenaar, museum, stad, F- of JH-nummer…",
+    "placeholder": "Zoek werk, kunstenaar, museum, stad of catalogusnummer…",
     "hint": "Bijvoorbeeld: Zonnebloemen, Amsterdam, F458 of JH1665",
     "submit": "Zoeken",
     "resultsFor": "Resultaten voor ‘{query}’",
@@ -80,6 +80,7 @@
     "seenOnly": "Gezien",
     "unseenOnly": "Niet gezien",
     "allMuseums": "Alle musea",
+    "withoutImage": "Zonder afbeelding",
     "empty": "Geen werken gevonden met deze filters.",
     "loadingMore": "Meer laden…",
     "type": {

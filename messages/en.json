@@ -6,7 +6,7 @@
     "open": "Search",
     "eyebrow": "Search the collection",
     "title": "What would you like to see?",
-    "placeholder": "Search artwork, artist, museum, city, F- or JH-number…",
+    "placeholder": "Search artwork, artist, museum, city or catalogue number…",
     "hint": "Try Sunflowers, Amsterdam, F458 or JH1665",
     "submit": "Search",
     "resultsFor": "Results for ‘{query}’",
@@ -80,6 +80,7 @@
     "seenOnly": "Seen",
     "unseenOnly": "Not seen",
     "allMuseums": "All museums",
+    "withoutImage": "Without image",
     "empty": "No works match these filters.",
     "loadingMore": "Loading more…",
     "type": {
