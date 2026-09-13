@@ -84,6 +84,8 @@
     "allMuseums": "All museums",
     "allPeriods": "All periods",
     "allThemes": "All themes and series",
+    "showFilters": "Show more filters",
+    "hideFilters": "Hide more filters",
     "unknownCountry": "Country unknown",
     "withoutImage": "Works without image",
     "empty": "No works match these filters.",

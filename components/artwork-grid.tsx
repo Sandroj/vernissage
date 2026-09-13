@@ -1,7 +1,7 @@
 'use client'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import ArtworkCard from '@/components/artwork-card'
-import { Search, ChevronDown, Check, SlidersHorizontal } from 'lucide-react'
+import { Search, ChevronDown, Check, SlidersHorizontal, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLocale, useTranslations } from 'next-intl'
 import { ARTIST_TAXONOMIES } from '@/lib/artwork-taxonomy'
@@ -80,11 +80,9 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   const tc = useTranslations('Countries')
   const locale = useLocale()
   const [filterTitle, setFilterTitle] = useState('')
-  // Start with paintings only; visitors can explicitly enable drawings,
-  // prints and the other types through the chips below.
-  const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set(
-      artworks.flatMap((artwork) => splitTypes(artwork.type_normalized)).filter((type) => type !== 'painting')
-  ))
+  // Start with every type visible. Narrowing to paintings/drawings/etc. is an
+  // explicit choice in the collapsed filter panel.
+  const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set())
   const [internalFilterSeen, setInternalFilterSeen] = useState<SeenFilter>('all')
   const filterSeen = seenFilter ?? internalFilterSeen
   const setFilterSeen = onSeenFilterChange ?? setInternalFilterSeen
@@ -92,6 +90,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   const [filterPeriod, setFilterPeriod] = useState('all')
   const [filterTheme, setFilterTheme] = useState('all')
   const [showMissingImages, setShowMissingImages] = useState(false)
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -220,8 +219,21 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
         </div>
 
         <div className="flex flex-wrap items-center gap-2 border-t border-black/5 pt-3 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0">
-          <SlidersHorizontal size={14} className="hidden text-stone-400 sm:block" />
           <Dropdown value={filterSeen} onChange={handleFilterChange(setFilterSeen)} options={seenOptions} />
+          <button
+            type="button"
+            aria-expanded={showAdvancedFilters}
+            aria-label={showAdvancedFilters ? t('hideFilters') : t('showFilters')}
+            onClick={() => setShowAdvancedFilters((open) => !open)}
+            className={cn('grid size-10 place-items-center rounded-full border transition-colors', showAdvancedFilters ? 'border-[#4256cc]/30 bg-[#e7e9fa] text-[#4256cc]' : 'border-black/10 bg-white/70 text-stone-500 hover:bg-white')}
+          >
+            {showAdvancedFilters ? <X size={15} /> : <SlidersHorizontal size={15} />}
+          </button>
+        </div>
+      </div>
+
+      {showAdvancedFilters && (
+        <div className="paper-card flex flex-wrap items-center gap-2 rounded-2xl p-3">
           {facetCounts.periods.length > 1 && (
             <Dropdown value={filterPeriod} onChange={handleFilterChange(setFilterPeriod)} options={[
               { value: 'all', label: t('allPeriods') },
@@ -254,10 +266,10 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
             </div>
           )}
         </div>
-      </div>
+      )}
 
       {/* Type-toggles: klik om een type te verbergen/tonen */}
-      {(types.length > 1 || missingImageCount > 0) && (
+      {showAdvancedFilters && (types.length > 1 || missingImageCount > 0) && (
         <div className="flex flex-wrap gap-2">
           {types.map(([ty, n]) => {
             const on = !hiddenTypes.has(ty)
