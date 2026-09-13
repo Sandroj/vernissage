@@ -4,7 +4,8 @@
  * are deleted and User/Seen/Report data is never touched.
  *
  * Coordinates were geocoded from official visitor addresses with OpenStreetMap
- * Nominatim on 2026-09-12.
+ * Nominatim on 2026-09-12 and 2026-09-13. The less searchable institutions
+ * were cross-checked against their Wikidata place/country/coordinate claims.
  */
 import { createClient } from '@libsql/client'
 import { createRequire } from 'module'
@@ -17,6 +18,35 @@ const require = createRequire(import.meta.url)
 const Database = require('better-sqlite3')
 
 const LOCATIONS = [
+  { name: 'Museum Ludwig', city: 'Cologne', country: 'Germany', lat: 50.9408347, lng: 6.9600217 },
+  { name: 'Kunstmuseum Bern', aliases: ['Bern Kunstmuseum'], city: 'Bern', country: 'Switzerland', lat: 46.9512091, lng: 7.4430955 },
+  { name: 'Staatsgalerie Stuttgart', city: 'Stuttgart', country: 'Germany', lat: 48.7802145, lng: 9.1871053 },
+  { name: 'National Art Museum of Azerbaijan', city: 'Baku', country: 'Azerbaijan', lat: 40.3632725, lng: 49.8318442 },
+  { name: 'National Gallery of Armenia', city: 'Yerevan', country: 'Armenia', lat: 40.17875, lng: 44.514167 },
+  { name: 'San Francisco Museum of Modern Art', city: 'San Francisco', country: 'United States', lat: 37.785915, lng: -122.4007359 },
+  { name: 'Portland Museum of Art', aliases: ['Maine, Portland Museum of Art'], city: 'Portland', country: 'United States', lat: 43.6537342, lng: -70.2620333 },
+  { name: 'Astrakhan State Art Gallery', aliases: ['Astrakhan picture gallery of a name. B. M. Custodiev'], city: 'Astrakhan', country: 'Russia', lat: 46.349238, lng: 48.051837 },
+  { name: 'Musée Zervos', city: 'Vézelay', country: 'France', lat: 47.4638, lng: 3.74329 },
+  { name: 'Nelson-Atkins Museum of Art', aliases: ['Missouri, Nelson-Atkins Museum of Art'], city: 'Kansas City', country: 'United States', lat: 39.0449664, lng: -94.5809582 },
+  { name: 'Musée d’arts de Nantes', aliases: ['Fine Arts Museum of Nantes'], city: 'Nantes', country: 'France', lat: 47.2195186, lng: -1.5475746 },
+  { name: 'Nizhny Novgorod State Art Museum', city: 'Nizhny Novgorod', country: 'Russia', lat: 56.3295482, lng: 44.0064045 },
+  { name: 'Georgian National Museum', city: 'Tbilisi', country: 'Georgia', lat: 41.6960428, lng: 44.8002209 },
+  { name: 'LWL-Museum of Art and Culture', city: 'Münster', country: 'Germany', lat: 51.9613817, lng: 7.6242696 },
+  { name: 'Vyatka Art Museum', city: 'Kirov', country: 'Russia', lat: 58.60223, lng: 49.66965 },
+  { name: 'Gemeente Zundert', city: 'Zundert', country: 'Netherlands', lat: 51.4730419, lng: 4.6642726 },
+  { name: 'Museum de Fundatie', aliases: ['Hannema-de Stuers Fundatie'], city: 'Zwolle', country: 'Netherlands', lat: 52.5102388, lng: 6.0915022 },
+  { name: 'National Galleries Scotland', aliases: ['National Gallery of Scotland'], city: 'Edinburgh', country: 'United Kingdom', lat: 55.950885, lng: -3.1956117 },
+  { name: 'Musée Angladon – Collection Jacques Doucet', city: 'Avignon', country: 'France', lat: 43.9460946, lng: 4.8069976 },
+  { name: 'Drents Museum', city: 'Assen', country: 'Netherlands', lat: 52.9928958, lng: 6.5642603 },
+  { name: 'Barber Institute of Fine Arts', city: 'Birmingham', country: 'United Kingdom', lat: 52.450331, lng: -1.927827 },
+  { name: 'Royal Museum of Fine Arts Antwerp', aliases: ['Koninklijk Museum voor Schone Kunsten Antwerpen'], city: 'Antwerp', country: 'Belgium', lat: 51.2085932, lng: 4.3946308 },
+  { name: 'Morohashi Museum of Modern Art', city: 'Kitashiobara', country: 'Japan', lat: 37.6538545, lng: 140.0965274 },
+  { name: 'Museum Langmatt', city: 'Baden', country: 'Switzerland', lat: 47.4814711, lng: 8.3075619 },
+  { name: 'Beaux-Arts Mons (BAM)', city: 'Mons', country: 'Belgium', lat: 50.4557663, lng: 3.9523165 },
+  { name: 'Staatliche Kunsthalle Karlsruhe', city: 'Karlsruhe', country: 'Germany', lat: 49.0119303, lng: 8.3997157 },
+  { name: 'Rijksmuseum Twenthe', city: 'Enschede', country: 'Netherlands', lat: 52.2280508, lng: 6.8972136 },
+  { name: 'Museum of Fine Arts Budapest', aliases: ['Szépmüvészeti Múzeum'], city: 'Budapest', country: 'Hungary', lat: 47.5162182, lng: 19.0763649 },
+  { name: 'Hamburger Kunsthalle', aliases: ['Kunsthalle Hamburg'], city: 'Hamburg', country: 'Germany', lat: 53.5552936, lng: 10.0030011 },
   { name: 'Van Gogh Museum', city: 'Amsterdam', country: 'Netherlands', lat: 52.3583673, lng: 4.88109 },
   { name: 'Kröller-Müller Museum', city: 'Otterlo', country: 'Netherlands', lat: 52.0959135, lng: 5.8178298 },
   { name: 'Kunsthaus Zürich', city: 'Zürich', country: 'Switzerland', lat: 47.3702241, lng: 8.5479797 },
