@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
-import { CheckCircle2, Eye, LogOut, Mail, Palette, Settings2, Sparkles, User } from 'lucide-react'
+import { CheckCircle2, ChevronDown, Eye, LogOut, Mail, Settings2, Sparkles, User } from 'lucide-react'
 import { useTranslations, useFormatter } from 'next-intl'
 import { proxyImg } from '@/lib/utils'
 
@@ -25,11 +25,14 @@ interface RecentSeen {
 interface ProfileClientProps {
   user: { id: string; name?: string | null; email: string; image?: string | null; seenPublic: boolean; createdAt: Date }
   seenCount: number
-  voteCount: number
+  seenByArtist: Array<{
+    artist: { id: number; name: string; slug: string }
+    artworks: Array<{ id: number; title: string }>
+  }>
   recentSeen: RecentSeen[]
 }
 
-export default function ProfileClient({ user, seenCount, voteCount, recentSeen }: ProfileClientProps) {
+export default function ProfileClient({ user, seenCount, seenByArtist, recentSeen }: ProfileClientProps) {
   const [name, setName] = useState(user.name ?? '')
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)
@@ -86,10 +89,9 @@ export default function ProfileClient({ user, seenCount, voteCount, recentSeen }
         </div>
       </section>
 
-      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-2">
         <StatCard icon={<CheckCircle2 size={16} />} value={seenCount} label={t('seenStat')} />
-        <StatCard icon={<Palette size={16} />} value={voteCount} label={t('votesStat')} />
-        <StatCard icon={<User size={16} />} value={memberSince} label={t('memberStat')} wide />
+        <StatCard icon={<User size={16} />} value={memberSince} label={t('memberStat')} />
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
@@ -116,6 +118,26 @@ export default function ProfileClient({ user, seenCount, voteCount, recentSeen }
                 </Link>
               })}
             </div>
+          )}
+          {seenByArtist.length > 0 && (
+            <details className="mt-6 border-t border-black/[.07] pt-5" open>
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-stone-800 [&::-webkit-details-marker]:hidden">
+                <span>{t('seenByArtist')}</span><ChevronDown size={16} className="text-stone-400 transition-transform [[open]>&]:rotate-180" />
+              </summary>
+              <div className="mt-3 divide-y divide-black/[.06]">
+                {seenByArtist.map(({ artist, artworks }) => (
+                  <details key={artist.id} className="group py-3 first:pt-1">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm [&::-webkit-details-marker]:hidden">
+                      <span className="font-semibold text-stone-800">{artist.name}</span>
+                      <span className="text-xs text-stone-400">{t('seenArtistCount', { count: artworks.length })} <ChevronDown size={14} className="ml-1 inline transition-transform group-open:rotate-180" /></span>
+                    </summary>
+                    <ul className="mt-2 space-y-1 pl-3">
+                      {artworks.map((artwork) => <li key={artwork.id}><Link href={`/artworks/${artwork.id}`} className="text-xs text-[#4256cc] hover:underline">{artwork.title}</Link></li>)}
+                    </ul>
+                  </details>
+                ))}
+              </div>
+            </details>
           )}
         </section>
 

@@ -78,4 +78,34 @@ export const ARTIST_TAXONOMIES: Record<string, ArtistTaxonomy> = {
       { key: 'scholars', labelKey: 'theme.scholars', matches: titleMatches(/astronomer|geographer/i) },
     ],
   },
+  'claude-monet': {
+    periods: [
+      { key: 'monet-early', labelKey: 'period.monetEarly', matches: yearIn(1858, 1869) },
+      { key: 'monet-argenteuil', labelKey: 'period.monetArgenteuil', matches: yearIn(1870, 1878) },
+      { key: 'monet-vetheuil', labelKey: 'period.monetVetheuil', matches: yearIn(1879, 1885) },
+      { key: 'monet-giverny', labelKey: 'period.monetGiverny', matches: yearIn(1886, 1899) },
+      { key: 'monet-late', labelKey: 'period.monetLate', matches: yearIn(1900, 1926) },
+    ],
+    themes: [
+      { key: 'monet-water-lilies', labelKey: 'theme.monetWaterLilies', matches: titleMatches(/water lilies|nymph[eé]as|nénuphars/i) },
+      { key: 'monet-rouen', labelKey: 'theme.monetRouen', matches: titleMatches(/rouen cathedral/i) },
+      { key: 'monet-haystacks', labelKey: 'theme.monetHaystacks', matches: titleMatches(/haystacks?|meules/i) },
+      { key: 'monet-parliament', labelKey: 'theme.monetParliament', matches: titleMatches(/houses? of parliament|parlement/i) },
+      { key: 'monet-giverny', labelKey: 'theme.monetGiverny', matches: titleMatches(/giverny|japanese bridge|pont japonais/i) },
+    ],
+  },
+  'gustav-klimt': {
+    periods: [
+      { key: 'klimt-historicism', labelKey: 'period.klimtHistoricism', matches: yearIn(1876, 1892) },
+      { key: 'klimt-secession', labelKey: 'period.klimtSecession', matches: yearIn(1893, 1904) },
+      { key: 'klimt-golden-period', labelKey: 'period.klimtGolden', matches: yearIn(1905, 1909) },
+      { key: 'klimt-late', labelKey: 'period.klimtLate', matches: yearIn(1910, 1918) },
+    ],
+    themes: [
+      { key: 'klimt-portraits', labelKey: 'theme.klimtPortraits', matches: titleMatches(/portrait|bildnis/i) },
+      { key: 'klimt-landscapes', labelKey: 'theme.klimtLandscapes', matches: titleMatches(/landscape|lake|garden|forest|field|attersee|kammer/i) },
+      { key: 'klimt-allegory', labelKey: 'theme.klimtAllegory', matches: titleMatches(/judith|pallas|medicine|philosophy|jurisprudence|beethoven|frieze|allegory/i) },
+      { key: 'klimt-nudes', labelKey: 'theme.klimtNudes', matches: titleMatches(/nude|nymph|water serpent|love|adam and eve/i) },
+    ],
+  },
 }

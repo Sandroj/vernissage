@@ -8,13 +8,25 @@ export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) redirect('/login')
 
-  const [user, seenCount, voteCount, recentSeen] = await Promise.all([
+  const [user, seenCount, seenRecords, recentSeen] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
       select: { id: true, name: true, email: true, image: true, seenPublic: true, createdAt: true },
     }),
     prisma.seen.count({ where: { userId: session.user.id } }),
-    prisma.artistVote.count({ where: { userId: session.user.id } }),
+    prisma.seen.findMany({
+      where: { userId: session.user.id },
+      orderBy: { dateSeen: 'desc' },
+      select: {
+        artwork: {
+          select: {
+            id: true,
+            title: true,
+            artist: { select: { id: true, name: true, slug: true } },
+          },
+        },
+      },
+    }),
     prisma.seen.findMany({
       where: { userId: session.user.id },
       orderBy: { dateSeen: 'desc' },
@@ -35,5 +47,15 @@ export default async function ProfilePage() {
     }),
   ])
 
-  return <ProfileClient user={user!} seenCount={seenCount} voteCount={voteCount} recentSeen={recentSeen} />
+  const seenByArtist = Object.values(seenRecords.reduce<Record<number, {
+    artist: { id: number; name: string; slug: string }
+    artworks: { id: number; title: string }[]
+  }>>((groups, record) => {
+    const artist = record.artwork.artist
+    groups[artist.id] ??= { artist, artworks: [] }
+    groups[artist.id].artworks.push({ id: record.artwork.id, title: record.artwork.title })
+    return groups
+  }, {})).sort((a, b) => a.artist.name.localeCompare(b.artist.name))
+
+  return <ProfileClient user={user!} seenCount={seenCount} seenByArtist={seenByArtist} recentSeen={recentSeen} />
 }

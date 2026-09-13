@@ -104,6 +104,15 @@
       "vermeerEmerging": "Ontluikende genreschilder · 1657–1661",
       "vermeerMature": "Rijpe interieurs · 1662–1667",
       "vermeerLate": "Late periode · 1668–1675"
+      ,"monetEarly": "Vroege jaren · 1858–1869"
+      ,"monetArgenteuil": "Argenteuil · 1870–1878"
+      ,"monetVetheuil": "Vétheuil · 1879–1885"
+      ,"monetGiverny": "Giverny en series · 1886–1899"
+      ,"monetLate": "Late Giverny-periode · 1900–1926"
+      ,"klimtHistoricism": "Historisme en opdrachten · 1876–1892"
+      ,"klimtSecession": "Weense Secession · 1893–1904"
+      ,"klimtGolden": "Gouden periode · 1905–1909"
+      ,"klimtLate": "Late periode · 1910–1918"
     },
     "theme": {
       "sunflowers": "Zonnebloemen",
@@ -123,6 +132,15 @@
       "music": "Muziek",
       "tronies": "Tronies",
       "scholars": "Geleerden"
+      ,"monetWaterLilies": "Waterlelies"
+      ,"monetRouen": "Kathedraal van Rouen"
+      ,"monetHaystacks": "Hooibergen"
+      ,"monetParliament": "Houses of Parliament"
+      ,"monetGiverny": "Tuin van Giverny"
+      ,"klimtPortraits": "Portretten"
+      ,"klimtLandscapes": "Landschappen"
+      ,"klimtAllegory": "Allegorie en muurschilderingen"
+      ,"klimtNudes": "Naakten en geliefden"
     },
     "type": {
       "painting": "Schilderijen",
@@ -293,7 +311,8 @@
     "seenCount": "{count} werken gezien",
     "collectionHint": "Blijf ontdekken, één werk tegelijk",
     "seenStat": "Gezien",
-    "votesStat": "Kunstenaarstips",
+    "seenByArtist": "Gezien per kunstenaar",
+    "seenArtistCount": "{count, plural, =1 {1 werk} other {# werken}}",
     "memberStat": "Lid sinds",
     "recentEyebrow": "Jouw spoor",
     "recentTitle": "Recent gezien",

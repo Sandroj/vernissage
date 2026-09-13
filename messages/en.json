@@ -104,6 +104,15 @@
       "vermeerEmerging": "Emerging genre painter · 1657–1661",
       "vermeerMature": "Mature interiors · 1662–1667",
       "vermeerLate": "Late period · 1668–1675"
+      ,"monetEarly": "Early years · 1858–1869"
+      ,"monetArgenteuil": "Argenteuil · 1870–1878"
+      ,"monetVetheuil": "Vétheuil · 1879–1885"
+      ,"monetGiverny": "Giverny and series · 1886–1899"
+      ,"monetLate": "Late Giverny · 1900–1926"
+      ,"klimtHistoricism": "Historicism and commissions · 1876–1892"
+      ,"klimtSecession": "Vienna Secession · 1893–1904"
+      ,"klimtGolden": "Golden Period · 1905–1909"
+      ,"klimtLate": "Late period · 1910–1918"
     },
     "theme": {
       "sunflowers": "Sunflowers",
@@ -123,6 +132,15 @@
       "music": "Music",
       "tronies": "Tronies",
       "scholars": "Scholars"
+      ,"monetWaterLilies": "Water lilies"
+      ,"monetRouen": "Rouen Cathedral"
+      ,"monetHaystacks": "Haystacks"
+      ,"monetParliament": "Houses of Parliament"
+      ,"monetGiverny": "Giverny garden"
+      ,"klimtPortraits": "Portraits"
+      ,"klimtLandscapes": "Landscapes"
+      ,"klimtAllegory": "Allegory and murals"
+      ,"klimtNudes": "Nudes and lovers"
     },
     "type": {
       "painting": "Paintings",
@@ -293,7 +311,8 @@
     "seenCount": "{count} works seen",
     "collectionHint": "Keep discovering, one work at a time",
     "seenStat": "Seen",
-    "votesStat": "Artist picks",
+    "seenByArtist": "Seen by artist",
+    "seenArtistCount": "{count, plural, =1 {1 work} other {# works}}",
     "memberStat": "Member since",
     "recentEyebrow": "Your trail",
     "recentTitle": "Recently seen",
