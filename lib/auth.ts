@@ -9,7 +9,12 @@ export const authOptions: NextAuthOptions = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   adapter: PrismaAdapter(prisma) as any,
   session: { strategy: 'jwt' },
-  pages: { signIn: '/login' },
+  pages: {
+    signIn: '/login',
+    // First-time Google users choose their preferred artists before landing
+    // on the dashboard; returning users still follow the requested callback.
+    newUser: '/discover',
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? '',
