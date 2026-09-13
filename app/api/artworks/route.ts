@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const artworks = await prisma.artwork.findMany({
     where: {
       ...(artistId ? { artistId: parseInt(artistId) } : {}),
-      ...(type ? { type_normalized: type } : {}),
+      ...(type ? { type_normalized: { contains: type } } : {}),
       ...(city ? { museum: { city: { contains: city } } } : {}),
     },
     include: {

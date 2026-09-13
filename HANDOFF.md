@@ -123,6 +123,21 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   reproduceerbaar via `scripts/repair-f1666-classification.mjs`.
 - `npm run build` slaagt; alleen bestaande `<img>`-lintwaarschuwingen.
 
+## Laatst gedaan (2026-09-13, multi-type classificatie)
+
+- De broncatalogus bevat 9 unieke werken die in meerdere verschillende
+  type-secties staan: 8 als painting + print en F1666 als painting + drawing.
+  In totaal zijn er 15 cross-listed identiteiten wanneer dubbele vermeldingen
+  binnen hetzelfde type worden meegerekend.
+- F1666 staat nu in dev.db en Turso als één werkrecord met
+  `type_normalized='painting|drawing'`; het verschijnt dus in beide typefilters
+  zonder dubbele kaart en zonder `unclassified`.
+- `artwork-grid.tsx`, de artwork-API en de detailweergave ondersteunen nu
+  pipe-separated multi-types. De reparatiescript-documentatie is bijgewerkt.
+- Getest: gerichte dev.db/Turso-sync (`1` rij elk), resterende
+  `unclassified`/NULL-classificaties gecontroleerd en `npm run build` slaagt
+  (alleen bestaande `<img>`-lintwaarschuwingen).
+
 ## Volgende stap
 1. Onderzoek de 60 resterende Kandinsky-records zonder `image_source_url` via
    exact herleidbare institutionele of catalogusbronnen; dit zijn geen

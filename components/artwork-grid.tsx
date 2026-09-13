@@ -8,7 +8,8 @@ import { ARTIST_TAXONOMIES } from '@/lib/artwork-taxonomy'
 
 const PAGE_SIZE = 200
 
-const TYPE_ORDER = ['painting', 'drawing', 'watercolor', 'work on paper', 'print', 'unclassified']
+const TYPE_ORDER = ['painting', 'drawing', 'watercolor', 'work on paper', 'print']
+const splitTypes = (value?: string | null) => value?.split('|').map((type) => type.trim()).filter(Boolean) ?? []
 
 interface Artwork {
   id: number
@@ -82,9 +83,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   // Start with paintings only; visitors can explicitly enable drawings,
   // prints and the other types through the chips below.
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set(
-    artworks
-      .map((artwork) => artwork.type_normalized)
-      .filter((type): type is string => Boolean(type && type !== 'painting'))
+      artworks.flatMap((artwork) => splitTypes(artwork.type_normalized)).filter((type) => type !== 'painting')
   ))
   const [internalFilterSeen, setInternalFilterSeen] = useState<SeenFilter>('all')
   const filterSeen = seenFilter ?? internalFilterSeen
@@ -100,7 +99,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   const types = useMemo(() => {
     const counts = new Map<string, number>()
     for (const a of artworks) {
-      if (a.type_normalized) counts.set(a.type_normalized, (counts.get(a.type_normalized) ?? 0) + 1)
+      for (const type of splitTypes(a.type_normalized)) counts.set(type, (counts.get(type) ?? 0) + 1)
     }
     return Array.from(counts.entries()).sort(
       ([a], [b]) => (TYPE_ORDER.indexOf(a) + 1 || 99) - (TYPE_ORDER.indexOf(b) + 1 || 99)
@@ -145,7 +144,8 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
       const haystack = [a.title, a.alternate_titles, a.catalogue_id, a.jh_catalogue_id, a.artist?.name, a.museum?.name, a.museum?.city].filter(Boolean).join(' ').toLowerCase()
       if (!haystack.includes(filterTitle.toLowerCase())) return false
     }
-    if (a.type_normalized && hiddenTypes.has(a.type_normalized)) return false
+    const artworkTypes = splitTypes(a.type_normalized)
+    if (artworkTypes.length > 0 && artworkTypes.every((type) => hiddenTypes.has(type))) return false
     if (filterSeen === 'seen' && !seenMap[a.id]) return false
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
     if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false

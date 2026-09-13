@@ -179,7 +179,7 @@ export default function ArtworkDetailClient({
               <MetaRow label={t('medium')} value={artwork.medium_raw} />
             )}
             {artwork.type_normalized && (
-              <MetaRow label={t('type')} value={t.has(`typeValue.${artwork.type_normalized}`) ? t(`typeValue.${artwork.type_normalized}`) : capitalize(artwork.type_normalized)} />
+              <MetaRow label={t('type')} value={artwork.type_normalized.split('|').map((type) => t.has(`typeValue.${type}`) ? t(`typeValue.${type}`) : capitalize(type)).join(' · ')} />
             )}
             {artwork.dimensions_raw && (
               <MetaRow label={t('dimensions')} value={artwork.dimensions_raw} />

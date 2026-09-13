@@ -1,6 +1,7 @@
 /**
- * Mark F1666 as unclassified. VGGallery explicitly says the medium cannot be
- * established and lists the work in both its paintings and drawings sections.
+ * Mark F1666 as both painting and drawing. VGGallery lists the work in both
+ * sections, and the app stores one canonical work with multiple pipe-separated
+ * types rather than duplicating the Artwork row.
  * Updates only the one Artwork row by stable catalogue_id.
  */
 import { createClient } from '@libsql/client'
@@ -19,7 +20,7 @@ const env = Object.fromEntries(readFileSync(resolve(__dirname, '../.env.local'),
   return [line.slice(0, index), value]
 }))
 
-const label = 'unclassified'
+const label = 'painting|drawing'
 const dbPath = resolve(__dirname, '../dev.db')
 const backup = `${dbPath}.bak-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}-before-f1666-classification`
 copyFileSync(dbPath, backup)

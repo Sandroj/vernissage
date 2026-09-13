@@ -138,7 +138,7 @@ async function main() {
   const stats = await turso.execute({
     sql: `SELECT COUNT(*) total, COUNT(catalogue_id) canonical,
       SUM(CASE WHEN catalogue_id IS NULL THEN 1 ELSE 0 END) legacy,
-      SUM(CASE WHEN catalogue_id IS NOT NULL AND type_normalized='painting' THEN 1 ELSE 0 END) paintings,
+      SUM(CASE WHEN catalogue_id IS NOT NULL AND (type_normalized='painting' OR type_normalized LIKE 'painting|%') THEN 1 ELSE 0 END) paintings,
       SUM(CASE WHEN catalogue_id IS NOT NULL AND (image_url IS NOT NULL OR image_local_path IS NOT NULL) THEN 1 ELSE 0 END) with_image
       FROM Artwork WHERE artistId=?`,
     args: [remoteArtistId],
