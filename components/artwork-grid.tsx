@@ -79,7 +79,13 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   const tc = useTranslations('Countries')
   const locale = useLocale()
   const [filterTitle, setFilterTitle] = useState('')
-  const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(new Set())
+  // Start with paintings only; visitors can explicitly enable drawings,
+  // prints and the other types through the chips below.
+  const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set(
+    artworks
+      .map((artwork) => artwork.type_normalized)
+      .filter((type): type is string => Boolean(type && type !== 'painting'))
+  ))
   const [internalFilterSeen, setInternalFilterSeen] = useState<SeenFilter>('all')
   const filterSeen = seenFilter ?? internalFilterSeen
   const setFilterSeen = onSeenFilterChange ?? setInternalFilterSeen

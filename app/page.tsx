@@ -85,6 +85,11 @@ export default async function DashboardPage() {
     .map((f) => featuredRows.find((r) => r.title === f.title && r.artist.name === f.artist))
     .filter((r): r is NonNullable<typeof r> => Boolean(r))
     .map((r) => ({ id: r.id, title: r.title, image_url: r.image_url, image_local_path: r.image_local_path, artist: r.artist.name }))
+  // Keep four timed batches even if a configured title temporarily drops out;
+  // modulo wrapping still guarantees three visible works per batch.
+  const heroGroups = Array.from({ length: heroWorks.length > 0 ? 4 : 0 }, (_, groupIndex) =>
+    Array.from({ length: 3 }, (_, workIndex) => heroWorks[(groupIndex * 3 + workIndex) % heroWorks.length])
+  )
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-12">
@@ -114,23 +119,30 @@ export default async function DashboardPage() {
           </div>
 
           <div className="relative h-[370px] w-full overflow-hidden rounded-[1.6rem] sm:h-[430px]">
-            {heroWorks.map((work, index) => (
-              <Link
-                key={work.id}
-                href={`/artworks/${work.id}`}
-                className="hero-slide group absolute inset-0"
-                style={{ animationDelay: index === 0 ? '-3s' : `${index * 6}s` }}
+            {heroGroups.map((group, groupIndex) => (
+              <div
+                key={groupIndex}
+                className="hero-slide absolute inset-0 grid grid-cols-[1.25fr_.75fr] grid-rows-2 gap-2"
+                style={{ animationDelay: `${-3 - ((heroGroups.length - groupIndex) % heroGroups.length) * 6}s` }}
               >
-                <img
-                  src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'}
-                  alt={work.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent p-5 pt-20">
-                  <p className="line-clamp-1 text-base font-medium">{work.title}</p>
-                  <p className="text-xs text-white/60">{work.artist}</p>
-                </div>
-              </Link>
+                {group.map((work, workIndex) => (
+                  <Link
+                    key={`${groupIndex}-${work.id}`}
+                    href={`/artworks/${work.id}`}
+                    className={`group relative min-h-0 overflow-hidden ${workIndex === 0 ? 'row-span-2' : ''}`}
+                  >
+                    <img
+                      src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'}
+                      alt={work.title}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    />
+                    <div className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent ${workIndex === 0 ? 'p-5 pt-20' : 'p-3 pt-10'}`}>
+                      <p className={`line-clamp-1 font-medium ${workIndex === 0 ? 'text-base' : 'text-xs'}`}>{work.title}</p>
+                      <p className="line-clamp-1 text-[11px] text-white/60">{work.artist}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             ))}
           </div>
         </div>

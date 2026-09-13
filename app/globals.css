@@ -85,10 +85,9 @@
     text-transform: uppercase;
   }
 
-  /* Homepage hero carousel: absolutely-stacked slides cross-fade in turn.
-     Each slide gets its own animation-delay (index * 6s); index 0 uses a
-     negative delay so it's already at peak opacity on first paint instead
-     of fading in from a blank hero. Pure CSS, no JS needed. */
+  /* Homepage hero carousel: batches of three works cross-fade in turn.
+     Negative delays put one batch at peak opacity on first paint and keep
+     all four batches on a seamless six-second cadence. */
   .hero-slide {
     opacity: 0;
   }
@@ -97,12 +96,12 @@
   }
   @media (prefers-reduced-motion: no-preference) {
     .hero-slide {
-      animation: hero-fade 60s infinite ease-in-out;
+      animation: hero-fade 24s infinite ease-in-out;
     }
   }
   @keyframes hero-fade {
-    0%, 100% { opacity: 0; }
-    2.5%, 7.5% { opacity: 1; }
-    10% { opacity: 0; }
+    0%, 22% { opacity: 1; }
+    25%, 96% { opacity: 0; }
+    100% { opacity: 1; }
   }
 }
