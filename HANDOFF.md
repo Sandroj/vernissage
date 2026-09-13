@@ -34,6 +34,33 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 - Datamodel: `prisma/schema.prisma` (models o.a. Artist, Artwork, Museum),
   seed via `prisma/seed.ts`.
 
+## Laatst gedaan (2026-09-13, UX/auth/museumronde)
+
+- Homepage-hero toont nu per carrouselstap drie klikbare werken (één groot +
+  twee gestapeld), met vier naadloos cross-fadende batches en behoud van
+  `prefers-reduced-motion`. In het werkenoverzicht staat voortaan alleen
+  `painting` standaard aan; alle andere aanwezige typen moeten via hun chip
+  expliciet worden aangezet. Commit `e796bec`.
+- Google OAuth was al volledig in code aanwezig, inclusief accountaanmaak en
+  veilige koppeling aan een bestaand wachtwoordaccount. `pages.newUser` stuurt
+  nieuwe Google-gebruikers nu naar `/discover`; terugkerende gebruikers volgen
+  de gewone callback. Commit `cb38048`. De live NextAuth-provider genereert de
+  juiste productiecallback `https://arttracker-xi.vercel.app/api/auth/callback/google`.
+  Nog handmatig in Google Cloud controleren: Audience = External en appstatus
+  = In production (de browsersessie was in deze ronde niet beschikbaar).
+- Alle 29 echte gekoppelde collectiehouders die nog onder Unknown/Onbekend
+  stonden zijn met plaats, land en coördinaten verrijkt en oude importaliassen
+  waar nodig samengevoegd. Bronnen: officiële/adresnamen + OSM Nominatim;
+  moeilijke gevallen ook tegen Wikidata gecontroleerd. Syncresultaat:
+  dev.db 58 verrijkt/16 werkverwijzingen verplaatst; Turso 58/2. Productie
+  heeft daarna alleen nog `Private collection` (2 werken) bewust op Unknown;
+  twee overige Unknown-rijen zijn lege historische aliassen en komen niet in
+  de UI. Commit `bdba2d1`.
+- Correctiemeldingen en Discover-keuzes sturen momenteel geen e-mail. Ze komen
+  uitsluitend in Turso terecht als respectievelijk `Report`- en `ArtistVote`-
+  rijen; er is nog geen admin-inbox/aggregatie in de UI.
+- `npm run build` slaagt (alleen de reeds bestaande `<img>`-waarschuwingen).
+
 ## Laatst gedaan (2026-09-11)
 - Tool-neutrale AI-flow opgezet in de Vernissage-repo zelf (AGENTS.md +
   symlinks CLAUDE.md/GEMINI.md, deze HANDOFF, .gitignore aangevuld).
