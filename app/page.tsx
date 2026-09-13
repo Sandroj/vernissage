@@ -85,6 +85,13 @@ export default async function DashboardPage() {
     .map((f) => featuredRows.find((r) => r.title === f.title && r.artist.name === f.artist))
     .filter((r): r is NonNullable<typeof r> => Boolean(r))
     .map((r) => ({ id: r.id, title: r.title, image_url: r.image_url, image_local_path: r.image_local_path, artist: r.artist.name }))
+  const featuredArtistImages = new Map(
+    artists.map((artist) => {
+      const preferred = FEATURED_HERO_WORKS.find((work) => work.artist === artist.name)
+      const row = preferred && featuredRows.find((candidate) => candidate.artist.name === artist.name && candidate.title === preferred.title)
+      return [artist.name, row?.image_local_path ?? row?.image_url ?? artist.artworks[0]?.image_local_path ?? artist.artworks[0]?.image_url ?? null]
+    })
+  )
   // Keep four timed batches even if a configured title temporarily drops out;
   // modulo wrapping still guarantees three visible works per batch.
   const heroGroups = Array.from({ length: heroWorks.length > 0 ? 4 : 0 }, (_, groupIndex) =>
@@ -168,7 +175,7 @@ export default async function DashboardPage() {
                 className="paper-card group flex items-center gap-4 rounded-2xl p-5 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
-                  {artist.artworks[0] && <img src={proxyImg(artist.artworks[0].image_local_path ?? artist.artworks[0].image_url) ?? ''} alt="" className="size-full object-cover transition duration-500 group-hover:scale-105" />}
+                  {featuredArtistImages.get(artist.name) && <img src={proxyImg(featuredArtistImages.get(artist.name)) ?? ''} alt="" className="size-full object-cover transition duration-500 group-hover:scale-105" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
