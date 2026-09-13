@@ -49,7 +49,7 @@ const SCREENS = [
   ],
 ]
 
-export default function DiscoverScreen({ initialVotes }: { initialVotes: string[] }) {
+export default function DiscoverScreen({ initialVotes, isLoggedIn }: { initialVotes: string[]; isLoggedIn: boolean }) {
   const router = useRouter()
   const t = useTranslations('Discover')
   const [screen, setScreen] = useState(0)
@@ -66,6 +66,10 @@ export default function DiscoverScreen({ initialVotes }: { initialVotes: string[
   }
 
   async function handleFinish() {
+    if (!isLoggedIn) {
+      router.push('/login?mode=register')
+      return
+    }
     setSaving(true)
     await fetch('/api/votes', {
       method: 'POST',
@@ -143,7 +147,7 @@ export default function DiscoverScreen({ initialVotes }: { initialVotes: string[
         <span className="text-slate-400 text-sm">{t('selected', { count: selected.size })}</span>
         {isLast ? (
           <Button onClick={handleFinish} disabled={saving}>
-            {saving ? t('saving') : t('save')}
+            {saving ? t('saving') : isLoggedIn ? t('save') : t('loginToSave')}
           </Button>
         ) : (
           <Button onClick={() => setScreen((s) => s + 1)}>

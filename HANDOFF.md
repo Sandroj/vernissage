@@ -61,6 +61,14 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   rijen; er is nog geen admin-inbox/aggregatie in de UI.
 - `npm run build` slaagt (alleen de reeds bestaande `<img>`-waarschuwingen).
 
+## Laatst gedaan (2026-09-13, gastmodus)
+
+- `/discover` is nu publiek bereikbaar; gasten kunnen alle kunstenaars
+  selecteren en door de drie schermen bladeren. Opslaan vraagt expliciet om
+  inloggen/registreren. `/profile` en `/admin` blijven accountafgeschermd.
+  Catalogus-, zoek-, museum- en detailpagina’s waren al publiek; hun
+  accountacties blijven beschermd door de API. `npm run build` slaagt.
+
 ## Laatst gedaan (2026-09-11)
 - Tool-neutrale AI-flow opgezet in de Vernissage-repo zelf (AGENTS.md +
   symlinks CLAUDE.md/GEMINI.md, deze HANDOFF, .gitignore aangevuld).

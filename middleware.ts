@@ -4,6 +4,5 @@ export const config = {
   matcher: [
     '/profile/:path*',
     '/admin/:path*',
-    '/discover/:path*',
   ],
 }
