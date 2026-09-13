@@ -1,20 +1,35 @@
 'use client'
+import Link from 'next/link'
 import { useState } from 'react'
 import { signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
-import { User, Mail, Eye, LogOut, CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, Eye, LogOut, Mail, Palette, Settings2, Sparkles, User } from 'lucide-react'
 import { useTranslations, useFormatter } from 'next-intl'
+import { proxyImg } from '@/lib/utils'
+
+interface RecentSeen {
+  id: number
+  dateSeen: Date | string
+  artwork: {
+    id: number
+    title: string
+    image_local_path: string | null
+    image_url: string | null
+    artist: { name: string }
+  }
+}
 
 interface ProfileClientProps {
   user: { id: string; name?: string | null; email: string; image?: string | null; seenPublic: boolean; createdAt: Date }
   seenCount: number
-  hasPassword: boolean
+  voteCount: number
+  recentSeen: RecentSeen[]
 }
 
-export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
+export default function ProfileClient({ user, seenCount, voteCount, recentSeen }: ProfileClientProps) {
   const [name, setName] = useState(user.name ?? '')
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)
@@ -35,104 +50,89 @@ export default function ProfileClient({ user, seenCount }: ProfileClientProps) {
 
   const initials = (user.name ?? user.email)
     .split(' ')
-    .map((w) => w[0])
+    .map((word) => word[0])
     .join('')
     .toUpperCase()
     .slice(0, 2)
-
   const memberSince = fmt.dateTime(new Date(user.createdAt), { month: 'long', year: 'numeric' })
 
   return (
-    <div className="max-w-lg">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-1">{t('title')}</h1>
-        <p className="text-zinc-500 text-sm">{t('memberSince', { date: memberSince })}</p>
-      </div>
-
-      {/* Avatar + stat */}
-      <div className="flex items-center gap-4 mb-8 p-5 bg-zinc-900 rounded-2xl border border-white/5">
-        <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
-          {user.image ? (
-            <img src={user.image} alt={user.name ?? ''} className="w-full h-full rounded-2xl object-cover" />
-          ) : (
-            <span className="text-xl font-bold text-indigo-300">{initials}</span>
-          )}
-        </div>
+    <div className="mx-auto max-w-5xl pb-12">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-semibold text-white text-lg">{user.name ?? t('unknown')}</p>
-          <p className="text-zinc-500 text-sm">{user.email}</p>
-          <div className="flex items-center gap-1.5 mt-1">
-            <CheckCircle2 size={13} className="text-indigo-400" />
-            <span className="text-indigo-400 text-sm font-medium">{t('seenCount', { count: seenCount })}</span>
-          </div>
+          <p className="eyebrow mb-2">{t('eyebrow')}</p>
+          <h1 className="font-display text-5xl font-medium tracking-tight text-stone-900 sm:text-6xl">{t('title')}</h1>
+          <p className="mt-3 text-sm text-stone-500">{t('memberSince', { date: memberSince })}</p>
         </div>
-      </div>
-
-      {/* Form */}
-      <div className="space-y-5">
-        {/* Naam */}
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium uppercase tracking-wider">
-            <User size={11} /> {t('name')}
-          </label>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={t('namePlaceholder')}
-            className="bg-zinc-900 border-white/10 text-white placeholder:text-zinc-600 focus:border-indigo-500 focus:ring-indigo-500/20"
-          />
-        </div>
-
-        {/* Email */}
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium uppercase tracking-wider">
-            <Mail size={11} /> {t('email')}
-          </label>
-          <Input
-            value={user.email}
-            disabled
-            className="bg-zinc-900/50 border-white/5 text-zinc-500 cursor-not-allowed"
-          />
-        </div>
-
-        {/* Privacy toggle */}
-        <div className="flex items-center justify-between bg-zinc-900 rounded-xl p-4 border border-white/5">
-          <div className="flex items-start gap-3">
-            <Eye size={16} className="text-zinc-400 mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-white">{t('publicTitle')}</p>
-              <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
-                {t('publicText')}
-              </p>
-            </div>
-          </div>
-          <Switch
-            checked={seenPublic}
-            onCheckedChange={setSeenPublic}
-            className="ml-4 flex-shrink-0"
-          />
-        </div>
-
-        {/* Save button */}
-        <Button
-          onClick={saveProfile}
-          disabled={saving}
-          className="w-full bg-indigo-600 hover:bg-indigo-500 text-white border-0 h-11"
-        >
-          {saving ? t('saving') : t('save')}
+        <Button variant="outline" onClick={() => signOut({ callbackUrl: '/login' })} className="gap-2 rounded-full border-black/10 bg-white/60 text-stone-700 hover:bg-white">
+          <LogOut size={14} /> {t('signOut')}
         </Button>
       </div>
 
-      {/* Uitloggen */}
-      <div className="mt-8 pt-6 border-t border-white/5">
-        <button
-          onClick={() => signOut({ callbackUrl: '/login' })}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm text-red-400 border border-red-900/40 hover:bg-red-950/30 transition-colors"
-        >
-          <LogOut size={14} /> {t('signOut')}
-        </button>
+      <section className="relative overflow-hidden rounded-[2rem] bg-[#25231f] p-6 text-white shadow-[0_24px_60px_rgba(68,52,30,.14)] sm:p-8">
+        <div className="absolute -right-16 -top-24 size-64 rounded-full bg-[#5368df]/25 blur-3xl" />
+        <div className="absolute -bottom-28 left-20 size-64 rounded-full bg-[#ed694c]/20 blur-3xl" />
+        <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-[1.5rem] bg-[#e7e9fa] text-2xl font-semibold text-[#4256cc] ring-4 ring-white/10">
+              {user.image ? <img src={user.image} alt="" className="size-full object-cover" /> : initials}
+            </div>
+            <div>
+              <p className="font-display text-3xl font-medium text-[#fffaf0]">{user.name ?? t('unknown')}</p>
+              <p className="mt-1 flex items-center gap-1.5 text-sm text-white/55"><Mail size={13} /> {user.email}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-white/65"><Sparkles size={15} className="text-[#f4b548]" /> {t('collectionHint')}</div>
+        </div>
+      </section>
+
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <StatCard icon={<CheckCircle2 size={16} />} value={seenCount} label={t('seenStat')} />
+        <StatCard icon={<Palette size={16} />} value={voteCount} label={t('votesStat')} />
+        <StatCard icon={<User size={16} />} value={memberSince} label={t('memberStat')} wide />
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
+        <section className="paper-card rounded-[1.75rem] p-5 sm:p-7">
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div><p className="eyebrow mb-1">{t('recentEyebrow')}</p><h2 className="font-display text-3xl font-medium text-stone-900">{t('recentTitle')}</h2></div>
+            {seenCount > 0 && <Link href="/artists" className="text-xs font-semibold text-[#4256cc] hover:underline">{t('browseMore')}</Link>}
+          </div>
+          {recentSeen.length === 0 ? (
+            <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl bg-black/[.025] px-6 text-center">
+              <CheckCircle2 size={25} className="mb-3 text-stone-300" />
+              <p className="text-sm font-medium text-stone-600">{t('recentEmpty')}</p>
+              <Link href="/artists" className="mt-3 text-xs font-semibold text-[#4256cc] hover:underline">{t('discoverWorks')}</Link>
+            </div>
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {recentSeen.map((item) => {
+                const image = proxyImg(item.artwork.image_local_path ?? item.artwork.image_url)
+                return <Link key={item.id} href={`/artworks/${item.artwork.id}`} className="group flex items-center gap-3 rounded-2xl p-2.5 transition hover:bg-black/[.035]">
+                  <div className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
+                    {image ? <img src={image} alt="" className="size-full object-cover transition duration-500 group-hover:scale-105" /> : <div className="size-full bg-[#e7e1d6]" />}
+                  </div>
+                  <div className="min-w-0"><p className="line-clamp-2 font-display text-base font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{item.artwork.title}</p><p className="mt-1 truncate text-xs text-stone-500">{item.artwork.artist.name} · {fmt.dateTime(new Date(item.dateSeen), { day: 'numeric', month: 'short', year: 'numeric' })}</p></div>
+                </Link>
+              })}
+            </div>
+          )}
+        </section>
+
+        <section className="paper-card rounded-[1.75rem] p-5 sm:p-7">
+          <div className="mb-5 flex items-center gap-2"><Settings2 size={16} className="text-[#4256cc]" /><h2 className="font-display text-2xl font-medium text-stone-900">{t('settingsTitle')}</h2></div>
+          <div className="space-y-5">
+            <div className="space-y-1.5"><label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-stone-400"><User size={11} /> {t('name')}</label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('namePlaceholder')} className="h-11 rounded-xl border-black/10 bg-white/70 text-stone-900 placeholder:text-stone-400" /></div>
+            <div className="space-y-1.5"><label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-stone-400"><Mail size={11} /> {t('email')}</label><Input value={user.email} disabled className="h-11 rounded-xl border-black/5 bg-black/[.035] text-stone-400" /></div>
+            <div className="flex items-start justify-between gap-4 rounded-2xl bg-black/[.03] p-4"><div className="flex items-start gap-3"><Eye size={16} className="mt-0.5 shrink-0 text-stone-500" /><div><p className="text-sm font-semibold text-stone-800">{t('publicTitle')}</p><p className="mt-1 text-xs leading-relaxed text-stone-500">{t('publicText')}</p></div></div><Switch checked={seenPublic} onCheckedChange={setSeenPublic} className="shrink-0" /></div>
+            <Button onClick={saveProfile} disabled={saving} className="h-11 w-full rounded-full bg-[#4256cc] text-white hover:bg-[#3447b8]">{saving ? t('saving') : t('save')}</Button>
+          </div>
+        </section>
       </div>
     </div>
   )
+}
+
+function StatCard({ icon, value, label, wide }: { icon: React.ReactNode; value: number | string; label: string; wide?: boolean }) {
+  return <div className={`paper-card rounded-2xl p-4 ${wide ? 'col-span-2 sm:col-span-1' : ''}`}><div className="mb-2 flex items-center gap-2 text-[#4256cc]">{icon}<span className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">{label}</span></div><p className="font-display text-2xl font-semibold text-stone-900">{value}</p></div>
 }

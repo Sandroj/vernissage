@@ -8,16 +8,32 @@ export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { id: true, name: true, email: true, image: true, seenPublic: true, createdAt: true },
-  })
+  const [user, seenCount, voteCount, recentSeen] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { id: true, name: true, email: true, image: true, seenPublic: true, createdAt: true },
+    }),
+    prisma.seen.count({ where: { userId: session.user.id } }),
+    prisma.artistVote.count({ where: { userId: session.user.id } }),
+    prisma.seen.findMany({
+      where: { userId: session.user.id },
+      orderBy: { dateSeen: 'desc' },
+      take: 8,
+      select: {
+        id: true,
+        dateSeen: true,
+        artwork: {
+          select: {
+            id: true,
+            title: true,
+            image_local_path: true,
+            image_url: true,
+            artist: { select: { name: true } },
+          },
+        },
+      },
+    }),
+  ])
 
-  const seenCount = await prisma.seen.count({ where: { userId: session.user.id } })
-  const hasPassword = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { password: true },
-  }).then((u) => !!u?.password)
-
-  return <ProfileClient user={user!} seenCount={seenCount} hasPassword={hasPassword} />
+  return <ProfileClient user={user!} seenCount={seenCount} voteCount={voteCount} recentSeen={recentSeen} />
 }

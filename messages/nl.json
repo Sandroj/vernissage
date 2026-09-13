@@ -129,7 +129,8 @@
       "drawing": "Tekeningen & schetsen",
       "watercolor": "Aquarellen",
       "work on paper": "Werk op papier",
-      "print": "Prenten"
+      "print": "Prenten",
+      "unclassified": "Ongeclassificeerd"
     }
   },
   "Card": {
@@ -176,7 +177,8 @@
       "drawing": "Tekening",
       "watercolor": "Aquarel",
       "work on paper": "Werk op papier",
-      "print": "Prent"
+      "print": "Prent",
+      "unclassified": "Ongeclassificeerd"
     }
   },
   "SeenModal": {
@@ -285,9 +287,20 @@
   },
   "Profile": {
     "title": "Profiel",
+    "eyebrow": "Jouw verzameling",
     "memberSince": "Lid sinds {date}",
     "unknown": "Onbekend",
     "seenCount": "{count} werken gezien",
+    "collectionHint": "Blijf ontdekken, één werk tegelijk",
+    "seenStat": "Gezien",
+    "votesStat": "Kunstenaarstips",
+    "memberStat": "Lid sinds",
+    "recentEyebrow": "Jouw spoor",
+    "recentTitle": "Recent gezien",
+    "browseMore": "Meer werken",
+    "recentEmpty": "Je hebt nog geen werken gemarkeerd",
+    "discoverWorks": "Ontdek de collectie",
+    "settingsTitle": "Profielinstellingen",
     "name": "Naam",
     "namePlaceholder": "Jouw naam",
     "email": "E-mail",

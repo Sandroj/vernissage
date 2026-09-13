@@ -5,6 +5,16 @@ import { authOptions } from '@/lib/auth'
 import ArtistCard from '@/components/artist-card'
 import ArtistsSearch from '@/components/artists-search'
 
+// Use recognisable anchor works for the artist cards instead of whichever
+// image happens to have the lowest database id.
+const FEATURED_ARTIST_WORKS = [
+  { artist: 'Vincent van Gogh', title: 'Sunflowers' },
+  { artist: 'Claude Monet', title: 'Impression, sunrise' },
+  { artist: 'Gustav Klimt', title: 'The Kiss' },
+  { artist: 'Johannes Vermeer', title: 'Girl with a Pearl Earring' },
+  { artist: 'Wassily Kandinsky', title: 'Composition VII' },
+]
+
 export default async function ArtistsPage({
   searchParams,
 }: {
@@ -30,6 +40,20 @@ export default async function ArtistsPage({
     },
     orderBy: { name: 'asc' },
   })
+
+  const featuredRows = await prisma.artwork.findMany({
+    where: {
+      AND: [hasImage, { OR: FEATURED_ARTIST_WORKS.map((work) => ({ title: work.title, artist: { name: work.artist } })) }],
+    },
+    select: { image_local_path: true, image_url: true, title: true, artist: { select: { name: true } } },
+    orderBy: { id: 'asc' },
+  })
+  const featuredImages = new Map(
+    FEATURED_ARTIST_WORKS.map((work) => [
+      work.artist,
+      featuredRows.find((row) => row.artist.name === work.artist && row.title === work.title),
+    ])
+  )
 
   // Haal seen-counts op voor ingelogde gebruiker
   const seenCounts: Record<number, number> = {}
@@ -57,7 +81,11 @@ export default async function ArtistsPage({
             key={artist.id}
             artist={localizeArtist(artist, locale)}
             seenCount={seenCounts[artist.id] ?? 0}
-            featuredImage={artist.artworks[0]?.image_local_path ?? artist.artworks[0]?.image_url ?? null}
+            featuredImage={featuredImages.get(artist.name)?.image_local_path
+              ?? featuredImages.get(artist.name)?.image_url
+              ?? artist.artworks[0]?.image_local_path
+              ?? artist.artworks[0]?.image_url
+              ?? null}
           />
         ))}
         {artists.length === 0 && (

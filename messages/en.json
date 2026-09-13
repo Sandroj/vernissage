@@ -129,7 +129,8 @@
       "drawing": "Drawings & sketches",
       "watercolor": "Watercolours",
       "work on paper": "Works on paper",
-      "print": "Prints"
+      "print": "Prints",
+      "unclassified": "Unclassified"
     }
   },
   "Card": {
@@ -176,7 +177,8 @@
       "drawing": "Drawing",
       "watercolor": "Watercolour",
       "work on paper": "Work on paper",
-      "print": "Print"
+      "print": "Print",
+      "unclassified": "Unclassified"
     }
   },
   "SeenModal": {
@@ -285,9 +287,20 @@
   },
   "Profile": {
     "title": "Profile",
+    "eyebrow": "Your collection",
     "memberSince": "Member since {date}",
     "unknown": "Unknown",
     "seenCount": "{count} works seen",
+    "collectionHint": "Keep discovering, one work at a time",
+    "seenStat": "Seen",
+    "votesStat": "Artist picks",
+    "memberStat": "Member since",
+    "recentEyebrow": "Your trail",
+    "recentTitle": "Recently seen",
+    "browseMore": "More works",
+    "recentEmpty": "You have not marked any works yet",
+    "discoverWorks": "Explore the collection",
+    "settingsTitle": "Profile settings",
     "name": "Name",
     "namePlaceholder": "Your name",
     "email": "Email",

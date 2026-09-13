@@ -8,7 +8,7 @@ import { ARTIST_TAXONOMIES } from '@/lib/artwork-taxonomy'
 
 const PAGE_SIZE = 200
 
-const TYPE_ORDER = ['painting', 'drawing', 'watercolor', 'work on paper', 'print']
+const TYPE_ORDER = ['painting', 'drawing', 'watercolor', 'work on paper', 'print', 'unclassified']
 
 interface Artwork {
   id: number

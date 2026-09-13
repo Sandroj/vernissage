@@ -111,6 +111,18 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   geschreven. Productie: Kandinsky 892/952, Vermeer 37/37. Vier nieuwe
   R2-steekproeven geven HTTP 200 JPEG.
 
+## Laatst gedaan (2026-09-13, profiel en datakwaliteit)
+
+- Kunstenaarskaarten gebruiken nu herkenbare ankerwerken (met fallback naar het
+  bestaande eerste beeld). `/profile` is herontworpen met lichte Vernissage-
+  cards, avatar, statistieken, recente gezien-items en instellingen.
+- F1666 (*Three figures walking along a canal*) is gecontroleerd via de
+  VGGallery-painting- en drawing-pagina’s. De bron zegt expliciet dat het
+  medium niet vast te stellen is en het werk in beide secties staat. Het
+  record staat daarom in dev.db en Turso op `unclassified`; het herstel is
+  reproduceerbaar via `scripts/repair-f1666-classification.mjs`.
+- `npm run build` slaagt; alleen bestaande `<img>`-lintwaarschuwingen.
+
 ## Volgende stap
 1. Onderzoek de 60 resterende Kandinsky-records zonder `image_source_url` via
    exact herleidbare institutionele of catalogusbronnen; dit zijn geen
