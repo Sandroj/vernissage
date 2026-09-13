@@ -16,7 +16,7 @@ interface ArtworkWithMuseum {
   dimensions_raw?: string | null
   image_local_path?: string | null
   image_url?: string | null
-  museum?: { id: number; name: string; city: string } | null
+  museum?: { id: number; name: string; city: string; country: string } | null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
@@ -45,6 +45,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   const [seenMap, setSeenMap] = useState(initialSeenMap)
   const [mapOpen, setMapOpen] = useState(false)
   const [seenFilter, setSeenFilter] = useState<'all' | 'seen' | 'unseen'>('all')
+  const [bioExpanded, setBioExpanded] = useState(false)
   const t = useTranslations('Artists')
 
   function showSeenWorks() {
@@ -142,7 +143,18 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
 
             {/* Bio */}
             {artist.bio && (
-              <p className="mt-5 line-clamp-3 max-w-2xl text-sm leading-relaxed text-white/60">{artist.bio}</p>
+              <div className="mt-5 max-w-2xl">
+                <p id="artist-bio" className={`${bioExpanded ? '' : 'line-clamp-3'} text-sm leading-relaxed text-white/60`}>{artist.bio}</p>
+                <button
+                  type="button"
+                  aria-expanded={bioExpanded}
+                  aria-controls="artist-bio"
+                  onClick={() => setBioExpanded((expanded) => !expanded)}
+                  className="mt-2 text-xs font-semibold text-[#f4b548] underline decoration-[#f4b548]/35 underline-offset-4 hover:text-[#ffd073]"
+                >
+                  {bioExpanded ? t('bioLess') : t('bioMore')}
+                </button>
+              </div>
             )}
           </div>
           <a href="#works" className="absolute bottom-0 right-0 hidden size-12 place-items-center rounded-full border border-white/15 bg-white/8 text-white/70 transition hover:bg-white/15 sm:grid"><ArrowDown size={18} /></a>
@@ -180,6 +192,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
         onRefresh={refresh}
         seenFilter={seenFilter}
         onSeenFilterChange={setSeenFilter}
+        artistSlug={artist.slug}
       /></div>
     </div>
   )

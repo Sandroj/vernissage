@@ -1,12 +1,12 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Command, CommandInput, CommandList, CommandItem, CommandEmpty } from '@/components/ui/command'
+import { Command, CommandInput, CommandList, CommandItem, CommandEmpty, CommandGroup } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { MapPin } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 
-interface Museum { id: number; name: string; city: string }
+interface Museum { id: number; name: string; city: string; country: string }
 
 interface MuseumSearchProps {
   value: string
@@ -15,6 +15,8 @@ interface MuseumSearchProps {
 
 export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
   const t = useTranslations('MuseumSearch')
+  const tc = useTranslations('Countries')
+  const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Museum[]>([])
@@ -28,6 +30,14 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
     }, 200)
     return () => clearTimeout(t)
   }, [query])
+
+  const countryLabel = (country: string) => {
+    if (!country || country === 'Onbekend' || country === 'Unknown') return t('unknownCountry')
+    return tc.has(country) ? tc(country) : country
+  }
+  const countries = Array.from(new Set(results.map((museum) => museum.country))).sort(
+    (a, b) => new Intl.Collator(locale, { sensitivity: 'base' }).compare(countryLabel(a), countryLabel(b))
+  )
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -61,16 +71,20 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
                 {t('useAsLocation', { query })}
               </button>
             </CommandEmpty>
-            {results.map((m) => (
-              <CommandItem
-                key={m.id}
-                value={`${m.name} ${m.city}`}
-                onSelect={() => { onChange(`${m.name}, ${m.city}`); setOpen(false) }}
-              >
-                <MapPin size={13} className="mr-2 text-stone-400" />
-                <span>{m.name}</span>
-                <span className="ml-auto text-stone-400 text-xs">{m.city}</span>
-              </CommandItem>
+            {countries.map((country) => (
+              <CommandGroup key={country || 'unknown'} heading={countryLabel(country)}>
+                {results.filter((museum) => museum.country === country).map((m) => (
+                  <CommandItem
+                    key={m.id}
+                    value={`${m.name} ${m.city} ${m.country}`}
+                    onSelect={() => { onChange(`${m.name}, ${m.city}`); setOpen(false) }}
+                  >
+                    <MapPin size={13} className="mr-2 text-stone-400" />
+                    <span>{m.name}</span>
+                    <span className="ml-auto text-stone-400 text-xs">{m.city}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
             ))}
           </CommandList>
         </Command>

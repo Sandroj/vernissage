@@ -3,7 +3,8 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import ArtworkCard from '@/components/artwork-card'
 import { Search, ChevronDown, Check, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
+import { ARTIST_TAXONOMIES } from '@/lib/artwork-taxonomy'
 
 const PAGE_SIZE = 200
 
@@ -22,7 +23,7 @@ interface Artwork {
   image_local_path?: string | null
   image_url?: string | null
   attribution_status?: string | null
-  museum?: { id: number; name: string; city: string } | null
+  museum?: { id: number; name: string; city: string; country?: string } | null
   artist?: { name: string; slug: string } | null
 }
 
@@ -45,6 +46,7 @@ interface ArtworkGridProps {
   onRefresh?: (() => void) | undefined
   seenFilter?: SeenFilter
   onSeenFilterChange?: (v: SeenFilter) => void
+  artistSlug?: string
 }
 
 function Dropdown<T extends string>({
@@ -72,14 +74,18 @@ function Dropdown<T extends string>({
   )
 }
 
-export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, seenFilter, onSeenFilterChange }: ArtworkGridProps) {
+export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, seenFilter, onSeenFilterChange, artistSlug }: ArtworkGridProps) {
   const t = useTranslations('Grid')
+  const tc = useTranslations('Countries')
+  const locale = useLocale()
   const [filterTitle, setFilterTitle] = useState('')
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(new Set())
   const [internalFilterSeen, setInternalFilterSeen] = useState<SeenFilter>('all')
   const filterSeen = seenFilter ?? internalFilterSeen
   const setFilterSeen = onSeenFilterChange ?? setInternalFilterSeen
   const [filterMuseum, setFilterMuseum] = useState('all')
+  const [filterPeriod, setFilterPeriod] = useState('all')
+  const [filterTheme, setFilterTheme] = useState('all')
   const [showMissingImages, setShowMissingImages] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -109,14 +115,24 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
     [artworks]
   )
 
-  // Unique museums
+  const taxonomy = artistSlug ? ARTIST_TAXONOMIES[artistSlug] : undefined
+
+  const facetCounts = useMemo(() => ({
+    periods: taxonomy?.periods.map((option) => ({ ...option, count: artworks.filter(option.matches).length })).filter((option) => option.count > 0) ?? [],
+    themes: taxonomy?.themes.map((option) => ({ ...option, count: artworks.filter(option.matches).length })).filter((option) => option.count > 0) ?? [],
+  }), [artworks, taxonomy])
+
+  // Unique museums, alphabetically grouped by country.
   const museums = useMemo(() => {
-    const map = new Map<number, string>()
+    const map = new Map<number, { id: number; name: string; country: string }>()
     for (const a of artworks) {
-      if (a.museum) map.set(a.museum.id, a.museum.name)
+      if (a.museum) map.set(a.museum.id, { id: a.museum.id, name: a.museum.name, country: a.museum.country ?? '' })
     }
-    return Array.from(map.entries())
-  }, [artworks])
+    const collator = new Intl.Collator(locale, { sensitivity: 'base' })
+    return Array.from(map.values()).sort((a, b) =>
+      collator.compare(a.country, b.country) || collator.compare(a.name, b.name)
+    )
+  }, [artworks, locale])
 
   const filtered = useMemo(() => artworks.filter((a) => {
     if (filterTitle) {
@@ -127,9 +143,11 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
     if (filterSeen === 'seen' && !seenMap[a.id]) return false
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
     if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
+    if (filterPeriod !== 'all' && !taxonomy?.periods.find((option) => option.key === filterPeriod)?.matches(a)) return false
+    if (filterTheme !== 'all' && !taxonomy?.themes.find((option) => option.key === filterTheme)?.matches(a)) return false
     if (!showMissingImages && !a.image_local_path && !a.image_url) return false
     return true
-  }), [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, showMissingImages, seenMap])
+  }), [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, filterPeriod, filterTheme, showMissingImages, seenMap, taxonomy])
 
   // Reset pagination when filters change
   const visible = filtered.slice(0, visibleCount)
@@ -155,10 +173,16 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
     { value: 'unseen', label: t('unseenOnly') },
   ]
 
-  const museumOptions = [
-    { value: 'all', label: t('allMuseums') },
-    ...museums.map(([id, name]) => ({ value: id.toString(), label: name.length > 34 ? name.substring(0, 32) + '…' : name })),
-  ]
+  const countryLabel = (country: string) => {
+    if (!country || country === 'Onbekend' || country === 'Unknown') return t('unknownCountry')
+    return tc.has(country) ? tc(country) : country
+  }
+  const museumCountries = Array.from(new Set(museums.map((museum) => museum.country))).sort((a, b) => {
+    const aUnknown = !a || a === 'Onbekend' || a === 'Unknown'
+    const bUnknown = !b || b === 'Onbekend' || b === 'Unknown'
+    if (aUnknown !== bUnknown) return aUnknown ? 1 : -1
+    return new Intl.Collator(locale, { sensitivity: 'base' }).compare(countryLabel(a), countryLabel(b))
+  })
 
   function handleFilterChange<T>(setter: (v: T) => void) {
     return (v: T) => { setter(v); setVisibleCount(PAGE_SIZE) }
@@ -192,8 +216,36 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
         <div className="flex flex-wrap items-center gap-2 border-t border-black/5 pt-3 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0">
           <SlidersHorizontal size={14} className="hidden text-stone-400 sm:block" />
           <Dropdown value={filterSeen} onChange={handleFilterChange(setFilterSeen)} options={seenOptions} />
+          {facetCounts.periods.length > 1 && (
+            <Dropdown value={filterPeriod} onChange={handleFilterChange(setFilterPeriod)} options={[
+              { value: 'all', label: t('allPeriods') },
+              ...facetCounts.periods.map((option) => ({ value: option.key, label: `${t(option.labelKey)} (${option.count})` })),
+            ]} />
+          )}
+          {facetCounts.themes.length > 0 && (
+            <Dropdown value={filterTheme} onChange={handleFilterChange(setFilterTheme)} options={[
+              { value: 'all', label: t('allThemes') },
+              ...facetCounts.themes.map((option) => ({ value: option.key, label: `${t(option.labelKey)} (${option.count})` })),
+            ]} />
+          )}
           {museums.length > 1 && (
-            <Dropdown value={filterMuseum} onChange={handleFilterChange(setFilterMuseum)} options={museumOptions} />
+            <div className="relative">
+              <select
+                value={filterMuseum}
+                onChange={(event) => handleFilterChange(setFilterMuseum)(event.target.value)}
+                className="h-10 max-w-[18rem] appearance-none cursor-pointer rounded-full border border-black/10 bg-white/70 py-1.5 pl-4 pr-9 text-xs font-medium text-stone-600 transition hover:bg-white focus:border-[#4256cc]/60 focus:outline-none"
+              >
+                <option value="all">{t('allMuseums')}</option>
+                {museumCountries.map((country) => (
+                  <optgroup key={country || 'unknown'} label={countryLabel(country)}>
+                    {museums.filter((museum) => museum.country === country).map((museum) => (
+                      <option key={museum.id} value={museum.id.toString()}>{museum.name}</option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              <ChevronDown size={12} className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+            </div>
           )}
         </div>
       </div>

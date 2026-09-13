@@ -65,7 +65,9 @@
     "mapButton": "View {count, plural, =1 {1 location} other {# locations}} on map",
     "mapTitle": "Where to find {name}",
     "mapDescription": "{count, plural, =1 {One collection holder with works by this artist.} other {# collection holders with works by this artist.}} A work may temporarily be in storage or on loan.",
-    "openMuseum": "View museum"
+    "openMuseum": "View museum",
+    "bioMore": "Read more",
+    "bioLess": "Read less"
   },
   "Progress": {
     "seenOf": "{seen} of {total} seen"
@@ -80,9 +82,48 @@
     "seenOnly": "Seen",
     "unseenOnly": "Not seen",
     "allMuseums": "All museums",
+    "allPeriods": "All periods",
+    "allThemes": "All themes and series",
+    "unknownCountry": "Country unknown",
     "withoutImage": "Works without image",
     "empty": "No works match these filters.",
     "loadingMore": "Loading more…",
+    "period": {
+      "vanGoghEarlyNetherlands": "Early Dutch years · 1881–1883",
+      "vanGoghNuenen": "Nuenen · 1884–1885",
+      "vanGoghParis": "Paris · 1886–1887",
+      "vanGoghArles": "Arles · 1888",
+      "vanGoghSaintRemy": "Saint-Rémy · 1889",
+      "vanGoghAuvers": "Auvers-sur-Oise · 1890",
+      "kandinskyEarlyMunich": "Early years and Munich · 1896–1907",
+      "kandinskyMurnau": "Murnau and Der Blaue Reiter · 1908–1914",
+      "kandinskyRussia": "Return to Russia · 1915–1921",
+      "kandinskyBauhaus": "Bauhaus · 1922–1933",
+      "kandinskyParis": "Paris · 1934–1944",
+      "vermeerEarly": "Early history painting · 1653–1656",
+      "vermeerEmerging": "Emerging genre painter · 1657–1661",
+      "vermeerMature": "Mature interiors · 1662–1667",
+      "vermeerLate": "Late period · 1668–1675"
+    },
+    "theme": {
+      "sunflowers": "Sunflowers",
+      "selfPortraits": "Self-portraits",
+      "orchards": "Orchards in blossom",
+      "wheatfields": "Wheatfields",
+      "cypresses": "Cypresses",
+      "bedroom": "The Bedroom",
+      "impressions": "Impressions",
+      "improvisations": "Improvisations",
+      "compositions": "Compositions",
+      "murnau": "Murnau",
+      "smallWorlds": "Small Worlds",
+      "historyFaith": "History and faith",
+      "delft": "Delft townscapes",
+      "letters": "Letters",
+      "music": "Music",
+      "tronies": "Tronies",
+      "scholars": "Scholars"
+    },
     "type": {
       "painting": "Paintings",
       "drawing": "Drawings & sketches",
@@ -136,10 +177,7 @@
       "watercolor": "Watercolour",
       "work on paper": "Work on paper",
       "print": "Print"
-    },
-    "typeSaved": "Type updated",
-    "typeError": "Could not save type",
-    "typeEditHint": "Click to correct the type"
+    }
   },
   "SeenModal": {
     "editTitle": "Edit",
@@ -162,6 +200,7 @@
     "stars": "{count, plural, =1 {1 star} other {# stars}}"
   },
   "MuseumSearch": {
+    "unknownCountry": "Country unknown",
     "placeholder": "Search museum...",
     "trigger": "Search museum or type a location...",
     "useAsLocation": "Use “{query}” as location"

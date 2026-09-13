@@ -65,7 +65,9 @@
     "mapButton": "Bekijk {count, plural, =1 {1 locatie} other {# locaties}} op kaart",
     "mapTitle": "Waar je {name} kunt vinden",
     "mapDescription": "{count, plural, =1 {Eén collectiehouder met werken van deze kunstenaar.} other {# collectiehouders met werken van deze kunstenaar.}} Een werk kan tijdelijk in depot of in bruikleen zijn.",
-    "openMuseum": "Bekijk museum"
+    "openMuseum": "Bekijk museum",
+    "bioMore": "Lees meer",
+    "bioLess": "Lees minder"
   },
   "Progress": {
     "seenOf": "{seen} van {total} gezien"
@@ -80,9 +82,48 @@
     "seenOnly": "Gezien",
     "unseenOnly": "Niet gezien",
     "allMuseums": "Alle musea",
+    "allPeriods": "Alle periodes",
+    "allThemes": "Alle thema’s en series",
+    "unknownCountry": "Land onbekend",
     "withoutImage": "Werken zonder beeld",
     "empty": "Geen werken gevonden met deze filters.",
     "loadingMore": "Meer laden…",
+    "period": {
+      "vanGoghEarlyNetherlands": "Vroege Nederlandse jaren · 1881–1883",
+      "vanGoghNuenen": "Nuenen · 1884–1885",
+      "vanGoghParis": "Parijs · 1886–1887",
+      "vanGoghArles": "Arles · 1888",
+      "vanGoghSaintRemy": "Saint-Rémy · 1889",
+      "vanGoghAuvers": "Auvers-sur-Oise · 1890",
+      "kandinskyEarlyMunich": "Vroege jaren en München · 1896–1907",
+      "kandinskyMurnau": "Murnau en Der Blaue Reiter · 1908–1914",
+      "kandinskyRussia": "Terug in Rusland · 1915–1921",
+      "kandinskyBauhaus": "Bauhaus · 1922–1933",
+      "kandinskyParis": "Parijs · 1934–1944",
+      "vermeerEarly": "Vroege historieschilderkunst · 1653–1656",
+      "vermeerEmerging": "Ontluikende genreschilder · 1657–1661",
+      "vermeerMature": "Rijpe interieurs · 1662–1667",
+      "vermeerLate": "Late periode · 1668–1675"
+    },
+    "theme": {
+      "sunflowers": "Zonnebloemen",
+      "selfPortraits": "Zelfportretten",
+      "orchards": "Bloeiende boomgaarden",
+      "wheatfields": "Korenvelden",
+      "cypresses": "Cipressen",
+      "bedroom": "De slaapkamer",
+      "impressions": "Impressies",
+      "improvisations": "Improvisaties",
+      "compositions": "Composities",
+      "murnau": "Murnau",
+      "smallWorlds": "Kleine werelden",
+      "historyFaith": "Historie en geloof",
+      "delft": "Delftse stadsgezichten",
+      "letters": "Brieven",
+      "music": "Muziek",
+      "tronies": "Tronies",
+      "scholars": "Geleerden"
+    },
     "type": {
       "painting": "Schilderijen",
       "drawing": "Tekeningen & schetsen",
@@ -136,10 +177,7 @@
       "watercolor": "Aquarel",
       "work on paper": "Werk op papier",
       "print": "Prent"
-    },
-    "typeSaved": "Type aangepast",
-    "typeError": "Type opslaan mislukt",
-    "typeEditHint": "Klik om het type te corrigeren"
+    }
   },
   "SeenModal": {
     "editTitle": "Bewerk",
@@ -162,6 +200,7 @@
     "stars": "{count, plural, =1 {1 ster} other {# sterren}}"
   },
   "MuseumSearch": {
+    "unknownCountry": "Land onbekend",
     "placeholder": "Zoek museum...",
     "trigger": "Zoek museum of typ locatie...",
     "useAsLocation": "Gebruik “{query}” als locatie"

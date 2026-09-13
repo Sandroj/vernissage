@@ -10,8 +10,6 @@ import { cn, proxyImg } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 
-const TYPES = ['painting', 'drawing', 'watercolor', 'work on paper', 'print']
-
 interface ArtworkDetailClientProps {
   artwork: {
     id: number
@@ -54,7 +52,6 @@ export default function ArtworkDetailClient({
   const [seen, setSeen] = useState(initialSeen)
   const [currentSeenCount, setCurrentSeenCount] = useState(seenCount)
   const [reportOpen, setReportOpen] = useState(false)
-  const [type, setType] = useState(artwork.type_normalized ?? '')
   const [reportMsg, setReportMsg] = useState('')
 
   const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url)
@@ -72,18 +69,6 @@ export default function ArtworkDetailClient({
       if (!seen && updated) setCurrentSeenCount((c) => c + 1)
     }
     toast(t('saved'))
-  }
-
-  async function changeType(next: string) {
-    const prev = type
-    setType(next)
-    const res = await fetch(`/api/artworks/${artwork.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type_normalized: next }),
-    })
-    if (res.ok) toast(t('typeSaved'))
-    else { setType(prev); toast.error(t('typeError')) }
   }
 
   async function submitReport() {
@@ -193,23 +178,8 @@ export default function ArtworkDetailClient({
             {artwork.medium_raw && (
               <MetaRow label={t('medium')} value={artwork.medium_raw} />
             )}
-            {isLoggedIn ? (
-              <div>
-                <p className="mb-0.5 text-xs uppercase tracking-widest text-stone-400">{t('type')}</p>
-                <select
-                  value={type}
-                  onChange={(e) => changeType(e.target.value)}
-                  title={t('typeEditHint')}
-                  className="-ml-0.5 cursor-pointer appearance-none border-b border-dashed border-black/20 bg-transparent pr-5 text-sm leading-snug text-stone-900 hover:text-[#4256cc] focus:outline-none"
-                >
-                  {!type && <option value="">—</option>}
-                  {TYPES.map((v) => (
-                    <option key={v} value={v} className="bg-white">{t(`typeValue.${v}`)}</option>
-                  ))}
-                </select>
-              </div>
-            ) : type && (
-              <MetaRow label={t('type')} value={t.has(`typeValue.${type}`) ? t(`typeValue.${type}`) : capitalize(type)} />
+            {artwork.type_normalized && (
+              <MetaRow label={t('type')} value={t.has(`typeValue.${artwork.type_normalized}`) ? t(`typeValue.${artwork.type_normalized}`) : capitalize(artwork.type_normalized)} />
             )}
             {artwork.dimensions_raw && (
               <MetaRow label={t('dimensions')} value={artwork.dimensions_raw} />

@@ -11,11 +11,12 @@ export async function GET(req: Request) {
           OR: [
             { name: { contains: q } },
             { city: { contains: q } },
+            { country: { contains: q } },
           ],
         }
       : undefined,
-    take: 10,
-    orderBy: { name: 'asc' },
+    take: 30,
+    orderBy: [{ country: 'asc' }, { name: 'asc' }, { city: 'asc' }],
   })
 
   return NextResponse.json(museums)
