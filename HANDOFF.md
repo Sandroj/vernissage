@@ -8,7 +8,8 @@
 Next.js-app (App Router) voor het bijhouden van kunst: artiesten, kunstwerken en
 musea, met discover-, profiel- en admin-secties. Draait live op Vercel. Van Gogh
 Worldwide/De la Faille is het primaire Van Gogh-register: 2.135 zichtbare
-F-records, 883 schilderijen en 2.048 werken met beeld. `main` is schoon en gelijk
+F-records, 883 schilderijen en 2.048 werken met beeld. Kandinsky staat op
+892/952 met beeld; Vermeer is compleet op 37/37. `main` is schoon en gelijk
 aan `origin/main`. Deze repo is nu Orca-klaar gemaakt: richt
 Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 `art/`-map.
@@ -65,11 +66,24 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   en verwijdert niets. Productie: 2.135 canoniek, 990 legacy, 883 paintings,
   1.902 met R2-beeld. Live en lokaal bevestigd; `npm run build` slaagt.
 
+## Laatst gedaan (2026-09-13)
+
+- Alle 97 eerder rate-limited Kandinsky- en 2 Vermeer-afbeeldingen zijn alsnog
+  opgehaald. De bronrepo-importers gebruiken nu Wikimedia's gangbare
+  1280px-`thumb.php`-route met vertraging en 429-backoff.
+- Exact 99 bestanden zijn naar R2 geüpload (0 fouten), in `dev.db` naar
+  publieke R2-URL's omgezet en via de gerichte afbeeldingssync naar Turso
+  geschreven. Productie: Kandinsky 892/952, Vermeer 37/37. Vier nieuwe
+  R2-steekproeven geven HTTP 200 JPEG.
+
 ## Volgende stap
-1. Houd de 87 resterende beeldloze records periodiek opnieuw tegen de bron aan:
+1. Onderzoek de 60 resterende Kandinsky-records zonder `image_source_url` via
+   exact herleidbare institutionele of catalogusbronnen; dit zijn geen
+   rate-limitgevallen meer.
+2. Houd de 87 resterende beeldloze Van Gogh-records periodiek opnieuw tegen de bron aan:
    50 hebben een historische VGW-reproductie maar geen werkende exact
    herleidbare publieke bron; 37 missen ook in de bron bruikbare metadata.
-2. Vergelijk de actuele publieke VGW-telling (2.158) met de vaste 2.135
+3. Vergelijk de actuele publieke VGW-telling (2.158) met de vaste 2.135
    De la Faille F-snapshot voordat eventuele nieuwe canonieke records worden
    toegevoegd.
 
