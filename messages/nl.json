@@ -184,6 +184,7 @@
     "cancel": "Annuleren",
     "reportSent": "Melding verstuurd, dank je!",
     "saved": "Opgeslagen",
+    "removed": "Markering verwijderd",
     "missingImage": "Geen afbeelding beschikbaar",
     "source": "Bron: {name}",
     "viewOriginal": "Bekijk originele pagina",
@@ -215,7 +216,8 @@
     "photoPreview": "Voorbeeld van upload",
     "removePhoto": "Foto verwijderen",
     "saving": "Opslaan...",
-    "save": "Opslaan"
+    "save": "Opslaan",
+    "removeSeen": "Markeer als niet gezien"
   },
   "StarRating": {
     "label": "Waardering",

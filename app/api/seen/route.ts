@@ -26,6 +26,23 @@ export async function POST(req: Request) {
   return NextResponse.json(seen, { status: 201 })
 }
 
+export async function DELETE(req: Request) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 })
+
+  const { artworkId } = await req.json()
+  const parsedArtworkId = Number(artworkId)
+  if (!Number.isInteger(parsedArtworkId) || parsedArtworkId <= 0) {
+    return NextResponse.json({ error: 'Ongeldig werk' }, { status: 400 })
+  }
+
+  await prisma.seen.deleteMany({
+    where: { userId: session.user.id, artworkId: parsedArtworkId },
+  })
+
+  return NextResponse.json({ ok: true })
+}
+
 export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 })

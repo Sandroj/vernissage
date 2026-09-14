@@ -123,6 +123,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
           onOpenChange={setModalOpen}
           existingSeen={seen}
           onSaved={() => { setModalOpen(false); onSeenChange() }}
+          onRemoved={() => { setModalOpen(false); onSeenChange() }}
         />
       )}
     </>

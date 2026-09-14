@@ -24,6 +24,7 @@ interface SeenModalProps {
     photo_url?: string | null
   } | null
   onSaved: () => void
+  onRemoved: () => void
 }
 
 export default function SeenModal({
@@ -33,6 +34,7 @@ export default function SeenModal({
   onOpenChange,
   existingSeen,
   onSaved,
+  onRemoved,
 }: SeenModalProps) {
   const [date, setDate] = useState<Date>(
     existingSeen ? new Date(existingSeen.dateSeen) : new Date()
@@ -65,14 +67,27 @@ export default function SeenModal({
     onSaved()
   }
 
+  async function handleRemove() {
+    setSaving(true)
+    const res = await fetch('/api/seen', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ artworkId }),
+    })
+    setSaving(false)
+    if (!res.ok) return
+    onOpenChange(false)
+    onRemoved()
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#faf6ee] border-black/10 sm:max-w-md">
+      <DialogContent className="w-[calc(100%-1rem)] max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-2xl bg-[#faf6ee] border-black/10 p-5 sm:max-w-md sm:rounded-2xl sm:p-6">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl font-medium text-stone-900">
             {existingSeen ? t('editTitle') : t('newTitle')}
           </DialogTitle>
-          <p className="text-stone-500 text-sm">{artworkTitle}</p>
+          <p className="max-w-full break-words text-stone-500 text-sm">{artworkTitle}</p>
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
@@ -173,9 +188,16 @@ export default function SeenModal({
             </div>
           </div>
 
-          <Button onClick={handleSave} disabled={saving} className="w-full h-11 rounded-full bg-[#ed694c] hover:bg-[#db573c] border-0 text-white">
-            {saving ? t('saving') : t('save')}
-          </Button>
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
+            {existingSeen && (
+              <Button type="button" variant="ghost" onClick={handleRemove} disabled={saving} className="h-11 rounded-full text-sm text-stone-500 hover:bg-red-50 hover:text-red-700 sm:px-3">
+                {t('removeSeen')}
+              </Button>
+            )}
+            <Button onClick={handleSave} disabled={saving} className="h-11 flex-1 rounded-full bg-[#ed694c] hover:bg-[#db573c] border-0 text-white">
+              {saving ? t('saving') : t('save')}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -67,8 +67,15 @@ export default function ArtworkDetailClient({
       const updated = all.find((s: any) => s.artworkId === artwork.id)
       setSeen(updated ?? null)
       if (!seen && updated) setCurrentSeenCount((c) => c + 1)
+      if (seen && !updated) setCurrentSeenCount((c) => Math.max(0, c - 1))
     }
     toast(t('saved'))
+  }
+
+  function handleRemoved() {
+    setSeen(null)
+    setCurrentSeenCount((c) => Math.max(0, c - 1))
+    toast(t('removed'))
   }
 
   async function submitReport() {
@@ -271,6 +278,7 @@ export default function ArtworkDetailClient({
         onOpenChange={setModalOpen}
         existingSeen={seen}
         onSaved={handleSaved}
+        onRemoved={handleRemoved}
       />
     </div>
   )

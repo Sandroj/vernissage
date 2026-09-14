@@ -184,6 +184,7 @@
     "cancel": "Cancel",
     "reportSent": "Report sent, thank you!",
     "saved": "Saved",
+    "removed": "Marked as unseen",
     "missingImage": "No image available",
     "source": "Source: {name}",
     "viewOriginal": "View original page",
@@ -215,7 +216,8 @@
     "photoPreview": "Upload preview",
     "removePhoto": "Remove photo",
     "saving": "Saving...",
-    "save": "Save"
+    "save": "Save",
+    "removeSeen": "Mark as unseen"
   },
   "StarRating": {
     "label": "Rating",
