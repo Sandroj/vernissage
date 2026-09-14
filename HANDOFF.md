@@ -66,6 +66,19 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   `https://arttracker-xi.vercel.app/artists/wassily-kandinsky` antwoordt HTTP
   200 met de bijgewerkte telling (919 Kandinsky-werken).
 
+## Laatst gedaan (2026-09-14, Kandinsky-profielverrijking)
+
+- Na feedback op de eerste merge zijn de ontbrekende complementaire velden uit
+  de oude records teruggezet met `scripts/enrich-kandinsky-merged-records.mjs`.
+  Het script koppelt musea op naam/stad/land omdat museum-id’s lokaal en in
+  Turso niet stabiel zijn.
+- 29 bewaarde rijen kregen ontbrekende locatie- en/of afmetingsvelden terug.
+  Voor `Gabriele Münter` (5302) is na visuele vergelijking bewust de scherpere
+  schilderijuitsnede `work-12.jpg` gekozen, inclusief bijbehorende provenance,
+  Lenbachhaus-locatie en afmetingen.
+- Toegepast en read-only gecontroleerd in dev.db en Turso. Kandinsky staat op
+  919 werken; de inhoudelijke wijzigingen zijn direct in Turso zichtbaar.
+
 ## Laatst gedaan (2026-09-13, UX/auth/museumronde)
 
 - Homepage-hero toont nu per carrouselstap drie klikbare werken (één groot +
