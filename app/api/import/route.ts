@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
+import { normalizeArtworkTitle } from '@/lib/artwork-title'
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
@@ -15,6 +16,7 @@ export async function POST(req: Request) {
 
   for (const work of works) {
     if (!work.artist || !work.title) continue
+    const title = normalizeArtworkTitle(work.title)
 
     let artist = await prisma.artist.findFirst({ where: { name: work.artist } })
     if (!artist) {
@@ -37,7 +39,7 @@ export async function POST(req: Request) {
     }
 
     const existing = await prisma.artwork.findFirst({
-      where: { artistId: artist.id, title: work.title },
+      where: { artistId: artist.id, title },
     })
     if (existing) continue
 
@@ -45,7 +47,7 @@ export async function POST(req: Request) {
       data: {
         artistId: artist.id,
         museumId,
-        title: work.title,
+        title,
         year_start: work.year_start ?? null,
         year_end: work.year_end ?? null,
         medium_raw: work.medium_raw ?? null,

@@ -11,6 +11,17 @@ import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
 
+function normalizeArtworkTitle(title) {
+  return title
+    .replace(/\b(?:1[0-9]{3}|20[0-9]{2})\b/g, '')
+    .replace(/\s+,/g, ',')
+    .replace(/,\s*(?=\()/g, ' ')
+    .replace(/\s*\(\s*No\./g, ' (No.')
+    .replace(/\(\s*\)/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const require = createRequire(import.meta.url)
 const Database = require('better-sqlite3')
@@ -94,7 +105,7 @@ async function main() {
   for (const row of rows) {
     const museumId = row.museum_name ? museumByName.get(row.museum_name.toLocaleLowerCase()) ?? null : null
     const values = [
-      remoteArtistId, museumId, row.title, row.year_start, row.year_end, row.medium_raw,
+      remoteArtistId, museumId, normalizeArtworkTitle(row.title), row.year_start, row.year_end, row.medium_raw,
       row.type_normalized, row.dimensions_raw, row.image_url, row.image_local_path,
       row.source_url, row.source_name, row.catalogue_id, row.jh_catalogue_id,
       row.alternate_titles, row.location_confidence, row.location_verified_at,
