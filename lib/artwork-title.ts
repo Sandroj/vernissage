@@ -6,6 +6,7 @@ export function normalizeArtworkTitle(title: string): string {
     .replace(/,\s*(?=\()/g, ' ')
     .replace(/\s*\(\s*No\./g, ' (No.')
     .replace(/\(\s*\)/g, '')
+    .replace(/,\s*$/g, '')
     .replace(/\s{2,}/g, ' ')
     .trim()
 }
