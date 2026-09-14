@@ -62,7 +62,9 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
   `/tmp/kandinsky-duplicate-backup-turso-*.json`. De expliciet onzekere groepen
   zijn niet aangepast.
 - Verificatie-dry-run na afloop: beide databases tonen nog alleen de 30 keep-
-  rijen van deze merge. Productiepush volgt in deze sessie.
+  rijen van deze merge. Commit `8ace4a4` is naar `origin/main` gepusht en
+  `https://arttracker-xi.vercel.app/artists/wassily-kandinsky` antwoordt HTTP
+  200 met de bijgewerkte telling (919 Kandinsky-werken).
 
 ## Laatst gedaan (2026-09-13, UX/auth/museumronde)
 
