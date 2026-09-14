@@ -37,6 +37,7 @@ interface ArtworkDetailClientProps {
   initialSeen: any | null
   seenCount: number
   isLoggedIn: boolean
+  backHref?: string
 }
 
 export default function ArtworkDetailClient({
@@ -44,6 +45,7 @@ export default function ArtworkDetailClient({
   initialSeen,
   seenCount,
   isLoggedIn,
+  backHref,
 }: ArtworkDetailClientProps) {
   const t = useTranslations('Artwork')
   const tc = useTranslations('Countries')
@@ -94,7 +96,7 @@ export default function ArtworkDetailClient({
     <div className="mx-auto max-w-6xl pb-12">
       {/* Back */}
       <Link
-        href={`/artists/${artwork.artist.slug}`}
+        href={backHref ?? `/artists/${artwork.artist.slug}`}
         className="group mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-stone-500 transition-colors hover:text-[#4256cc]"
       >
         <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />

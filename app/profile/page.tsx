@@ -22,6 +22,8 @@ export default async function ProfilePage() {
           select: {
             id: true,
             title: true,
+            image_local_path: true,
+            image_url: true,
             artist: { select: { id: true, name: true, slug: true } },
           },
         },
@@ -49,11 +51,11 @@ export default async function ProfilePage() {
 
   const seenByArtist = Object.values(seenRecords.reduce<Record<number, {
     artist: { id: number; name: string; slug: string }
-    artworks: { id: number; title: string }[]
+    artworks: { id: number; title: string; image_local_path: string | null; image_url: string | null }[]
   }>>((groups, record) => {
     const artist = record.artwork.artist
     groups[artist.id] ??= { artist, artworks: [] }
-    groups[artist.id].artworks.push({ id: record.artwork.id, title: record.artwork.title })
+    groups[artist.id].artworks.push({ id: record.artwork.id, title: record.artwork.title, image_local_path: record.artwork.image_local_path, image_url: record.artwork.image_url })
     return groups
   }, {})).sort((a, b) => a.artist.name.localeCompare(b.artist.name))
 

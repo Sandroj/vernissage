@@ -83,6 +83,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   // Start with every type visible. Narrowing to paintings/drawings/etc. is an
   // explicit choice in the collapsed filter panel.
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set())
+  const [filtersHydrated, setFiltersHydrated] = useState(false)
   const [internalFilterSeen, setInternalFilterSeen] = useState<SeenFilter>('all')
   const filterSeen = seenFilter ?? internalFilterSeen
   const setFilterSeen = onSeenFilterChange ?? setInternalFilterSeen
@@ -93,6 +94,28 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!artistSlug) {
+      setFiltersHydrated(true)
+      return
+    }
+    try {
+      const saved = window.localStorage.getItem(`vernissage:artist-types:${artistSlug}`)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed)) setHiddenTypes(new Set(parsed.filter((type): type is string => typeof type === 'string')))
+      }
+    } catch {
+      // Ignore unavailable or malformed local storage; defaults remain visible.
+    }
+    setFiltersHydrated(true)
+  }, [artistSlug])
+
+  useEffect(() => {
+    if (!artistSlug || !filtersHydrated) return
+    window.localStorage.setItem(`vernissage:artist-types:${artistSlug}`, JSON.stringify(Array.from(hiddenTypes)))
+  }, [artistSlug, filtersHydrated, hiddenTypes])
 
   // Unique types, in vaste volgorde, met aantallen
   const types = useMemo(() => {

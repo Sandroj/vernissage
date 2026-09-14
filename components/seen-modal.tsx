@@ -88,6 +88,11 @@ export default function SeenModal({
             {existingSeen ? t('editTitle') : t('newTitle')}
           </DialogTitle>
           <p className="max-w-full break-words text-stone-500 text-sm">{artworkTitle}</p>
+          {existingSeen && (
+            <Button type="button" variant="outline" onClick={handleRemove} disabled={saving} className="mt-1 h-9 w-full rounded-full border-red-200 bg-red-50/50 text-xs text-red-700 hover:bg-red-50">
+              {t('removeSeen')}
+            </Button>
+          )}
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
@@ -189,11 +194,6 @@ export default function SeenModal({
           </div>
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
-            {existingSeen && (
-              <Button type="button" variant="ghost" onClick={handleRemove} disabled={saving} className="h-11 rounded-full text-sm text-stone-500 hover:bg-red-50 hover:text-red-700 sm:px-3">
-                {t('removeSeen')}
-              </Button>
-            )}
             <Button onClick={handleSave} disabled={saving} className="h-11 flex-1 rounded-full bg-[#ed694c] hover:bg-[#db573c] border-0 text-white">
               {saving ? t('saving') : t('save')}
             </Button>

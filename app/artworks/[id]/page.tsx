@@ -5,7 +5,7 @@ import { getLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import ArtworkDetailClient from './artwork-detail-client'
 
-export default async function ArtworkDetailPage({ params }: { params: { id: string } }) {
+export default async function ArtworkDetailPage({ params, searchParams }: { params: { id: string }; searchParams: { returnTo?: string } }) {
   const session = await getServerSession(authOptions)
   const locale = await getLocale()
 
@@ -36,6 +36,7 @@ export default async function ArtworkDetailPage({ params }: { params: { id: stri
       initialSeen={seen as any}
       seenCount={artwork._count.seenBy}
       isLoggedIn={!!session?.user}
+      backHref={searchParams.returnTo?.startsWith('/search') ? searchParams.returnTo : undefined}
     />
   )
 }

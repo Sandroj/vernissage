@@ -27,7 +27,7 @@ interface ProfileClientProps {
   seenCount: number
   seenByArtist: Array<{
     artist: { id: number; name: string; slug: string }
-    artworks: Array<{ id: number; title: string }>
+    artworks: Array<{ id: number; title: string; image_local_path: string | null; image_url: string | null }>
   }>
   recentSeen: RecentSeen[]
 }
@@ -131,8 +131,18 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
                       <span className="font-semibold text-stone-800">{artist.name}</span>
                       <span className="text-xs text-stone-400">{t('seenArtistCount', { count: artworks.length })} <ChevronDown size={14} className="ml-1 inline transition-transform group-open:rotate-180" /></span>
                     </summary>
-                    <ul className="mt-2 space-y-1 pl-3">
-                      {artworks.map((artwork) => <li key={artwork.id}><Link href={`/artworks/${artwork.id}`} className="text-xs text-[#4256cc] hover:underline">{artwork.title}</Link></li>)}
+                    <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                      {artworks.map((artwork) => {
+                        const image = proxyImg(artwork.image_local_path ?? artwork.image_url)
+                        return <li key={artwork.id}>
+                          <Link href={`/artworks/${artwork.id}`} className="group flex min-w-0 items-center gap-2 rounded-xl p-1.5 transition hover:bg-black/[.035]">
+                            <span className="size-9 shrink-0 overflow-hidden rounded-lg bg-stone-200">
+                              {image ? <img src={image} alt="" className="size-full object-cover transition duration-300 group-hover:scale-105" /> : <span className="block size-full bg-[#e7e1d6]" />}
+                            </span>
+                            <span className="min-w-0 line-clamp-2 text-xs leading-tight text-[#4256cc] group-hover:underline">{artwork.title}</span>
+                          </Link>
+                        </li>
+                      })}
                     </ul>
                   </details>
                 ))}
