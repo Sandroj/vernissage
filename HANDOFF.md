@@ -34,6 +34,21 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 - Datamodel: `prisma/schema.prisma` (models o.a. Artist, Artwork, Museum),
   seed via `prisma/seed.ts`.
 
+## Laatst gedaan (2026-09-14, snelheidsronde)
+
+- Homepage en `/artists` halen gebruikersvoortgang nu met één Seen-relationquery
+  op in plaats van één `count`-query per kunstenaar. Dit vermindert de
+  serverlatency vooral bij Turso.
+- De kunstenaarsdetailpagina selecteert alleen de artwork-, museum-, artist-
+  en Seen-velden die de UI gebruikt. Daardoor wordt minder data naar de client
+  geserialiseerd, zonder de filters of detailmodal te wijzigen.
+- Gesloten Seen-modals worden niet meer voor elke kaart gemount; ze worden pas
+  bij openen aangemaakt. Artwork- en kunstenaarsafbeeldingen onder de fold
+  gebruiken lazy loading/asynchrone decoding; de eerste hero-batch krijgt hoge
+  laadprioriteit.
+- Getest met `npm run build` en `git diff --check`; build slaagt. De bestaande
+  `<img>`-lintwaarschuwingen blijven aanwezig. Geen DB-, R2- of Turso-mutaties.
+
 ## Laatst gedaan (2026-09-13, UX/auth/museumronde)
 
 - Homepage-hero toont nu per carrouselstap drie klikbare werken (één groot +

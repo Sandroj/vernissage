@@ -21,10 +21,38 @@ export default async function ArtistDetailPage({
 
   const artist = await prisma.artist.findUnique({
     where: { slug: params.slug },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      birth_year: true,
+      death_year: true,
+      nationality: true,
+      nationality_en: true,
+      bio: true,
+      bio_en: true,
+      portrait_url: true,
       artworks: {
         where: catalogueWhere,
-        include: { museum: true },
+        select: {
+          id: true,
+          title: true,
+          year_start: true,
+          year_end: true,
+          medium_raw: true,
+          type_normalized: true,
+          dimensions_raw: true,
+          image_local_path: true,
+          image_url: true,
+          image_source_name: true,
+          catalogue_id: true,
+          jh_catalogue_id: true,
+          alternate_titles: true,
+          attribution_status: true,
+          attribution_note: true,
+          attribution_note_en: true,
+          museum: { select: { id: true, name: true, city: true, country: true } },
+        },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
       },
     },
@@ -54,9 +82,18 @@ export default async function ArtistDetailPage({
     ? await prisma.seen.findMany({
         where: {
           userId: session.user.id,
-          artwork: { artistId: artist.id },
+          artwork: { artistId: artist.id, ...catalogueWhere },
         },
-        include: { artwork: { select: { museumId: true } } },
+        select: {
+          id: true,
+          artworkId: true,
+          dateSeen: true,
+          locationSeen: true,
+          notes: true,
+          rating: true,
+          photo_url: true,
+          artwork: { select: { museumId: true } },
+        },
       })
     : []
 

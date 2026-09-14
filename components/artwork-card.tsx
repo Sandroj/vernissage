@@ -115,7 +115,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
       </article>
 
       {/* Seen modal */}
-      {isLoggedIn && (
+      {isLoggedIn && modalOpen && (
         <SeenModal
           artworkId={artwork.id}
           artworkTitle={artwork.title}

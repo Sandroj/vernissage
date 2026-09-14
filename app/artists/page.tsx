@@ -58,11 +58,13 @@ export default async function ArtistsPage({
   // Haal seen-counts op voor ingelogde gebruiker
   const seenCounts: Record<number, number> = {}
   if (session?.user?.id) {
-    for (const artist of artists) {
-      const count = await prisma.seen.count({
-        where: { userId: session.user.id, artwork: { artistId: artist.id, ...primaryCatalogue } },
-      })
-      seenCounts[artist.id] = count
+    // One relation query is substantially cheaper than one count query per artist.
+    const seenArtworkRows = await prisma.seen.findMany({
+      where: { userId: session.user.id, artwork: primaryCatalogue },
+      select: { artwork: { select: { artistId: true } } },
+    })
+    for (const row of seenArtworkRows) {
+      seenCounts[row.artwork.artistId] = (seenCounts[row.artwork.artistId] ?? 0) + 1
     }
   }
 

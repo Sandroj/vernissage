@@ -57,10 +57,13 @@ export default async function DashboardPage() {
   }> = []
 
   if (session?.user?.id) {
-    for (const artist of artists) {
-      seenCounts[artist.id] = await prisma.seen.count({
-        where: { userId: session.user.id, artwork: { artistId: artist.id, ...primaryCatalogue } },
-      })
+    // Fetch the user's artist ids once instead of issuing one count query per artist.
+    const seenArtworkRows = await prisma.seen.findMany({
+      where: { userId: session.user.id, artwork: primaryCatalogue },
+      select: { artwork: { select: { artistId: true } } },
+    })
+    for (const row of seenArtworkRows) {
+      seenCounts[row.artwork.artistId] = (seenCounts[row.artwork.artistId] ?? 0) + 1
     }
     const recent = await prisma.seen.findMany({
       where: { userId: session.user.id, artwork: primaryCatalogue },
@@ -141,6 +144,8 @@ export default async function DashboardPage() {
                     <img
                       src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'}
                       alt={work.title}
+                      fetchPriority={groupIndex === 0 ? 'high' : 'low'}
+                      decoding="async"
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     />
                     <div className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent ${workIndex === 0 ? 'p-5 pt-20' : 'p-3 pt-10'}`}>
@@ -175,7 +180,7 @@ export default async function DashboardPage() {
                 className="paper-card group flex items-center gap-4 rounded-2xl p-5 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
-                  {featuredArtistImages.get(artist.name) && <img src={proxyImg(featuredArtistImages.get(artist.name)) ?? ''} alt="" className="size-full object-cover transition duration-500 group-hover:scale-105" />}
+                  {featuredArtistImages.get(artist.name) && <img src={proxyImg(featuredArtistImages.get(artist.name)) ?? ''} alt="" loading="lazy" decoding="async" className="size-full object-cover transition duration-500 group-hover:scale-105" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
@@ -208,6 +213,8 @@ export default async function DashboardPage() {
                   <img
                     src={s.artwork.image_local_path ?? proxyImg(s.artwork.image_url) ?? '/placeholder.jpg'}
                     alt={s.artwork.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>

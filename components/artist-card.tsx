@@ -46,6 +46,8 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
               src={imgSrc}
               onError={() => setImgError(true)}
               alt={t('featuredAlt', { name: artist.name })}
+              loading="lazy"
+              decoding="async"
               className="size-full object-cover transition duration-700 group-hover:scale-105"
             />
           ) : (
