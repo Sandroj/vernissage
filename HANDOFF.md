@@ -49,6 +49,21 @@ Orca/agents op **deze map** (`projects/art/arttracker/`), niet op de buitenste
 - Getest met `npm run build` en `git diff --check`; build slaagt. De bestaande
   `<img>`-lintwaarschuwingen blijven aanwezig. Geen DB-, R2- of Turso-mutaties.
 
+## Laatst gedaan (2026-09-14, Kandinsky-dubbelen)
+
+- De 29 hoge-zekerheidsgroepen uit `docs/kandinsky-duplicate-audit.md` plus
+  `270 -> 5417` zijn relationeel veilig samengevoegd in zowel `dev.db` als
+  Turso. De oude 30 rijen zijn verwijderd; de 30 institutionele/Wikidata-rijen
+  blijven als publieke kaart over.
+- `Seen` en `Report` worden door `scripts/merge-kandinsky-duplicates.mjs`
+  behouden of naar de keep-rij verplaatst. De dry-run vond op beide databases
+  geen gekoppelde Seen/Report-rijen op de te verwijderen oude records.
+- Backups zijn opgeslagen als `/tmp/kandinsky-duplicate-backup-dev-*.json` en
+  `/tmp/kandinsky-duplicate-backup-turso-*.json`. De expliciet onzekere groepen
+  zijn niet aangepast.
+- Verificatie-dry-run na afloop: beide databases tonen nog alleen de 30 keep-
+  rijen van deze merge. Productiepush volgt in deze sessie.
+
 ## Laatst gedaan (2026-09-13, UX/auth/museumronde)
 
 - Homepage-hero toont nu per carrouselstap drie klikbare werken (één groot +
