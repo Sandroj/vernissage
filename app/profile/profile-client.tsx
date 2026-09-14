@@ -136,7 +136,7 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
                         const image = proxyImg(artwork.image_local_path ?? artwork.image_url)
                         return <li key={artwork.id}>
                           <Link href={`/artworks/${artwork.id}`} className="group flex min-w-0 items-center gap-2 rounded-xl p-1.5 transition hover:bg-black/[.035]">
-                            <span className="size-9 shrink-0 overflow-hidden rounded-lg bg-stone-200">
+                            <span className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
                               {image ? <img src={image} alt="" className="size-full object-cover transition duration-300 group-hover:scale-105" /> : <span className="block size-full bg-[#e7e1d6]" />}
                             </span>
                             <span className="min-w-0 line-clamp-2 text-xs leading-tight text-[#4256cc] group-hover:underline">{artwork.title}</span>
