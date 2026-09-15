@@ -18,6 +18,7 @@ interface ArtworkWithArtist {
   image_url?: string | null
   museum?: { id: number; name: string; city: string } | null
   artist: { id: number; name: string; slug: string }
+  loans?: { id: number; toMuseum: { name: string } }[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
@@ -43,9 +44,10 @@ interface MuseumDetailClientProps {
   seenMap: Record<number, any>
   isLoggedIn: boolean
   artists: ArtistSummary[]
+  incomingLoans: { id: number; fromOwnerName: string | null; fromMuseum: { id: number; name: string } | null; artwork: ArtworkWithArtist }[]
 }
 
-export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, isLoggedIn, artists }: MuseumDetailClientProps) {
+export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, isLoggedIn, artists, incomingLoans }: MuseumDetailClientProps) {
   const [seenMap, setSeenMap] = useState(initialSeenMap)
   const t = useTranslations('Museums')
   const tc = useTranslations('Countries')
@@ -127,6 +129,16 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
           <p>{t('withoutImage', { count: withoutImage })}</p>
         </div>
       )}
+
+      {incomingLoans.length > 0 && <section className="mb-8 space-y-3">
+        <div><p className="eyebrow">{t('loanEyebrow')}</p><h2 className="font-display text-3xl text-stone-900">{t('onLoanHere')}</h2></div>
+        <div className="grid gap-2 sm:grid-cols-2">{incomingLoans.map((loan) => <Link key={loan.id} href={`/artworks/${loan.artwork.id}`} className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-stone-800 transition hover:bg-amber-100"><span className="font-semibold">{loan.artwork.title}</span><span className="block text-xs text-stone-600">{loan.artwork.artist.name} · {t('onLoanFrom', { owner: loan.fromMuseum?.name ?? loan.fromOwnerName ?? t('unknownOwner') })}</span></Link>)}</div>
+      </section>}
+
+      {museum.artworks.some((work) => work.loans?.length) && <section className="mb-8 space-y-2">
+        <p className="eyebrow">{t('loanEyebrow')}</p><h2 className="font-display text-2xl text-stone-900">{t('loanedOut')}</h2>
+        {museum.artworks.flatMap((work) => (work.loans ?? []).map((loan) => <Link key={loan.id} href={`/artworks/${work.id}`} className="block rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-stone-800"><span className="font-semibold">{work.title}</span><span className="ml-2 text-stone-600">{t('onLoanAt', { museum: loan.toMuseum.name })}</span></Link>))}
+      </section>}
 
       {linkedTotal > 0 ? (
         <ArtworkGrid artworks={museum.artworks} seenMap={seenMap} isLoggedIn={isLoggedIn} onRefresh={refresh} />

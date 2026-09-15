@@ -176,6 +176,9 @@
     "medium": "Medium",
     "dimensions": "Afmetingen",
     "location": "Locatie",
+    "currentLoanAt": "Momenteel in bruikleen bij {museum}.",
+    "currentLoanFrom": "In bruikleen van {owner}.",
+    "unknownOwner": "onbekende eigenaar",
     "fullDetails": "Bekijk volledige details"
   },
   "Artwork": {
@@ -262,6 +265,12 @@
     "legendHint": "· Klik op een pin om de museumpagina te openen",
     "openMuseum": "Bekijk museum",
     "collectionEyebrow": "Museumcollectie",
+    "loanEyebrow": "Tijdelijke bruiklenen",
+    "onLoanHere": "Momenteel hier te zien in bruikleen",
+    "onLoanFrom": "In bruikleen van {owner}",
+    "loanedOut": "Werken uitgeleend",
+    "onLoanAt": "Momenteel in bruikleen bij {museum}",
+    "unknownOwner": "onbekende eigenaar",
     "availableInApp": "beschikbaar in Vernissage",
     "linkedWorks": "gekoppeld",
     "withoutImage": "{count, plural, =1 {1 gekoppeld werk heeft geen beeld en staat daarom nog niet in de galerij.} other {# gekoppelde werken hebben geen beeld en staan daarom nog niet in de galerij.}}",

@@ -14,6 +14,7 @@ export default async function ArtworkDetailPage({ params, searchParams }: { para
     include: {
       artist: true,
       museum: true,
+      loans: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { fromMuseum: true, toMuseum: true } },
       _count: {
         select: { seenBy: true },
       },

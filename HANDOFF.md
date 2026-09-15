@@ -1,5 +1,29 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 15 september 2026 (beheer, bruiklenen en datatoegang)
+
+- Branch `codex/kandinsky-feedback-fixes` staat op GitHub. De eerdere Duitse
+  titels, suggestieformulieren en filterfix zijn gepusht maar nog niet
+  gemerged/gedeployed; e-mail vereist nog steeds de Resend-omgevingsvariabelen.
+- `/admin` is nu beperkt tot `ADMIN_EMAILS` (standaard
+  `s.regtuijt@gmail.com`); `/api/import` en alle nieuwe admin-API’s controleren
+  dezelfde allowlist. Het dashboard kan werkvelden en museumkoppelingen
+  aanpassen, beelden naar R2 uploaden en bewaart before/after in `ArtworkEdit`.
+  Voor nieuwe beelden zijn R2-upload, bronlink, bronnaam, rechtennotitie en
+  ophaaldatum nodig.
+- `Loan` houdt uitlener (museum of genoemde privé-eigenaar), ontvangend museum,
+  datums, bron en actuele status apart van de collectie-eigenaar in
+  `Artwork.museumId`. Werkdetails en beide museumpagina’s tonen actuele
+  bruiklenen; dashboard kan een uitleen sluiten en de historie blijft staan.
+- De publieke `/api/artworks` geeft maximaal 100 records per verzoek en laat
+  pagineren met `offset`/`limit`. Dit maakt één bulkdump minder eenvoudig maar
+  voorkomt crawlen niet. `docs/collection-protection.md` documenteert wat op
+  Cloudflare nog handmatig nodig is.
+- Build, Prisma-validatie, migratiesmoke-test, script-syntaxcheck en
+  `git diff --check` slagen. Migratie `20260915160000_add_admin_edits_and_loans`
+  is **nog niet** op Turso toegepast; pas toe als onderdeel van een
+  goedgekeurde productierelease. De featurebranch is niet naar `main` gemerged.
+
 ## Laatste update — 15 september 2026 (Kandinsky, meldingen en Duitse titels)
 
 - De filter voor beeldloze werken toont deze records nu ook wanneer alle

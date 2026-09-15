@@ -33,6 +33,7 @@ interface ArtworkDetailClientProps {
     attribution_note?: string | null
     artist: { id: number; name: string; slug: string }
     museum?: { id: number; name: string; city: string; country: string } | null
+    loans?: { id: number; fromOwnerName: string | null; fromMuseum?: { id: number; name: string } | null; toMuseum: { id: number; name: string } }[]
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialSeen: any | null
@@ -231,6 +232,12 @@ export default function ArtworkDetailClient({
                 </div>
               </div>
             )}
+            {artwork.loans?.map((loan) => (
+              <div key={loan.id} className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-950">
+                <p>{t('currentLoanAt', { museum: loan.toMuseum.name })}</p>
+                <p>{t('currentLoanFrom', { owner: loan.fromMuseum?.name ?? loan.fromOwnerName ?? artwork.museum?.name ?? t('unknownOwner') })}</p>
+              </div>
+            ))}
           </div>
 
           {/* Report form */}

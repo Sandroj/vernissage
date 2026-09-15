@@ -7,63 +7,67 @@ datasource db {
 }
 
 model Artist {
-  id           Int       @id @default(autoincrement())
-  name         String
-  slug         String    @unique
-  birth_year   Int?
-  death_year   Int?
-  nationality  String?
+  id             Int       @id @default(autoincrement())
+  name           String
+  slug           String    @unique
+  birth_year     Int?
+  death_year     Int?
+  nationality    String?
   nationality_en String?
-  bio          String?
-  bio_en       String?
-  portrait_url String?
-  createdAt    DateTime  @default(now())
-  artworks     Artwork[]
+  bio            String?
+  bio_en         String?
+  portrait_url   String?
+  createdAt      DateTime  @default(now())
+  artworks       Artwork[]
 }
 
 model Museum {
-  id       Int       @id @default(autoincrement())
-  name     String
-  city     String
-  country  String
-  website  String?
-  lat      Float?
-  lng      Float?
-  artworks Artwork[]
+  id        Int       @id @default(autoincrement())
+  name      String
+  city      String
+  country   String
+  website   String?
+  lat       Float?
+  lng       Float?
+  artworks  Artwork[]
+  loansFrom Loan[]    @relation("LoanFrom")
+  loansTo   Loan[]    @relation("LoanTo")
 }
 
 model Artwork {
-  id               Int      @id @default(autoincrement())
-  artistId         Int
-  museumId         Int?
-  title            String
-  title_de         String?
-  year_start       Int?
-  year_end         Int?
-  medium_raw       String?
-  type_normalized  String?
-  dimensions_raw   String?
-  image_url        String?
-  image_local_path String?
-  image_source_url String?
-  image_source_name String?
-  image_rights     String?
-  image_retrieved_at DateTime?
-  source_url       String?
-  source_name      String?
-  catalogue_id     String?   @unique
-  jh_catalogue_id  String?
-  alternate_titles String?
-  location_confidence String?
+  id                   Int              @id @default(autoincrement())
+  artistId             Int
+  museumId             Int?
+  title                String
+  title_de             String?
+  year_start           Int?
+  year_end             Int?
+  medium_raw           String?
+  type_normalized      String?
+  dimensions_raw       String?
+  image_url            String?
+  image_local_path     String?
+  image_source_url     String?
+  image_source_name    String?
+  image_rights         String?
+  image_retrieved_at   DateTime?
+  source_url           String?
+  source_name          String?
+  catalogue_id         String?          @unique
+  jh_catalogue_id      String?
+  alternate_titles     String?
+  location_confidence  String?
   location_verified_at DateTime?
-  attribution_status String?  @default("accepted")
-  attribution_note String?
-  attribution_note_en String?
-  artist           Artist   @relation(fields: [artistId], references: [id])
-  museum           Museum?  @relation(fields: [museumId], references: [id])
-  seenBy           Seen[]
-  reports          Report[]
-  suggestions      WorkSuggestion[]
+  attribution_status   String?          @default("accepted")
+  attribution_note     String?
+  attribution_note_en  String?
+  artist               Artist           @relation(fields: [artistId], references: [id])
+  museum               Museum?          @relation(fields: [museumId], references: [id])
+  seenBy               Seen[]
+  reports              Report[]
+  suggestions          WorkSuggestion[]
+  loans                Loan[]
+  edits                ArtworkEdit[]
 
   @@index([artistId])
   @@index([museumId])
@@ -134,9 +138,9 @@ model Seen {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   artwork      Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, artworkId])
   @@index([userId])
   @@index([artworkId])
-  @@unique([userId, artworkId])
 }
 
 model ArtistVote {
@@ -164,19 +168,53 @@ model Report {
 }
 
 model WorkSuggestion {
-  id             Int      @id @default(autoincrement())
-  kind           String
-  artistName     String
-  artworkId      Int?
-  artworkTitle   String?
-  message        String
-  senderEmail    String?
-  status         String   @default("open")
-  emailSentAt    DateTime?
-  emailError     String?
-  createdAt      DateTime @default(now())
-  artwork        Artwork? @relation(fields: [artworkId], references: [id], onDelete: SetNull)
+  id           Int       @id @default(autoincrement())
+  kind         String
+  artistName   String
+  artworkId    Int?
+  artworkTitle String?
+  message      String
+  senderEmail  String?
+  status       String    @default("open")
+  emailSentAt  DateTime?
+  emailError   String?
+  createdAt    DateTime  @default(now())
+  artwork      Artwork?  @relation(fields: [artworkId], references: [id], onDelete: SetNull)
 
   @@index([artworkId])
   @@index([status])
+}
+
+model Loan {
+  id            Int       @id @default(autoincrement())
+  artworkId     Int
+  fromMuseumId  Int?
+  fromOwnerName String?
+  toMuseumId    Int
+  startAt       DateTime?
+  endAt         DateTime?
+  current       Boolean   @default(true)
+  sourceUrl     String?
+  verifiedAt    DateTime?
+  note          String?
+  createdAt     DateTime  @default(now())
+  artwork       Artwork   @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  fromMuseum    Museum?   @relation("LoanFrom", fields: [fromMuseumId], references: [id], onDelete: SetNull)
+  toMuseum      Museum    @relation("LoanTo", fields: [toMuseumId], references: [id], onDelete: Cascade)
+
+  @@index([artworkId, current])
+  @@index([fromMuseumId, current])
+  @@index([toMuseumId, current])
+}
+
+model ArtworkEdit {
+  id          Int      @id @default(autoincrement())
+  artworkId   Int
+  editorEmail String
+  beforeJson  String
+  afterJson   String
+  createdAt   DateTime @default(now())
+  artwork     Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@index([artworkId, createdAt])
 }

@@ -176,6 +176,9 @@
     "medium": "Medium",
     "dimensions": "Dimensions",
     "location": "Location",
+    "currentLoanAt": "Currently on loan at {museum}.",
+    "currentLoanFrom": "On loan from {owner}.",
+    "unknownOwner": "unknown owner",
     "fullDetails": "View full details"
   },
   "Artwork": {
@@ -262,6 +265,12 @@
     "legendHint": "· Click a pin to open the museum page",
     "openMuseum": "View museum",
     "collectionEyebrow": "Museum collection",
+    "loanEyebrow": "Temporary loans",
+    "onLoanHere": "Currently on view here on loan",
+    "onLoanFrom": "On loan from {owner}",
+    "loanedOut": "Works currently on loan",
+    "onLoanAt": "Currently on loan at {museum}",
+    "unknownOwner": "unknown owner",
     "availableInApp": "available in Vernissage",
     "linkedWorks": "linked",
     "withoutImage": "{count, plural, =1 {1 linked work has no image and isn't shown in the gallery yet.} other {# linked works have no image and aren't shown in the gallery yet.}}",
