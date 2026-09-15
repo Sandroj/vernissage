@@ -14,6 +14,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
         { OR: [
           { title: { contains: q } },
           { alternate_titles: { contains: q } },
+          { title_de: { contains: q } },
           { catalogue_id: { contains: q } },
           { jh_catalogue_id: { contains: q } },
           { artist: { name: { contains: q } } },

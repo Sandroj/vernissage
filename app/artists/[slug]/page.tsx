@@ -37,6 +37,7 @@ export default async function ArtistDetailPage({
         select: {
           id: true,
           title: true,
+          title_de: true,
           year_start: true,
           year_end: true,
           medium_raw: true,

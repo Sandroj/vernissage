@@ -7,6 +7,9 @@ import { ArrowDown, MapPin } from 'lucide-react'
 import { proxyImg } from '@/lib/utils'
 import MuseumMap, { type MuseumPin } from '@/components/museum-map'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
 
 interface ArtworkWithMuseum {
   id: number
@@ -46,6 +49,11 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   const [mapOpen, setMapOpen] = useState(false)
   const [seenFilter, setSeenFilter] = useState<'all' | 'seen' | 'unseen'>('all')
   const [bioExpanded, setBioExpanded] = useState(false)
+  const [suggestionOpen, setSuggestionOpen] = useState(false)
+  const [suggestionTitle, setSuggestionTitle] = useState('')
+  const [suggestionMessage, setSuggestionMessage] = useState('')
+  const [suggestionEmail, setSuggestionEmail] = useState('')
+  const [suggestionSending, setSuggestionSending] = useState(false)
   const t = useTranslations('Artists')
 
   function showSeenWorks() {
@@ -76,6 +84,35 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
         }
       }
       setSeenMap(map)
+    }
+  }
+
+  async function submitSuggestion() {
+    if (!suggestionTitle.trim() || !suggestionMessage.trim() || suggestionSending) return
+    setSuggestionSending(true)
+    try {
+      const response = await fetch('/api/work-suggestions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'missing_work',
+          artistName: artist.name,
+          artworkTitle: suggestionTitle,
+          message: suggestionMessage,
+          senderEmail: suggestionEmail,
+        }),
+      })
+      if (!response.ok) throw new Error('submission_failed')
+      const result = await response.json()
+      setSuggestionOpen(false)
+      setSuggestionTitle('')
+      setSuggestionMessage('')
+      setSuggestionEmail('')
+      toast(result.emailSent ? t('suggestionSent') : t('suggestionSaved'))
+    } catch {
+      toast(t('suggestionFailed'))
+    } finally {
+      setSuggestionSending(false)
     }
   }
 
@@ -140,6 +177,14 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
                 {t('mapButton', { count: museumPins.length })}
               </button>
             )}
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setSuggestionOpen(true)}
+              className="mt-5 ml-2 border border-white/20 bg-white/10 text-white hover:bg-white/18 hover:text-white"
+            >
+              {t('suggestMissingWork')}
+            </Button>
 
             {/* Bio */}
             {artist.bio && (
@@ -178,6 +223,24 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
               compact
             />
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={suggestionOpen} onOpenChange={setSuggestionOpen}>
+        <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto rounded-[1.5rem] bg-[#fffaf0] p-5 sm:max-w-lg sm:p-7">
+          <DialogHeader className="pr-8">
+            <DialogTitle className="font-display text-3xl">{t('suggestionTitle')}</DialogTitle>
+            <DialogDescription>{t('suggestionDescription', { name: artist.name })}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Input aria-label={t('suggestionWorkTitle')} value={suggestionTitle} onChange={(event) => setSuggestionTitle(event.target.value)} maxLength={240} placeholder={t('suggestionWorkTitle')} />
+            <textarea aria-label={t('suggestionDetails')} value={suggestionMessage} onChange={(event) => setSuggestionMessage(event.target.value)} maxLength={3000} rows={4} placeholder={t('suggestionDetails')} className="w-full resize-y rounded-xl border border-black/10 bg-white px-3 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#4256cc]/25" />
+            <Input aria-label={t('suggestionEmail')} value={suggestionEmail} onChange={(event) => setSuggestionEmail(event.target.value)} type="email" maxLength={254} placeholder={t('suggestionEmail')} />
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="ghost" onClick={() => setSuggestionOpen(false)}>{t('suggestionCancel')}</Button>
+              <Button type="button" disabled={!suggestionTitle.trim() || !suggestionMessage.trim() || suggestionSending} onClick={submitSuggestion}>{t('suggestionSubmit')}</Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 

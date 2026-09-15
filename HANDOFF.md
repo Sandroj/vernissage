@@ -1,5 +1,33 @@
 # HANDOFF — Vernissage
 
+## Laatste update — 15 september 2026 (Kandinsky, meldingen en Duitse titels)
+
+- De filter voor beeldloze werken toont deze records nu ook wanneer alle
+  gewone typefilters uitstaan. De typefilters blijven van toepassing op werken
+  met een afbeelding.
+- Kandinsky-records hebben een optioneel `title_de`-veld. Dit is op de
+  detailpagina zichtbaar onder de hoofdtitel en doorzoekbaar; 532 Duitse
+  ondertitels uit de gekoppelde Kandinsky-bronpagina’s en 198 Duitse
+  Wikidata-labels zijn in dev.db en Turso ingevuld (656 van 897 werken).
+- Kandinsky DB 599 is samengevoegd in DB 42. De twee bronpagina’s canonicalen
+  naar dezelfde entry en beide R2-bestanden hebben dezelfde SHA-256. Er waren
+  geen Seen- of Report-relaties. De bewaarde titel en bronlink zijn
+  rechtgezet; JSON-backups staan in `/tmp/kandinsky-wall-b-duplicate-*.json`.
+- Kunstenaars- en werkdetailpagina’s hebben nu formulieren voor respectievelijk
+  ontbrekende werken en onjuiste vermeldingen. Inzendingen worden opgeslagen
+  als `WorkSuggestion` en per Resend naar `s.regtuijt@gmail.com` gestuurd.
+  De Resend API-sleutel en een geverifieerd afzenderadres ontbreken nog in
+  Vercel/.env.local; tot die zijn ingesteld meldt de UI dat alleen opslag is
+  gelukt.
+- De Louvre-pin met twee werken betreft Vermeer; de Louvre-collectiedatabase
+  geeft precies twee Johannes-Vermeer-resultaten (*La Dentellière* en
+  *L’Astronome*).
+- `npm run build`, `node --check` voor beide nieuwe scripts en
+  `git diff --check` slagen. Bestaande `<img>`-waarschuwingen blijven.
+- Nog open: exacte Christie’s-page-2-resultaten konden niet uitgelezen worden;
+  de pagina laadt via een API die 404 antwoordt. Daarna de appbranch reviewen,
+  Resend-omgevingsvariabelen instellen en deployen.
+
 > Levend statusbestand. Elke AI werkt dit bij vóór het stoppen, zodat de
 > volgende (Claude, Codex of Antigravity) naadloos verder kan. Kort en concreet:
 > paden, commando's, exacte namen. Geen secrets — verwijs naar env-vars.

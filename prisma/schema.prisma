@@ -37,6 +37,7 @@ model Artwork {
   artistId         Int
   museumId         Int?
   title            String
+  title_de         String?
   year_start       Int?
   year_end         Int?
   medium_raw       String?
@@ -62,6 +63,7 @@ model Artwork {
   museum           Museum?  @relation(fields: [museumId], references: [id])
   seenBy           Seen[]
   reports          Report[]
+  suggestions      WorkSuggestion[]
 
   @@index([artistId])
   @@index([museumId])
@@ -159,4 +161,22 @@ model Report {
 
   @@index([artworkId])
   @@index([userId])
+}
+
+model WorkSuggestion {
+  id             Int      @id @default(autoincrement())
+  kind           String
+  artistName     String
+  artworkId      Int?
+  artworkTitle   String?
+  message        String
+  senderEmail    String?
+  status         String   @default("open")
+  emailSentAt    DateTime?
+  emailError     String?
+  createdAt      DateTime @default(now())
+  artwork        Artwork? @relation(fields: [artworkId], references: [id], onDelete: SetNull)
+
+  @@index([artworkId])
+  @@index([status])
 }
