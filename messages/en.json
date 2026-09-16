@@ -78,6 +78,7 @@
     "suggestionSubmit": "Send suggestion",
     "suggestionSent": "Thank you. Your suggestion was saved and emailed.",
     "suggestionSaved": "Thank you. Your suggestion was saved; email delivery is not configured yet.",
+    "suggestionFailedDelivery": "Your suggestion was saved, but Resend rejected the email.",
     "suggestionFailed": "We couldn't send your suggestion. Please try again."
   },
   "Progress": {
@@ -198,6 +199,7 @@
     "cancel": "Cancel",
     "reportSent": "Report sent, thank you!",
     "reportSaved": "Thank you. Your report was saved; email delivery is not configured yet.",
+    "reportFailedDelivery": "Your report was saved, but Resend rejected the email.",
     "reportFailed": "We couldn't send your report. Please try again.",
     "germanTitle": "German title",
     "saved": "Saved",
