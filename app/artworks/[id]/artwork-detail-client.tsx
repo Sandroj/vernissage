@@ -93,7 +93,7 @@ export default function ArtworkDetailClient({
       const result = await response.json()
       setReportOpen(false)
       setReportMsg('')
-      toast(result.emailSent ? t('reportSent') : t('reportSaved'))
+      toast(result.emailSent ? t('reportSent') : result.emailConfigured ? t('reportFailedDelivery') : t('reportSaved'))
     } catch {
       toast(t('reportFailed'))
     }

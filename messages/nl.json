@@ -78,6 +78,7 @@
     "suggestionSubmit": "Melding versturen",
     "suggestionSent": "Dank je. Je melding is opgeslagen en per e-mail verstuurd.",
     "suggestionSaved": "Dank je. Je melding is opgeslagen; e-mailbezorging is nog niet ingesteld.",
+    "suggestionFailedDelivery": "Je melding is opgeslagen, maar Resend heeft de e-mail geweigerd.",
     "suggestionFailed": "Je melding kon niet worden verstuurd. Probeer het opnieuw."
   },
   "Progress": {
@@ -195,6 +196,7 @@
     "cancel": "Annuleren",
     "reportSent": "Melding verstuurd, dank je!",
     "reportSaved": "Dank je. Je melding is opgeslagen; e-mailbezorging is nog niet ingesteld.",
+    "reportFailedDelivery": "Je melding is opgeslagen, maar Resend heeft de e-mail geweigerd.",
     "reportFailed": "Melding versturen is niet gelukt. Probeer het opnieuw.",
     "germanTitle": "Duitse titel",
     "saved": "Opgeslagen",

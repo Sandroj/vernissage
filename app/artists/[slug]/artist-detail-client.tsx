@@ -108,7 +108,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
       setSuggestionTitle('')
       setSuggestionMessage('')
       setSuggestionEmail('')
-      toast(result.emailSent ? t('suggestionSent') : t('suggestionSaved'))
+      toast(result.emailSent ? t('suggestionSent') : result.emailConfigured ? t('suggestionFailedDelivery') : t('suggestionSaved'))
     } catch {
       toast(t('suggestionFailed'))
     } finally {

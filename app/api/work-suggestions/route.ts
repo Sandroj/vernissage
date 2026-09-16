@@ -60,5 +60,5 @@ export async function POST(req: Request) {
     data: { emailSentAt: email.sent ? new Date() : null, emailError: email.error },
   })
 
-  return NextResponse.json({ ok: true, id: suggestion.id, emailSent: email.sent }, { status: 201 })
+  return NextResponse.json({ ok: true, id: suggestion.id, emailSent: email.sent, emailConfigured: Boolean(process.env.RESEND_API_KEY && process.env.FEEDBACK_FROM_EMAIL), emailError: email.sent ? null : email.error }, { status: 201 })
 }
