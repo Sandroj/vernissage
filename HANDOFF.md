@@ -1,5 +1,19 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 16 september 2026 (admin-editor UI en beeldoptimalisatie)
+
+- Nieuwe branch `codex/admin-editor-polish` vanaf productie-`main` maakt het
+  adminformulier duidelijker met zoekworkflow, geselecteerd record, veldgroepen,
+  voorbeeldafbeelding, expliciete resetknop en opslagstatus.
+- Admin-afbeeldingen mogen tot 25 MB worden aangeleverd. De server controleert
+  signatures, draait EXIF-oriëntatie recht, schaalt naar maximaal 2400×2400 px
+  en comprimeert naar WebP (quality 82) vóór R2-upload. De API retourneert de
+  originele en geoptimaliseerde bestandsgrootte.
+- `sharp` is als runtime dependency toegevoegd. `npm run build` slaagt; alleen
+  de bestaande `<img>`-lintwarnings blijven.
+- Nog te doen: deze branch pushen/mergen en daarna de productiebuild laten
+  deployen.
+
 ## Aanvulling — 15 september 2026 (beheer, bruiklenen en datatoegang)
 
 - Branch `codex/kandinsky-feedback-fixes` staat op GitHub. De eerdere Duitse
