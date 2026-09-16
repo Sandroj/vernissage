@@ -1,10 +1,10 @@
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import ImportClient from './import-client'
+import { getAdminEmail } from '@/lib/admin'
+import ArtworkEditor from './artwork-editor'
 
 export default async function AdminPage() {
-  const session = await getServerSession(authOptions)
-  if (!session?.user?.id) redirect('/login')
-  return <ImportClient />
+  const email = await getAdminEmail()
+  if (!email) redirect('/login?callbackUrl=%2Fadmin')
+  return <><ImportClient /><ArtworkEditor /></>
 }

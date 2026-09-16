@@ -1,5 +1,57 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 15 september 2026 (beheer, bruiklenen en datatoegang)
+
+- Branch `codex/kandinsky-feedback-fixes` staat op GitHub. De eerdere Duitse
+  titels, suggestieformulieren en filterfix zijn gepusht maar nog niet
+  gemerged/gedeployed; e-mail vereist nog steeds de Resend-omgevingsvariabelen.
+- `/admin` is nu beperkt tot `ADMIN_EMAILS` (standaard
+  `s.regtuijt@gmail.com`); `/api/import` en alle nieuwe admin-API’s controleren
+  dezelfde allowlist. Het dashboard kan werkvelden en museumkoppelingen
+  aanpassen, beelden naar R2 uploaden en bewaart before/after in `ArtworkEdit`.
+  Voor nieuwe beelden zijn R2-upload, bronlink, bronnaam, rechtennotitie en
+  ophaaldatum nodig.
+- `Loan` houdt uitlener (museum of genoemde privé-eigenaar), ontvangend museum,
+  datums, bron en actuele status apart van de collectie-eigenaar in
+  `Artwork.museumId`. Werkdetails en beide museumpagina’s tonen actuele
+  bruiklenen; dashboard kan een uitleen sluiten en de historie blijft staan.
+- De publieke `/api/artworks` geeft maximaal 100 records per verzoek en laat
+  pagineren met `offset`/`limit`. Dit maakt één bulkdump minder eenvoudig maar
+  voorkomt crawlen niet. `docs/collection-protection.md` documenteert wat op
+  Cloudflare nog handmatig nodig is.
+- Build, Prisma-validatie, migratiesmoke-test, script-syntaxcheck en
+  `git diff --check` slagen. Migratie `20260915160000_add_admin_edits_and_loans`
+  is **nog niet** op Turso toegepast; pas toe als onderdeel van een
+  goedgekeurde productierelease. De featurebranch is niet naar `main` gemerged.
+
+## Laatste update — 15 september 2026 (Kandinsky, meldingen en Duitse titels)
+
+- De filter voor beeldloze werken toont deze records nu ook wanneer alle
+  gewone typefilters uitstaan. De typefilters blijven van toepassing op werken
+  met een afbeelding.
+- Kandinsky-records hebben een optioneel `title_de`-veld. Dit is op de
+  detailpagina zichtbaar onder de hoofdtitel en doorzoekbaar; 532 Duitse
+  ondertitels uit de gekoppelde Kandinsky-bronpagina’s en 198 Duitse
+  Wikidata-labels zijn in dev.db en Turso ingevuld (656 van 897 werken).
+- Kandinsky DB 599 is samengevoegd in DB 42. De twee bronpagina’s canonicalen
+  naar dezelfde entry en beide R2-bestanden hebben dezelfde SHA-256. Er waren
+  geen Seen- of Report-relaties. De bewaarde titel en bronlink zijn
+  rechtgezet; JSON-backups staan in `/tmp/kandinsky-wall-b-duplicate-*.json`.
+- Kunstenaars- en werkdetailpagina’s hebben nu formulieren voor respectievelijk
+  ontbrekende werken en onjuiste vermeldingen. Inzendingen worden opgeslagen
+  als `WorkSuggestion` en per Resend naar `s.regtuijt@gmail.com` gestuurd.
+  De Resend API-sleutel en een geverifieerd afzenderadres ontbreken nog in
+  Vercel/.env.local; tot die zijn ingesteld meldt de UI dat alleen opslag is
+  gelukt.
+- De Louvre-pin met twee werken betreft Vermeer; de Louvre-collectiedatabase
+  geeft precies twee Johannes-Vermeer-resultaten (*La Dentellière* en
+  *L’Astronome*).
+- `npm run build`, `node --check` voor beide nieuwe scripts en
+  `git diff --check` slagen. Bestaande `<img>`-waarschuwingen blijven.
+- Nog open: exacte Christie’s-page-2-resultaten konden niet uitgelezen worden;
+  de pagina laadt via een API die 404 antwoordt. Daarna de appbranch reviewen,
+  Resend-omgevingsvariabelen instellen en deployen.
+
 > Levend statusbestand. Elke AI werkt dit bij vóór het stoppen, zodat de
 > volgende (Claude, Codex of Antigravity) naadloos verder kan. Kort en concreet:
 > paden, commando's, exacte namen. Geen secrets — verwijs naar env-vars.

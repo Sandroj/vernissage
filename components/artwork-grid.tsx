@@ -167,13 +167,16 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
       if (!haystack.includes(filterTitle.toLowerCase())) return false
     }
     const artworkTypes = splitTypes(a.type_normalized)
-    if (artworkTypes.length > 0 && artworkTypes.every((type) => hiddenTypes.has(type))) return false
+    const hasImage = Boolean(a.image_local_path || a.image_url)
+    // Image-less records have their own filter chip. When enabled, that chip
+    // must show them even if every regular artwork type is hidden.
+    if (hasImage && artworkTypes.length > 0 && artworkTypes.every((type) => hiddenTypes.has(type))) return false
     if (filterSeen === 'seen' && !seenMap[a.id]) return false
     if (filterSeen === 'unseen' && seenMap[a.id]) return false
     if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
     if (filterPeriod !== 'all' && !taxonomy?.periods.find((option) => option.key === filterPeriod)?.matches(a)) return false
     if (filterTheme !== 'all' && !taxonomy?.themes.find((option) => option.key === filterTheme)?.matches(a)) return false
-    if (!showMissingImages && !a.image_local_path && !a.image_url) return false
+    if (!showMissingImages && !hasImage) return false
     return true
   }), [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, filterPeriod, filterTheme, showMissingImages, seenMap, taxonomy])
 

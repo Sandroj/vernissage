@@ -9,6 +9,18 @@ import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
 
+function normalizeArtworkTitle(title) {
+  return title
+    .replace(/\b(?:1[0-9]{3}|20[0-9]{2})\b/g, '')
+    .replace(/\s+,/g, ',')
+    .replace(/,\s*(?=\()/g, ' ')
+    .replace(/\s*\(\s*No\./g, ' (No.')
+    .replace(/\(\s*\)/g, '')
+    .replace(/,\s*$/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const require = createRequire(import.meta.url)
 const Database = require('better-sqlite3')
@@ -104,7 +116,7 @@ async function main() {
       sql: `UPDATE Artwork SET title=?, catalogue_id=?, jh_catalogue_id=?, alternate_titles=?, medium_raw=?,
         dimensions_raw=?, source_url=?, source_name=?, location_confidence=?,
         location_verified_at=?, museumId=?, image_url=?, image_local_path=? WHERE id=?`,
-      args: [row.title, row.catalogue_id, row.jh_catalogue_id, row.alternate_titles, row.medium_raw, row.dimensions_raw,
+      args: [normalizeArtworkTitle(row.title), row.catalogue_id, row.jh_catalogue_id, row.alternate_titles, row.medium_raw, row.dimensions_raw,
         row.source_url, row.source_name, row.location_confidence, row.location_verified_at,
         museumId, row.image_url, row.image_local_path, row.id],
     })

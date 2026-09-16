@@ -22,9 +22,10 @@ export default async function MuseumDetailPage({
     include: {
       artworks: {
         where: primaryCatalogue,
-        include: { artist: { select: { id: true, name: true, slug: true } } },
+        include: { artist: { select: { id: true, name: true, slug: true } }, loans: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { toMuseum: true } } },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
       },
+      loansTo: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { artwork: { include: { artist: { select: { id: true, name: true, slug: true } }, museum: true } }, fromMuseum: true } },
     },
   })
 
@@ -67,6 +68,7 @@ export default async function MuseumDetailPage({
         seenMap={seenMap as any}
         isLoggedIn={!!session?.user}
         artists={artists}
+        incomingLoans={museum.loansTo}
       />
     </div>
   )

@@ -14,6 +14,7 @@ interface ArtworkDetailClientProps {
   artwork: {
     id: number
     title: string
+    title_de?: string | null
     year_start?: number | null
     year_end?: number | null
     medium_raw?: string | null
@@ -32,6 +33,7 @@ interface ArtworkDetailClientProps {
     attribution_note?: string | null
     artist: { id: number; name: string; slug: string }
     museum?: { id: number; name: string; city: string; country: string } | null
+    loans?: { id: number; fromOwnerName: string | null; fromMuseum?: { id: number; name: string } | null; toMuseum: { id: number; name: string } }[]
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialSeen: any | null
@@ -82,14 +84,20 @@ export default function ArtworkDetailClient({
 
   async function submitReport() {
     if (!reportMsg.trim()) return
-    await fetch('/api/artwork-reports', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ artworkId: artwork.id, message: reportMsg }),
-    })
-    setReportOpen(false)
-    setReportMsg('')
-    toast(t('reportSent'))
+    try {
+      const response = await fetch('/api/work-suggestions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind: 'incorrect_listing', artistName: artwork.artist.name, artworkId: artwork.id, artworkTitle: artwork.title, message: reportMsg }),
+      })
+      if (!response.ok) throw new Error('submission_failed')
+      const result = await response.json()
+      setReportOpen(false)
+      setReportMsg('')
+      toast(result.emailSent ? t('reportSent') : t('reportSaved'))
+    } catch {
+      toast(t('reportFailed'))
+    }
   }
 
   return (
@@ -145,6 +153,12 @@ export default function ArtworkDetailClient({
               <h1 className="font-display text-4xl font-semibold leading-[1.02] text-stone-900">{artwork.title}</h1>
               <ShareMenu url={`/artworks/${artwork.id}`} title={`${artwork.title} — ${artwork.artist.name}`} />
             </div>
+            {artwork.title_de && (
+              <p className="mt-2 text-base italic leading-snug text-stone-500">
+                <span className="mb-0.5 block font-sans text-[10px] font-semibold not-italic uppercase tracking-[.12em] text-stone-400">{t('germanTitle')}</span>
+                {artwork.title_de}
+              </p>
+            )}
             <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-stone-500">
               <Link href={`/artists/${artwork.artist.slug}`} className="font-semibold text-[#4256cc] transition-colors hover:text-[#3447b8]">
                 {artwork.artist.name}
@@ -207,19 +221,23 @@ export default function ArtworkDetailClient({
                       {[artwork.museum.city, artwork.museum.country && tc.has(artwork.museum.country) ? tc(artwork.museum.country) : artwork.museum.country].filter(Boolean).join(', ')}
                     </p>
                   </div>
-                  {isLoggedIn && (
-                    <button
-                      onClick={() => setReportOpen(!reportOpen)}
-                      className="mt-0.5 flex shrink-0 items-center gap-1 text-xs text-stone-400 transition-colors hover:text-amber-600"
-                      title={t('reportTooltip')}
-                    >
-                      <AlertCircle size={12} />
-                      {t('reportWrong')}
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setReportOpen(!reportOpen)}
+                    className="mt-0.5 flex shrink-0 items-center gap-1 text-xs text-stone-400 transition-colors hover:text-amber-600"
+                    title={t('reportTooltip')}
+                  >
+                    <AlertCircle size={12} />
+                    {t('reportWrong')}
+                  </button>
                 </div>
               </div>
             )}
+            {artwork.loans?.map((loan) => (
+              <div key={loan.id} className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-950">
+                <p>{t('currentLoanAt', { museum: loan.toMuseum.name })}</p>
+                <p>{t('currentLoanFrom', { owner: loan.fromMuseum?.name ?? loan.fromOwnerName ?? artwork.museum?.name ?? t('unknownOwner') })}</p>
+              </div>
+            ))}
           </div>
 
           {/* Report form */}

@@ -3,6 +3,7 @@ import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import BetterSqlite3 from 'better-sqlite3'
 import * as fs from 'fs'
 import * as path from 'path'
+import { normalizeArtworkTitle } from '../lib/artwork-title'
 
 const DB_PATH = path.resolve(__dirname, '../dev.db')
 const adapter = new PrismaBetterSqlite3({ url: DB_PATH })
@@ -98,7 +99,7 @@ async function main() {
       data: {
         artistId: artist.id,
         museumId,
-        title: row.title,
+        title: normalizeArtworkTitle(row.title),
         year_start: row.year_start,
         year_end: row.year_end,
         medium_raw: row.medium_raw,
