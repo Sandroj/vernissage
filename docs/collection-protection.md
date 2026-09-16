@@ -7,8 +7,10 @@ The `/admin` artwork editor is restricted to email addresses in `ADMIN_EMAILS`
 holder, German title, image upload to R2, image/source rights provenance and
 current loans. Each artwork edit records before/after data and the admin email
 in `ArtworkEdit`. New image links require a source URL, source name, rights note
-and retrieval date. R2 uploads accept JPEG/PNG/WebP up to 8 MB and verify the
-file signature. Unused uploads remain in R2 if the edit is abandoned.
+and retrieval date. R2 uploads accept JPEG/PNG/WebP up to 25 MB, verify the
+file signature, auto-rotate and resize to at most 2400×2400 pixels, and
+compress to WebP quality 82 before storing. Unused uploads remain in R2 if the
+edit is abandoned.
 
 ## Loans
 
