@@ -56,11 +56,11 @@ export default function ImportClient() {
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold">Beheer</h1>
+    <div className="max-w-3xl space-y-5">
+      <div><p className="eyebrow mb-2">Onderhoudstaak</p><h2 className="font-display text-3xl text-stone-900">Werken importeren</h2><p className="mt-1 max-w-2xl text-sm leading-relaxed text-stone-500">Gebruik dit alleen voor gecontroleerde scraper-output of een volledig nieuw los werk. Voor verbeteringen aan bestaande records gebruik je de tab <strong>Werk bewerken</strong>.</p></div>
 
       <Tabs defaultValue="import">
-        <TabsList className="bg-slate-900">
+        <TabsList className="bg-stone-100">
           <TabsTrigger value="import">Scraper import</TabsTrigger>
           <TabsTrigger value="manual">Handmatig toevoegen</TabsTrigger>
         </TabsList>
@@ -73,7 +73,7 @@ export default function ImportClient() {
             value={jsonData}
             onChange={(e) => setJsonData(e.target.value)}
             placeholder='[{"artist": "Monet", "title": "Water Lilies", ...}]'
-            className="bg-slate-900 border-slate-700 font-mono text-sm"
+            className="border-stone-300 bg-white font-mono text-sm"
             rows={10}
           />
           <Button onClick={handleImport} disabled={importing || !jsonData}>
@@ -87,20 +87,20 @@ export default function ImportClient() {
               placeholder="Kunstenaarsnaam"
               value={artistName}
               onChange={(e) => setArtistName(e.target.value)}
-              className="bg-slate-900 border-slate-700"
+              className="border-stone-300 bg-white"
             />
             <Input
               placeholder="Titel van het werk"
               value={artworkTitle}
               onChange={(e) => setArtworkTitle(e.target.value)}
-              className="bg-slate-900 border-slate-700"
+              className="border-stone-300 bg-white"
             />
             <Input
               placeholder="Jaar (optioneel)"
               type="number"
               value={artworkYear}
               onChange={(e) => setArtworkYear(e.target.value)}
-              className="bg-slate-900 border-slate-700"
+              className="border-stone-300 bg-white"
             />
             <Button onClick={handleAddArtwork} disabled={!artistName || !artworkTitle}>
               Werk toevoegen

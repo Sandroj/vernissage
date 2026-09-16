@@ -1,5 +1,15 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 16 september 2026 (admin-tabindeling)
+
+- De admin opent nu standaard met `Werk bewerken`: zoeken, een bestaand record
+  kiezen en gericht overschrijven.
+- `Importeren` staat in een aparte hoofdtab met uitleg dat dit alleen bedoeld is
+  voor gecontroleerde scraper-output of een nieuw los werk. De eerdere donkere
+  importer-styling is vervangen door de lichte Vernissage-formulieren.
+- Getest met `npm run build` en `git diff --check`. Branch
+  `codex/admin-tabs` wacht op push/merge.
+
 ## Aanvulling — 16 september 2026 (admin-editor UI en beeldoptimalisatie)
 
 - Nieuwe branch `codex/admin-editor-polish` vanaf productie-`main` maakt het
