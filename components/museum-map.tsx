@@ -52,7 +52,7 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
 
       mapInstanceRef.current = map
 
-      // Light gallery-like basemap that fits the rest of Vernissage.
+      // Light gallery-like basemap that fits the rest of Pinacot.
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',

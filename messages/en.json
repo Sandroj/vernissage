@@ -264,7 +264,7 @@
     "legendHint": "· Click a pin to open the museum page",
     "openMuseum": "View museum",
     "collectionEyebrow": "Museum collection",
-    "availableInApp": "available in Vernissage",
+    "availableInApp": "available in Pinacot",
     "linkedWorks": "linked",
     "withoutImage": "{count, plural, =1 {1 linked work has no image and isn't shown in the gallery yet.} other {# linked works have no image and aren't shown in the gallery yet.}}",
     "noAvailableWorks": "No works with images available yet",
@@ -370,7 +370,7 @@
   "Privacy": {
     "title": "Privacy",
     "updated": "Last updated: 11 September 2026",
-    "intro": "Vernissage is a personal, non-commercial app for keeping track of the artworks you've seen. Here is what we do with your data.",
+    "intro": "Pinacot is a personal, non-commercial app for keeping track of the artworks you've seen. Here is what we do with your data.",
     "collectTitle": "What we store",
     "collect1": "Your email address and name — to recognise your account. If you sign in with Google, we only receive your name, email address and profile picture; never your password or any other Google data.",
     "collect2": "The artworks you mark as seen, together with the date, location, rating, notes and optional photo you enter yourself.",

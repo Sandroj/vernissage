@@ -20,7 +20,7 @@ const IMAGES_SOURCE = path.resolve(
 const IMAGES_DEST = path.resolve(__dirname, '../public/images/artworks')
 
 async function main() {
-  console.log('Seeding ArtTracker database...')
+  console.log('Seeding Pinacot database...')
 
   // 1. Zorg dat images-map bestaat
   fs.mkdirSync(IMAGES_DEST, { recursive: true })

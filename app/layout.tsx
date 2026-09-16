@@ -14,7 +14,7 @@ const geist = localFont({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Meta')
-  return { title: 'Vernissage', description: t('description') }
+  return { title: 'Pinacot', description: t('description') }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
