@@ -17,9 +17,9 @@ jest.mock('@/components/ui/button', () => ({
 }))
 
 describe('Nav', () => {
-  it('toont ArtTracker logo', () => {
+  it('toont Pinacot logo', () => {
     render(<Nav />)
-    expect(screen.getByText('ArtTracker')).toBeInTheDocument()
+    expect(screen.getByText('Pinacot')).toBeInTheDocument()
   })
   it('toont Inloggen als niet ingelogd', () => {
     render(<Nav />)

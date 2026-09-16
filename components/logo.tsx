@@ -1,8 +1,6 @@
 /**
- * Vernissage-merk: twee lijsthoeken met de koraalrode "verkocht"-stip die
- * galeries naast een geclaimd werk hangen — dezelfde huisstijlkleuren als de
- * rest van de app (#ed694c / #4256cc). Puur SVG, dus scherp op elk formaat
- * van favicon tot hero.
+ * Pinacot-merk: een ingelijst kunstwerk met een koraalkleurige
+ * "gezien"-stip. Puur SVG, dus scherp op elk formaat van favicon tot hero.
  */
 export function LogoMark({ size = 32, className }: { size?: number; className?: string }) {
   return (
@@ -15,10 +13,11 @@ export function LogoMark({ size = 32, className }: { size?: number; className?: 
       className={className}
       aria-hidden="true"
     >
-      <circle cx="16" cy="16" r="15" fill="#fffdf8" stroke="#4256cc" strokeWidth="1.5" />
-      <path d="M9,14 L9,9 L14,9" stroke="#24211c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M23,18 L23,23 L18,23" stroke="#24211c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="23.5" cy="23.5" r="3.6" fill="#ed694c" stroke="#fffdf8" strokeWidth="1.1" />
+      <rect x="1.5" y="1.5" width="29" height="29" rx="9" fill="#4256cc" />
+      <rect x="7.5" y="8" width="17" height="16" rx="2.5" fill="#fffdf8" />
+      <path d="M9.5 21.5 14 16.5l3.1 3 2.5-2.6 2.9 3.3" stroke="#4256cc" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9.5 24h13" stroke="#24211c" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="21.5" cy="9.5" r="3.4" fill="#ed694c" stroke="#fffdf8" strokeWidth="1.2" />
     </svg>
   )
 }
@@ -27,7 +26,7 @@ export function Logo({ size = 32, wordmark = true, className }: { size?: number;
   return (
     <span className={`flex shrink-0 items-center gap-2.5 ${className ?? ''}`}>
       <LogoMark size={size} />
-      {wordmark && <span className="font-display text-xl font-semibold">Vernissage</span>}
+      {wordmark && <span className="font-display text-xl font-semibold">Pinacot</span>}
     </span>
   )
 }

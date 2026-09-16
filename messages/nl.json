@@ -177,9 +177,6 @@
     "medium": "Medium",
     "dimensions": "Afmetingen",
     "location": "Locatie",
-    "currentLoanAt": "Momenteel in bruikleen bij {museum}.",
-    "currentLoanFrom": "In bruikleen van {owner}.",
-    "unknownOwner": "onbekende eigenaar",
     "fullDetails": "Bekijk volledige details"
   },
   "Artwork": {
@@ -267,13 +264,7 @@
     "legendHint": "· Klik op een pin om de museumpagina te openen",
     "openMuseum": "Bekijk museum",
     "collectionEyebrow": "Museumcollectie",
-    "loanEyebrow": "Tijdelijke bruiklenen",
-    "onLoanHere": "Momenteel hier te zien in bruikleen",
-    "onLoanFrom": "In bruikleen van {owner}",
-    "loanedOut": "Werken uitgeleend",
-    "onLoanAt": "Momenteel in bruikleen bij {museum}",
-    "unknownOwner": "onbekende eigenaar",
-    "availableInApp": "beschikbaar in Vernissage",
+    "availableInApp": "beschikbaar in Pinacot",
     "linkedWorks": "gekoppeld",
     "withoutImage": "{count, plural, =1 {1 gekoppeld werk heeft geen beeld en staat daarom nog niet in de galerij.} other {# gekoppelde werken hebben geen beeld en staan daarom nog niet in de galerij.}}",
     "noAvailableWorks": "Nog geen werken met afbeelding beschikbaar",
@@ -379,7 +370,7 @@
   "Privacy": {
     "title": "Privacy",
     "updated": "Laatst bijgewerkt: 11 september 2026",
-    "intro": "Vernissage is een persoonlijke, niet-commerciële app om bij te houden welke kunstwerken je hebt gezien. Dit is wat we met je gegevens doen.",
+    "intro": "Pinacot is een persoonlijke, niet-commerciële app om bij te houden welke kunstwerken je hebt gezien. Dit is wat we met je gegevens doen.",
     "collectTitle": "Welke gegevens we bewaren",
     "collect1": "Je e-mailadres en naam — om je account te herkennen. Log je in met Google, dan ontvangen we alleen je naam, e-mailadres en profielfoto; nooit je wachtwoord of andere Google-gegevens.",
     "collect2": "De kunstwerken die je als gezien markeert, met de datum, locatie, waardering, notitie en optionele foto die je zelf invult.",

@@ -77,7 +77,7 @@ function LoginForm() {
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <LogoMark size={40} className="mx-auto mb-3" />
-          <h1 className="text-2xl font-bold">Vernissage</h1>
+          <h1 className="text-2xl font-bold">Pinacot</h1>
           <p className="text-slate-400 mt-1 text-sm">
             {mode === 'login' ? t('signInSubtitle') : t('registerSubtitle')}
           </p>
