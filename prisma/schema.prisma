@@ -76,19 +76,20 @@ model Artwork {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  name          String?
-  email         String       @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  seenPublic    Boolean      @default(true)
-  createdAt     DateTime     @default(now())
-  accounts      Account[]
-  sessions      Session[]
-  seen          Seen[]
-  votes         ArtistVote[]
-  reports       Report[]
+  id                String       @id @default(cuid())
+  name              String?
+  email             String       @unique
+  emailVerified     DateTime?
+  image             String?
+  password          String?
+  passwordChangedAt DateTime?
+  seenPublic        Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  accounts          Account[]
+  sessions          Session[]
+  seen              Seen[]
+  votes             ArtistVote[]
+  reports           Report[]
 }
 
 model Account {

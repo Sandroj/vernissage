@@ -42,11 +42,33 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.id = user.id
+      if (user) {
+        token.id = user.id
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { passwordChangedAt: true },
+        })
+        token.pwv = dbUser?.passwordChangedAt?.getTime() ?? 0
+        return token
+      }
+      // Wachtwoordreset trekt bestaande sessies in: als het wachtwoord na het
+      // uitgeven van dit token is gewijzigd, is de sessie niet meer geldig.
+      if (token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id },
+          select: { passwordChangedAt: true },
+        })
+        const currentPwv = dbUser?.passwordChangedAt?.getTime() ?? 0
+        if (currentPwv !== token.pwv) {
+          token.id = undefined
+        }
+      }
       return token
     },
     async session({ session, token }) {
-      if (token && session.user) session.user.id = token.id as string
+      // token.id ontbreekt na een wachtwoordreset van deze sessie; laat
+      // session.user.id dan bewust ongezet zodat routes de sessie afwijzen.
+      if (token?.id && session.user) session.user.id = token.id
       return session
     },
   },

@@ -1,9 +1,9 @@
-type NotificationEmail = { subject: string; text: string }
+type NotificationEmail = { subject: string; text: string; to?: string }
 
-export async function sendNotificationEmail({ subject, text }: NotificationEmail) {
+export async function sendNotificationEmail({ subject, text, to: toOverride }: NotificationEmail) {
   const apiKey = process.env.RESEND_API_KEY
   const from = process.env.FEEDBACK_FROM_EMAIL
-  const to = process.env.FEEDBACK_TO_EMAIL ?? process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 's.regtuijt@gmail.com'
+  const to = toOverride ?? process.env.FEEDBACK_TO_EMAIL ?? process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 's.regtuijt@gmail.com'
 
   if (!apiKey || !from) return { sent: false, error: 'Email delivery is not configured.' }
 
