@@ -219,19 +219,23 @@
       "unclassified": "Unclassified"
     }
   },
-  "SeenModal": {
-    "editTitle": "Edit",
-    "newTitle": "Mark as seen",
+  "VisitForm": {
     "date": "Date",
     "location": "Location",
     "rating": "Rating",
     "notes": "Notes",
     "notesPlaceholder": "What did you think of this work?",
-    "photo": "Photo (optional)",
+    "photo": "Add a photo",
+    "photoHint": "Prove you were there",
     "photoUpload": "Take or upload a photo",
     "photoUrlPlaceholder": "Or paste a photo URL...",
     "photoPreview": "Upload preview",
     "removePhoto": "Remove photo",
+    "compressing": "Compressing photo..."
+  },
+  "SeenModal": {
+    "editTitle": "Edit",
+    "newTitle": "Mark as seen",
     "saving": "Saving...",
     "save": "Save",
     "removeSeen": "Mark as unseen"
