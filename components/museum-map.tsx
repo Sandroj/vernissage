@@ -1,6 +1,11 @@
 'use client'
 import { useEffect, useRef } from 'react'
 
+// Self-hosted Protomaps PMTiles-basemap op de bestaande R2-bucket (z0-7,
+// voldoende voor deze kaart die nooit verder inzoomt dan 7) — vervangt de
+// CARTO-tegelservice, geen API-key/per-tile-kosten.
+const BASEMAP_URL = 'https://pub-c0a3f32bc99e468483e04b1b8073d00c.r2.dev/basemaps/world-lowzoom.pmtiles'
+
 export interface MuseumPin {
   id: number
   name: string
@@ -69,12 +74,17 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
       mapInstanceRef.current = map
       markersLayerRef.current = L.layerGroup().addTo(map)
 
-      // Light gallery-like basemap that fits the rest of Pinacot.
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 19,
-      }).addTo(map)
+      // Light gallery-like basemap, self-hosted on R2 (Protomaps PMTiles) —
+      // no vendor tile API/key, no per-request tile costs.
+      import('protomaps-leaflet').then((protomapsL) => {
+        if (cancelled) return
+        protomapsL.leafletLayer({
+          url: BASEMAP_URL,
+          flavor: 'light',
+          lang: 'en',
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://protomaps.com">Protomaps</a>',
+        }).addTo(map)
+      })
 
       renderMarkers()
     })
