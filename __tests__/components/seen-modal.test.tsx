@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react'
+import { NextIntlClientProvider } from 'next-intl'
 import SeenModal from '@/components/seen-modal'
+import messages from '@/messages/nl.json'
 
 jest.mock('@/components/museum-search', () => () => <div>MuseumSearch</div>)
 jest.mock('@/components/star-rating', () => () => <div>StarRating</div>)
@@ -31,13 +33,16 @@ jest.mock('@/components/ui/popover', () => ({
 describe('SeenModal', () => {
   it('toont titel van het kunstwerk', () => {
     render(
-      <SeenModal
-        artworkId={1}
-        artworkTitle="Colorful Life"
-        open={true}
-        onOpenChange={jest.fn()}
-        onSaved={jest.fn()}
-      />
+      <NextIntlClientProvider locale="nl" messages={messages} timeZone="Europe/Amsterdam" now={new Date('2026-09-18T00:00:00Z')}>
+        <SeenModal
+          artworkId={1}
+          artworkTitle="Colorful Life"
+          open={true}
+          onOpenChange={jest.fn()}
+          onSaved={jest.fn()}
+          onRemoved={jest.fn()}
+        />
+      </NextIntlClientProvider>
     )
     expect(screen.getByText('Colorful Life')).toBeInTheDocument()
     expect(screen.getByText('Markeer als gezien')).toBeInTheDocument()
