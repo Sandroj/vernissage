@@ -20,6 +20,7 @@
   "Nav": {
     "artists": "Kunstenaars",
     "museums": "Musea",
+    "nearby": "In de buurt",
     "discover": "Ontdekken",
     "profile": "Profiel",
     "signOut": "Uitloggen",
@@ -385,6 +386,24 @@
     "rights": "Je kunt je naam en privacy-instelling zelf aanpassen op je profielpagina. Wil je je account en alle bijbehorende gegevens laten verwijderen, stuur dan een e-mail naar <email></email> — dat regelen we binnen 30 dagen.",
     "cookiesTitle": "Cookies",
     "cookies": "We gebruiken alleen functionele cookies: een sessiecookie om je ingelogd te houden en een cookie die je taalkeuze onthoudt. Geen tracking, geen analytics."
+  },
+  "Nearby": {
+    "eyebrow": "Ontdek dichtbij",
+    "title": "In de buurt",
+    "subtitle": "Zie welke kunstwerken binnen 200 km van jou te bewonderen zijn, van één of meerdere kunstenaars.",
+    "intro": "Deel je locatie om te zien welke werken bij jou in de buurt hangen.",
+    "useLocation": "Gebruik mijn locatie",
+    "locating": "Locatie ophalen…",
+    "denied": "Locatietoegang geweigerd. Sta het toe in je browserinstellingen om deze pagina te gebruiken.",
+    "unsupported": "Je browser ondersteunt geen locatiebepaling.",
+    "allArtists": "Alle kunstenaars",
+    "works": "werken",
+    "openMuseum": "Bekijk museum",
+    "loading": "Laden…",
+    "resultCount": "{count, plural, =1 {1 werk gevonden} other {# werken gevonden}} binnen 200 km",
+    "distance": "{km} km",
+    "onLoanHint": "Tijdelijk uitgeleend vanuit een ander museum",
+    "onLoanFrom": "Normaal in {museum}, nu tijdelijk hier uitgeleend"
   },
   "Countries": {
     "Duitsland": "Duitsland",

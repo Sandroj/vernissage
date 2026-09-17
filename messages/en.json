@@ -20,6 +20,7 @@
   "Nav": {
     "artists": "Artists",
     "museums": "Museums",
+    "nearby": "Nearby",
     "discover": "Discover",
     "profile": "Profile",
     "signOut": "Sign out",
@@ -385,6 +386,24 @@
     "rights": "You can change your name and privacy setting yourself on your profile page. To have your account and all associated data deleted, email <email></email> — we'll take care of it within 30 days.",
     "cookiesTitle": "Cookies",
     "cookies": "We only use functional cookies: a session cookie to keep you signed in and a cookie that remembers your language choice. No tracking, no analytics."
+  },
+  "Nearby": {
+    "eyebrow": "Discover close by",
+    "title": "Nearby",
+    "subtitle": "See which artworks are within 200 km of you, from one or several artists.",
+    "intro": "Share your location to see which works are near you.",
+    "useLocation": "Use my location",
+    "locating": "Getting location…",
+    "denied": "Location access denied. Allow it in your browser settings to use this page.",
+    "unsupported": "Your browser doesn't support location.",
+    "allArtists": "All artists",
+    "works": "works",
+    "openMuseum": "View museum",
+    "loading": "Loading…",
+    "resultCount": "{count, plural, =1 {1 artwork found} other {# artworks found}} within 200 km",
+    "distance": "{km} km",
+    "onLoanHint": "Temporarily on loan from another museum",
+    "onLoanFrom": "Normally at {museum}, currently on loan here"
   },
   "Countries": {
     "Duitsland": "Germany",

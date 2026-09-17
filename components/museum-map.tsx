@@ -11,11 +11,12 @@ export interface MuseumPin {
   artworkCount: number
   previewImage: string | null
   seenCount: number
+  hasLoan?: boolean
 }
 
 interface MuseumMapProps {
   museums: MuseumPin[]
-  labels: { works: string; seen: string; openMuseum: string }
+  labels: { works: string; seen: string; openMuseum: string; onLoanHint?: string }
   compact?: boolean
 }
 
@@ -27,13 +28,27 @@ function escapeHtml(value: string) {
 
 export default function MuseumMap({ museums, labels, compact = false }: MuseumMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<unknown>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapInstanceRef = useRef<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const leafletRef = useRef<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const markersLayerRef = useRef<any>(null)
+  const museumsRef = useRef(museums)
+  museumsRef.current = museums
 
   useEffect(() => {
-    if (!mapRef.current || mapInstanceRef.current) return
+    if (!mapRef.current) return
+    // React Strict Mode (dev only) mounts, cleans up, and mounts again
+    // synchronously, but this init is async — without this flag the first
+    // and second run would both try to call L.map() on the same container
+    // once their imports resolve, and Leaflet throws on the second call.
+    let cancelled = false
 
     // Dynamically import Leaflet (client-only)
     import('leaflet').then((L) => {
+      if (cancelled || !mapRef.current) return
+
       // Fix default marker icon path issues with webpack
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -43,14 +58,16 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
         shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
       })
 
-      const map = L.map(mapRef.current!, {
+      const map = L.map(mapRef.current, {
         center: [43, 8],
         zoom: 3,
         zoomControl: true,
         scrollWheelZoom: true,
       })
 
+      leafletRef.current = L
       mapInstanceRef.current = map
+      markersLayerRef.current = L.layerGroup().addTo(map)
 
       // Light gallery-like basemap that fits the rest of Pinacot.
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -59,12 +76,38 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
         maxZoom: 19,
       }).addTo(map)
 
-      // Add museum markers
-      museums.forEach((m) => {
-        const pct = m.artworkCount > 0 ? Math.round((m.seenCount / m.artworkCount) * 100) : 0
-        const hasProgress = m.seenCount > 0
+      renderMarkers()
+    })
 
-        const html = `
+    return () => {
+      cancelled = true
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove()
+        mapInstanceRef.current = null
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Kaart wordt eenmalig aangemaakt; markers worden opnieuw getekend zodra de
+  // pins veranderen (bv. nadat de gebruiker zijn locatie deelt of filtert).
+  useEffect(() => {
+    renderMarkers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [museums])
+
+  function renderMarkers() {
+    const L = leafletRef.current
+    const map = mapInstanceRef.current
+    const layer = markersLayerRef.current
+    if (!L || !map || !layer) return
+    layer.clearLayers()
+
+    museumsRef.current.forEach((m) => {
+      const pct = m.artworkCount > 0 ? Math.round((m.seenCount / m.artworkCount) * 100) : 0
+      const hasProgress = m.seenCount > 0
+
+      const html = `
           <div style="
             position: relative;
             width: 48px;
@@ -84,6 +127,24 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
                 : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#52525b;font-size:18px">🏛</div>`
               }
             </div>
+            ${m.hasLoan ? `
+              <div style="
+                position: absolute;
+                top: -3px;
+                left: -3px;
+                width: 15px;
+                height: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #d97706;
+                border-radius: 999px;
+                border: 1px solid rgba(0,0,0,0.35);
+                color: white;
+                font-size: 9px;
+                line-height: 1;
+              " title="${escapeHtml(labels.onLoanHint ?? '')}">⇄</div>
+            ` : ''}
             ${hasProgress ? `
               <div style="
                 position: absolute;
@@ -113,23 +174,23 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
           </div>
         `
 
-        const icon = L.divIcon({
-          html,
-          className: '',
-          iconSize: [48, 55],
-          iconAnchor: [24, 55],
-          popupAnchor: [0, -58],
-        })
+      const icon = L.divIcon({
+        html,
+        className: '',
+        iconSize: [48, 55],
+        iconAnchor: [24, 55],
+        popupAnchor: [0, -58],
+      })
 
-        const marker = L.marker([m.lat, m.lng], {
-          icon,
-          title: m.name,
-          alt: `${labels.openMuseum}: ${m.name}`,
-          keyboard: true,
-        }).addTo(map)
+      const marker = L.marker([m.lat, m.lng], {
+        icon,
+        title: m.name,
+        alt: `${labels.openMuseum}: ${m.name}`,
+        keyboard: true,
+      }).addTo(layer)
 
-        // Popup
-        const popupContent = `
+      // Popup
+      const popupContent = `
           <a href="/museums/${m.id}" aria-label="${escapeHtml(labels.openMuseum)}: ${escapeHtml(m.name)}" style="display:block;text-decoration:none">
           <div style="
             background: #fffaf0;
@@ -146,43 +207,35 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
               <span style="color:#6f665b">${m.artworkCount} ${escapeHtml(labels.works)}</span>
               ${m.seenCount > 0 ? `<span style="color:#4256cc;font-weight:700">${m.seenCount} ${escapeHtml(labels.seen)}</span>` : ''}
             </div>
+            ${m.hasLoan && labels.onLoanHint ? `<div style="margin-top:6px;color:#b45309;font-size:10px">${escapeHtml(labels.onLoanHint)}</div>` : ''}
             <div style="margin-top:9px;color:#4256cc;font-size:11px;font-weight:700">${escapeHtml(labels.openMuseum)} →</div>
           </div>
           </a>
         `
 
-        marker.bindPopup(popupContent, {
-          className: 'museum-popup',
-          closeButton: false,
-          maxWidth: 220,
-        })
-
-        marker.on('click', () => {
-          window.location.assign(`/museums/${m.id}`)
-        })
-
-        marker.on('mouseover', () => marker.openPopup())
+      marker.bindPopup(popupContent, {
+        className: 'museum-popup',
+        closeButton: false,
+        maxWidth: 220,
       })
 
-      if (museums.length === 1) {
-        map.setView([museums[0].lat, museums[0].lng], 7)
-      } else if (museums.length > 1) {
-        map.fitBounds(L.latLngBounds(museums.map((museum) => [museum.lat, museum.lng])), {
-          padding: [42, 42],
-          maxZoom: compact ? 6 : 5,
-        })
-      }
+      marker.on('click', () => {
+        window.location.assign(`/museums/${m.id}`)
+      })
+
+      marker.on('mouseover', () => marker.openPopup())
     })
 
-    return () => {
-      if (mapInstanceRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(mapInstanceRef.current as any).remove()
-        mapInstanceRef.current = null
-      }
+    const current = museumsRef.current
+    if (current.length === 1) {
+      map.setView([current[0].lat, current[0].lng], 7)
+    } else if (current.length > 1) {
+      map.fitBounds(L.latLngBounds(current.map((museum: MuseumPin) => [museum.lat, museum.lng])), {
+        padding: [42, 42],
+        maxZoom: compact ? 6 : 5,
+      })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
 
   return (
     <>

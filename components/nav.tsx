@@ -28,6 +28,7 @@ export default function Nav() {
   const links = [
     { href: '/artists', label: t('artists') },
     { href: '/museums', label: t('museums') },
+    { href: '/nearby', label: t('nearby') },
     { href: '/discover', label: t('discover') },
     ...(session ? [{ href: '/profile', label: t('profile') }] : []),
   ]
