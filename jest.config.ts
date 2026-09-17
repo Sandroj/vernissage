@@ -12,4 +12,19 @@ const config: Config = {
   },
 }
 
-export default createJestConfig(config)
+export default async () => {
+  const jestConfig = await createJestConfig(config)()
+
+  // next/jest sets up default transformIgnorePatterns, including /node_modules/
+  // We need to override that to allow next-intl and use-intl to be transformed
+  const transformIgnorePatterns = jestConfig.transformIgnorePatterns || []
+  // Replace /node_modules/ pattern with our custom pattern that excludes next-intl and use-intl
+  const updatedPatterns = transformIgnorePatterns.map((pattern: string) =>
+    pattern === '/node_modules/' ? '/node_modules/(?!(next-intl|use-intl))/' : pattern
+  )
+
+  return {
+    ...jestConfig,
+    transformIgnorePatterns: updatedPatterns,
+  }
+}
