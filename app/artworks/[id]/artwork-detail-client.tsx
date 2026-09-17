@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, ImageOff, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -60,6 +60,17 @@ export default function ArtworkDetailClient({
   const [currentSeenCount, setCurrentSeenCount] = useState(seenCount)
   const [reportOpen, setReportOpen] = useState(false)
   const [reportMsg, setReportMsg] = useState('')
+  const [hasVisits, setHasVisits] = useState(false)
+
+  // Refetch just before the Seen modal opens, so the "unmark as seen"
+  // warning (Finding B) reflects visits logged via VisitHistory since load.
+  useEffect(() => {
+    if (!modalOpen || !seen) return
+    fetch(`/api/visits?artworkId=${artwork.id}`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((visits) => setHasVisits(visits.length > 0))
+      .catch(() => {})
+  }, [modalOpen, seen, artwork.id])
 
   const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url)
   const yearLabel = artwork.year_end && artwork.year_end !== artwork.year_start
@@ -300,6 +311,7 @@ export default function ArtworkDetailClient({
         open={modalOpen}
         onOpenChange={setModalOpen}
         existingSeen={seen}
+        hasVisits={hasVisits}
         onSaved={handleSaved}
         onRemoved={handleRemoved}
       />

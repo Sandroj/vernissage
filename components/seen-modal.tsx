@@ -18,6 +18,7 @@ interface SeenModalProps {
     rating?: number | null
     photo_url?: string | null
   } | null
+  hasVisits?: boolean
   onSaved: () => void
   onRemoved: () => void
 }
@@ -28,6 +29,7 @@ export default function SeenModal({
   open,
   onOpenChange,
   existingSeen,
+  hasVisits,
   onSaved,
   onRemoved,
 }: SeenModalProps) {
@@ -61,6 +63,7 @@ export default function SeenModal({
   }
 
   async function handleRemove() {
+    if (hasVisits && !window.confirm(t('confirmUnmarkWithVisits'))) return
     setSaving(true)
     const res = await fetch('/api/seen', {
       method: 'DELETE',

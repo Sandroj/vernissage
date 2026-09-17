@@ -30,6 +30,9 @@ export async function POST(req: Request) {
     },
   })
 
+  // Best-effort synced cache: a direct edit via POST /api/seen after this
+  // can still overwrite these fields later. No reconciliation between the
+  // two paths exists yet (accepted limitation, see plan review Finding F).
   await prisma.seen.upsert({
     where: { userId_artworkId: { userId, artworkId } },
     update: { dateSeen: visit.dateSeen, locationSeen: visit.locationSeen, notes: visit.notes, rating: visit.rating, photo_url: visit.photo_url },
@@ -48,9 +51,12 @@ export async function GET(req: Request) {
   const artworkId = parseInt(new URL(req.url).searchParams.get('artworkId') ?? '')
   if (!artworkId) return NextResponse.json({ error: 'artworkId is verplicht' }, { status: 400 })
 
+  // Only the fields the VisitHistory list view renders — full rows (esp.
+  // photo_url data-URLs) would bloat the response for no reason (Finding C).
   const visits = await prisma.visit.findMany({
     where: { userId: session.user.id, artworkId },
     orderBy: { dateSeen: 'desc' },
+    select: { id: true, dateSeen: true, locationSeen: true, photo_url: true },
   })
 
   return NextResponse.json(visits)

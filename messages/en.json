@@ -231,19 +231,22 @@
     "photoUrlPlaceholder": "Or paste a photo URL...",
     "photoPreview": "Upload preview",
     "removePhoto": "Remove photo",
-    "compressing": "Compressing photo..."
+    "compressing": "Compressing photo...",
+    "photoTooLarge": "This photo is too large."
   },
   "SeenModal": {
     "editTitle": "Edit",
     "newTitle": "Mark as seen",
     "saving": "Saving...",
     "save": "Save",
-    "removeSeen": "Mark as unseen"
+    "removeSeen": "Mark as unseen",
+    "confirmUnmarkWithVisits": "You've logged visits for this artwork. They'll stay saved, but disappear from view until you mark it as seen again. Continue?"
   },
   "VisitModal": {
     "title": "Add another visit",
     "saving": "Saving...",
-    "save": "Save visit"
+    "save": "Save visit",
+    "saveError": "Could not save the visit."
   },
   "VisitHistory": {
     "title": "Earlier visits",

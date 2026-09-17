@@ -9,6 +9,13 @@ import MuseumSearch from '@/components/museum-search'
 import StarRating from '@/components/star-rating'
 import { compressImageDataUrl } from '@/lib/image-compress'
 import { useTranslations, useFormatter } from 'next-intl'
+import { toast } from 'sonner'
+
+// Large phone photos that fail to decode/compress fall back to their
+// original (uncompressed) data-URL in lib/image-compress.ts — reject
+// pathologically large files up front so that path can't blow past request
+// body limits (Finding C).
+const MAX_PHOTO_FILE_SIZE = 15 * 1024 * 1024
 
 interface VisitFormFieldsProps {
   date: Date
@@ -41,6 +48,10 @@ export default function VisitFormFields({
   const fmt = useFormatter()
 
   async function handleFileSelected(file: File) {
+    if (file.size > MAX_PHOTO_FILE_SIZE) {
+      toast.error(t('photoTooLarge'))
+      return
+    }
     const reader = new FileReader()
     reader.onload = async (ev) => {
       const raw = ev.target?.result as string

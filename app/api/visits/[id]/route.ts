@@ -31,6 +31,9 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
   })
 
   if (latest) {
+    // Best-effort synced cache: a direct edit via POST /api/seen can still
+    // overwrite these fields later. No reconciliation between the two paths
+    // exists yet (accepted limitation, see plan review Finding F).
     await prisma.seen.update({
       where: { userId_artworkId: { userId, artworkId: deleted.artworkId } },
       data: { dateSeen: latest.dateSeen, locationSeen: latest.locationSeen, notes: latest.notes, rating: latest.rating, photo_url: latest.photo_url },

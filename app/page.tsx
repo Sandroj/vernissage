@@ -68,7 +68,7 @@ export default async function DashboardPage() {
     const recent = await prisma.seen.findMany({
       where: { userId: session.user.id, artwork: primaryCatalogue },
       include: { artwork: { include: { artist: true } } },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { dateSeen: 'desc' },
       take: 12,
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
