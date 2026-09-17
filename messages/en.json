@@ -240,6 +240,11 @@
     "save": "Save",
     "removeSeen": "Mark as unseen"
   },
+  "VisitModal": {
+    "title": "Add another visit",
+    "saving": "Saving...",
+    "save": "Save visit"
+  },
   "StarRating": {
     "label": "Rating",
     "stars": "{count, plural, =1 {1 star} other {# stars}}"
