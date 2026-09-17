@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { getLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
+import { hasActiveEntitlement } from '@/lib/entitlement'
 import ArtworkDetailClient from './artwork-detail-client'
 
 export default async function ArtworkDetailPage({ params, searchParams }: { params: { id: string }; searchParams: { returnTo?: string } }) {
@@ -29,6 +30,8 @@ export default async function ArtworkDetailPage({ params, searchParams }: { para
       })
     : null
 
+  const isPlus = session?.user?.id ? await hasActiveEntitlement(session.user.id) : false
+
   return (
     <ArtworkDetailClient
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,6 +40,7 @@ export default async function ArtworkDetailPage({ params, searchParams }: { para
       initialSeen={seen as any}
       seenCount={artwork._count.seenBy}
       isLoggedIn={!!session?.user}
+      isPlus={isPlus}
       backHref={searchParams.returnTo?.startsWith('/search') ? searchParams.returnTo : undefined}
     />
   )
