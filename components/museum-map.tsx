@@ -84,6 +84,10 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
           lang: 'en',
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://protomaps.com">Protomaps</a>',
         }).addTo(map)
+        // Canvas tiles don't always paint on the very first frame (container
+        // size/layout not settled yet at L.map() init) — this same nudge is
+        // what a manual scroll/zoom was doing by accident before this fix.
+        requestAnimationFrame(() => map.invalidateSize())
       })
 
       renderMarkers()
