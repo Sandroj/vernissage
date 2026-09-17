@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import VisitFormFields from '@/components/visit-form-fields'
 import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
 
 interface VisitModalProps {
   artworkId: number
@@ -24,7 +25,7 @@ export default function VisitModal({ artworkId, artworkTitle, open, onOpenChange
 
   async function handleSave() {
     setSaving(true)
-    await fetch('/api/visits', {
+    const res = await fetch('/api/visits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -37,6 +38,10 @@ export default function VisitModal({ artworkId, artworkTitle, open, onOpenChange
       }),
     })
     setSaving(false)
+    if (!res.ok) {
+      toast.error(t('saveError'))
+      return
+    }
     setDate(new Date())
     setLocation('')
     setNotes('')

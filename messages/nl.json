@@ -231,19 +231,22 @@
     "photoUrlPlaceholder": "Of voeg een foto-URL in...",
     "photoPreview": "Voorbeeld van upload",
     "removePhoto": "Foto verwijderen",
-    "compressing": "Foto verkleinen..."
+    "compressing": "Foto verkleinen...",
+    "photoTooLarge": "Deze foto is te groot."
   },
   "SeenModal": {
     "editTitle": "Bewerk",
     "newTitle": "Markeer als gezien",
     "saving": "Opslaan...",
     "save": "Opslaan",
-    "removeSeen": "Markeer als niet gezien"
+    "removeSeen": "Markeer als niet gezien",
+    "confirmUnmarkWithVisits": "Je hebt bezoeken gelogd bij dit werk. Die blijven bewaard, maar verdwijnen uit beeld totdat je het werk opnieuw als gezien markeert. Doorgaan?"
   },
   "VisitModal": {
     "title": "Nog een bezoek toevoegen",
     "saving": "Opslaan...",
-    "save": "Bezoek opslaan"
+    "save": "Bezoek opslaan",
+    "saveError": "Kon het bezoek niet opslaan."
   },
   "VisitHistory": {
     "title": "Eerdere bezoeken",
