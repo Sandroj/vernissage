@@ -240,6 +240,11 @@
     "save": "Opslaan",
     "removeSeen": "Markeer als niet gezien"
   },
+  "VisitModal": {
+    "title": "Nog een bezoek toevoegen",
+    "saving": "Opslaan...",
+    "save": "Bezoek opslaan"
+  },
   "StarRating": {
     "label": "Waardering",
     "stars": "{count, plural, =1 {1 ster} other {# sterren}}"
