@@ -90,6 +90,8 @@ model User {
   seen              Seen[]
   votes             ArtistVote[]
   reports           Report[]
+  billingCustomer   BillingCustomer?
+  entitlement       Entitlement?
 }
 
 model Account {
@@ -218,4 +220,55 @@ model ArtworkEdit {
   artwork     Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
 
   @@index([artworkId, createdAt])
+}
+
+// Stripe-koppeling. Betaling (Subscription/BillingEvent) blijft gescheiden
+// van het recht op een feature (Entitlement) — zie plan §7. Eén webhook kan
+// dus Entitlement bijwerken zonder dat Subscription-historie verloren gaat.
+model BillingCustomer {
+  id               String         @id @default(cuid())
+  userId           String         @unique
+  stripeCustomerId String         @unique
+  createdAt        DateTime       @default(now())
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptions    Subscription[]
+}
+
+model Subscription {
+  id                   String          @id @default(cuid())
+  billingCustomerId    String
+  stripeSubscriptionId String          @unique
+  stripePriceId        String
+  status               String
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean         @default(false)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  billingCustomer      BillingCustomer @relation(fields: [billingCustomerId], references: [id], onDelete: Cascade)
+
+  @@index([billingCustomerId])
+  @@index([status])
+}
+
+// Ruwe webhook-log, sleutel op Stripe's event-id: voorkomt dubbele verwerking
+// bij herhaalde/uit-volgorde afgeleverde webhooks (plan §7) en dient als
+// reconciliatiebron.
+model BillingEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  type          String
+  payload       String
+  processedAt   DateTime @default(now())
+
+  @@index([type])
+}
+
+model Entitlement {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  plan      String
+  active    Boolean   @default(false)
+  expiresAt DateTime?
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
