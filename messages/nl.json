@@ -219,19 +219,23 @@
       "unclassified": "Ongeclassificeerd"
     }
   },
-  "SeenModal": {
-    "editTitle": "Bewerk",
-    "newTitle": "Markeer als gezien",
+  "VisitForm": {
     "date": "Datum",
     "location": "Locatie",
     "rating": "Waardering",
     "notes": "Notitie",
     "notesPlaceholder": "Wat vond je van dit werk?",
-    "photo": "Foto (optioneel)",
+    "photo": "Voeg een foto toe",
+    "photoHint": "Bewijs dat je er was",
     "photoUpload": "Foto maken of uploaden",
     "photoUrlPlaceholder": "Of voeg een foto-URL in...",
     "photoPreview": "Voorbeeld van upload",
     "removePhoto": "Foto verwijderen",
+    "compressing": "Foto verkleinen..."
+  },
+  "SeenModal": {
+    "editTitle": "Bewerk",
+    "newTitle": "Markeer als gezien",
     "saving": "Opslaan...",
     "save": "Opslaan",
     "removeSeen": "Markeer als niet gezien"
