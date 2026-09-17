@@ -64,6 +64,7 @@ model Artwork {
   artist               Artist           @relation(fields: [artistId], references: [id])
   museum               Museum?          @relation(fields: [museumId], references: [id])
   seenBy               Seen[]
+  visits               Visit[]
   reports              Report[]
   suggestions          WorkSuggestion[]
   loans                Loan[]
@@ -88,6 +89,7 @@ model User {
   accounts          Account[]
   sessions          Session[]
   seen              Seen[]
+  visits            Visit[]
   votes             ArtistVote[]
   reports           Report[]
   billingCustomer   BillingCustomer?
@@ -143,6 +145,23 @@ model Seen {
 
   @@unique([userId, artworkId])
   @@index([userId])
+  @@index([artworkId])
+}
+
+model Visit {
+  id           Int      @id @default(autoincrement())
+  userId       String
+  artworkId    Int
+  dateSeen     DateTime
+  locationSeen String?
+  notes        String?
+  rating       Int?
+  photo_url    String?
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artwork      Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@index([userId, artworkId])
   @@index([artworkId])
 }
 
