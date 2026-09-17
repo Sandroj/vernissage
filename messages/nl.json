@@ -245,6 +245,14 @@
     "saving": "Opslaan...",
     "save": "Bezoek opslaan"
   },
+  "VisitHistory": {
+    "title": "Eerdere bezoeken",
+    "addVisit": "Nog een bezoek toevoegen",
+    "deleteVisit": "Verwijderen",
+    "upsellTitle": "Bewaar meerdere bezoeken",
+    "upsellBody": "Bewaar meerdere bezoeken aan dit werk met Pinacot Plus — €24,99/jaar.",
+    "upgradeButton": "Upgrade naar Plus"
+  },
   "StarRating": {
     "label": "Waardering",
     "stars": "{count, plural, =1 {1 ster} other {# sterren}}"

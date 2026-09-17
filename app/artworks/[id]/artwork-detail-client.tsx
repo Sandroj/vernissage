@@ -5,6 +5,7 @@ import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, Imag
 import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
+import VisitHistory from '@/components/visit-history'
 import ShareMenu from '@/components/share-menu'
 import { cn, proxyImg } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -39,6 +40,7 @@ interface ArtworkDetailClientProps {
   initialSeen: any | null
   seenCount: number
   isLoggedIn: boolean
+  isPlus: boolean
   backHref?: string
 }
 
@@ -47,6 +49,7 @@ export default function ArtworkDetailClient({
   initialSeen,
   seenCount,
   isLoggedIn,
+  isPlus,
   backHref,
 }: ArtworkDetailClientProps) {
   const t = useTranslations('Artwork')
@@ -300,6 +303,10 @@ export default function ArtworkDetailClient({
         onSaved={handleSaved}
         onRemoved={handleRemoved}
       />
+
+      {seen && (
+        <VisitHistory artworkId={artwork.id} artworkTitle={artwork.title} isPlus={isPlus} />
+      )}
     </div>
   )
 }

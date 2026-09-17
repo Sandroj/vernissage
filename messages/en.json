@@ -245,6 +245,14 @@
     "saving": "Saving...",
     "save": "Save visit"
   },
+  "VisitHistory": {
+    "title": "Earlier visits",
+    "addVisit": "Add another visit",
+    "deleteVisit": "Delete",
+    "upsellTitle": "Save more than one visit",
+    "upsellBody": "Save multiple visits to this artwork with Pinacot Plus — €24.99/year.",
+    "upgradeButton": "Upgrade to Plus"
+  },
   "StarRating": {
     "label": "Rating",
     "stars": "{count, plural, =1 {1 star} other {# stars}}"
