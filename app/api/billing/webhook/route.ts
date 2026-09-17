@@ -49,10 +49,24 @@ export async function POST(req: Request) {
     case 'customer.subscription.deleted':
       await syncSubscription(event.data.object as Stripe.Subscription)
       break
+    case 'invoice.paid':
+    case 'invoice.payment_failed': {
+      // Stripe's eigen advies: een subscriptie-integratie is niet compleet
+      // zonder deze twee, naast customer.subscription.*. De subscription-
+      // status zelf is de bron voor Entitlement; hier alleen vers ophalen
+      // zodat afwijkende volgorde van events geen stale toegang oplevert.
+      const invoice = event.data.object as Stripe.Invoice
+      const subscriptionRef = invoice.parent?.subscription_details?.subscription
+      const subscriptionId = typeof subscriptionRef === 'string' ? subscriptionRef : subscriptionRef?.id
+      if (subscriptionId) {
+        const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+        await syncSubscription(subscription)
+      }
+      break
+    }
     default:
-      // Andere events (bv. checkout.session.completed, invoice.*) staan al
-      // in BillingEvent voor reconciliatie; de subscription-events hierboven
-      // zijn de brontabel voor Entitlement, dus geen dubbele afhandeling.
+      // Andere events staan al in BillingEvent voor reconciliatie; de
+      // subscription-events hierboven zijn de brontabel voor Entitlement.
       break
   }
 

@@ -55,6 +55,8 @@ export async function POST() {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${baseUrl}/profile?checkout=success`,
       cancel_url: `${baseUrl}/profile?checkout=cancelled`,
+      // Label voor Dashboard-tracking van deze specifieke checkout-flow.
+      integration_identifier: 'pinacotplusyr',
     },
     // Voorkomt een dubbele sessie/dubbele betaling bij een dubbelklik of
     // netwerkretry op dezelfde actie.
