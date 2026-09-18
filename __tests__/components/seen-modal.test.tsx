@@ -72,4 +72,36 @@ describe('SeenModal', () => {
 
     expect(toast.error).toHaveBeenCalledWith('Kon niet opslaan. Probeer het opnieuw.')
   })
+
+  it('does not resubmit photo_url when the photo was not touched', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({ ok: true })
+    global.fetch = fetchMock
+    const user = userEvent.setup()
+
+    render(
+      <NextIntlClientProvider locale="nl" messages={messages} timeZone="Europe/Amsterdam" now={new Date('2026-09-18T00:00:00Z')}>
+        <SeenModal
+          artworkId={1}
+          artworkTitle="Colorful Life"
+          open={true}
+          onOpenChange={jest.fn()}
+          existingSeen={{
+            id: 1,
+            dateSeen: '2026-01-01T00:00:00Z',
+            locationSeen: null,
+            notes: null,
+            rating: null,
+            photo_url: 'https://signed.example/photo.jpg',
+          }}
+          onSaved={jest.fn()}
+          onRemoved={jest.fn()}
+        />
+      </NextIntlClientProvider>
+    )
+
+    await user.click(screen.getByText('Opslaan'))
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body)
+    expect(body).not.toHaveProperty('photo_url')
+  })
 })
