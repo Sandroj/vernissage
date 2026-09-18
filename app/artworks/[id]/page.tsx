@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { getLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { hasActiveEntitlement } from '@/lib/entitlement'
-import { signedPhotoUrl } from '@/lib/photo-storage'
+import { signPhotoUrls } from '@/lib/photo-storage'
 import ArtworkDetailClient from './artwork-detail-client'
 
 export default async function ArtworkDetailPage({ params, searchParams }: { params: { id: string }; searchParams: { returnTo?: string } }) {
@@ -31,9 +31,7 @@ export default async function ArtworkDetailPage({ params, searchParams }: { para
       })
     : null
 
-  const seen = seenRow
-    ? { ...seenRow, photo_url: seenRow.photo_url ? await signedPhotoUrl(seenRow.photo_url) : seenRow.photo_url }
-    : seenRow
+  const seen = seenRow ? (await signPhotoUrls([seenRow]))[0] : seenRow
 
   const isPlus = session?.user?.id ? await hasActiveEntitlement(session.user.id) : false
 

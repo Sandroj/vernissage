@@ -59,7 +59,9 @@ export async function signedPhotoUrl(key: string): Promise<string> {
 
 export async function deletePhoto(key: string): Promise<void> {
   if (key.startsWith('data:')) return
-  await client().send(new DeleteObjectCommand({ Bucket: bucket(), Key: key })).catch(() => {})
+  await client().send(new DeleteObjectCommand({ Bucket: bucket(), Key: key })).catch((err) => {
+    console.error('deletePhoto: failed to delete R2 object', key, err)
+  })
 }
 
 export async function deletePhotoIfOrphaned(userId: string, artworkId: number, key: string): Promise<void> {
@@ -69,4 +71,21 @@ export async function deletePhotoIfOrphaned(userId: string, artworkId: number, k
     prisma.visit.findFirst({ where: { userId, artworkId, photo_url: key }, select: { id: true } }),
   ])
   if (!seenMatch && !visitMatch) await deletePhoto(key)
+}
+
+// Signs every row's photo_url, for the several read paths that hand an
+// array of Seen/Visit-like rows to the browser. A signing failure (e.g.
+// misconfigured R2 env vars) degrades that one row's photo to null instead
+// of throwing and crashing the whole page/response — logged so a systemic
+// misconfiguration is still diagnosable.
+export async function signPhotoUrls<T extends { photo_url: string | null }>(rows: T[]): Promise<T[]> {
+  return Promise.all(rows.map(async (row) => ({
+    ...row,
+    photo_url: row.photo_url
+      ? await signedPhotoUrl(row.photo_url).catch((err) => {
+          console.error('signPhotoUrls: failed to sign photo_url', row.photo_url, err)
+          return null
+        })
+      : row.photo_url,
+  })))
 }

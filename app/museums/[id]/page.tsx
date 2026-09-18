@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import MuseumDetailClient from './museum-detail-client'
 import { getTranslations } from 'next-intl/server'
+import { signPhotoUrls } from '@/lib/photo-storage'
 
 export default async function MuseumDetailPage({
   params,
@@ -32,12 +33,23 @@ export default async function MuseumDetailPage({
   if (!museum) notFound()
 
   const seenRecords = session?.user?.id
-    ? await prisma.seen.findMany({
-        where: {
-          userId: session.user.id,
-          artwork: { museumId, ...primaryCatalogue },
-        },
-      })
+    ? await signPhotoUrls(
+        await prisma.seen.findMany({
+          where: {
+            userId: session.user.id,
+            artwork: { museumId, ...primaryCatalogue },
+          },
+          select: {
+            id: true,
+            artworkId: true,
+            dateSeen: true,
+            locationSeen: true,
+            notes: true,
+            rating: true,
+            photo_url: true,
+          },
+        })
+      )
     : []
 
   const seenMap = Object.fromEntries(seenRecords.map((s) => [s.artworkId, s]))

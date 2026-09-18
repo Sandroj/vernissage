@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import ArtistDetailClient from './artist-detail-client'
 import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
+import { signPhotoUrls } from '@/lib/photo-storage'
 
 export default async function ArtistDetailPage({
   params,
@@ -81,22 +82,24 @@ export default async function ArtistDetailPage({
   })
 
   const seenRecords = session?.user?.id
-    ? await prisma.seen.findMany({
-        where: {
-          userId: session.user.id,
-          artwork: { artistId: artist.id, ...catalogueWhere },
-        },
-        select: {
-          id: true,
-          artworkId: true,
-          dateSeen: true,
-          locationSeen: true,
-          notes: true,
-          rating: true,
-          photo_url: true,
-          artwork: { select: { museumId: true } },
-        },
-      })
+    ? await signPhotoUrls(
+        await prisma.seen.findMany({
+          where: {
+            userId: session.user.id,
+            artwork: { artistId: artist.id, ...catalogueWhere },
+          },
+          select: {
+            id: true,
+            artworkId: true,
+            dateSeen: true,
+            locationSeen: true,
+            notes: true,
+            rating: true,
+            photo_url: true,
+            artwork: { select: { museumId: true } },
+          },
+        })
+      )
     : []
 
   const seenMap = Object.fromEntries(seenRecords.map((s: { artworkId: number; [key: string]: unknown }) => [s.artworkId, s]))

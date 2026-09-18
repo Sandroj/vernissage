@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
-import { signedPhotoUrl } from '@/lib/photo-storage'
+import { signPhotoUrls } from '@/lib/photo-storage'
 import ProfileClient from './profile-client'
 
 export default async function ProfilePage() {
@@ -73,9 +73,7 @@ export default async function ProfilePage() {
     .sort((a, b) => +new Date(b.dateSeen) - +new Date(a.dateSeen))
     .slice(0, 60)
 
-  const myPhotos = await Promise.all(
-    myPhotosUnsigned.map(async (photo) => ({ ...photo, photo_url: await signedPhotoUrl(photo.photo_url) }))
-  )
+  const myPhotos = await signPhotoUrls(myPhotosUnsigned)
 
   const seenByArtist = Object.values(seenRecords.reduce<Record<number, {
     artist: { id: number; name: string; slug: string }
