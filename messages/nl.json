@@ -91,6 +91,8 @@
     "seen": "{count} gezien",
     "visible": "{count} zichtbaar",
     "searchPlaceholder": "Zoek op titel…",
+    "sortPopular": "Populair",
+    "sortChronological": "Chronologisch",
     "allWorks": "Alle werken",
     "seenOnly": "Gezien",
     "unseenOnly": "Niet gezien",

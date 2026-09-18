@@ -53,6 +53,7 @@ export default async function ArtistDetailPage({
           attribution_note: true,
           attribution_note_en: true,
           museum: { select: { id: true, name: true, city: true, country: true } },
+          _count: { select: { seenBy: true } },
         },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
       },
