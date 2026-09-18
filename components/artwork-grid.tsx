@@ -94,7 +94,10 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   const [filterMuseum, setFilterMuseum] = useState('all')
   const [filterPeriod, setFilterPeriod] = useState('all')
   const [filterTheme, setFilterTheme] = useState('all')
-  const [showMissingImages, setShowMissingImages] = useState(false)
+  // Artists without any published image (e.g. still in copyright) would otherwise render an empty grid.
+  const [showMissingImages, setShowMissingImages] = useState(
+    () => artworks.length > 0 && artworks.every((a) => !a.image_local_path && !a.image_url)
+  )
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)

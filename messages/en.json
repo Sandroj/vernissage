@@ -130,6 +130,11 @@
       ,"klimtSecession": "Vienna Secession · 1893–1904"
       ,"klimtGolden": "Golden Period · 1905–1909"
       ,"klimtLate": "Late period · 1910–1918"
+      ,"kahloEarly": "Early portraits · 1924–1929"
+      ,"kahloUnitedStates": "United States · 1930–1933"
+      ,"kahloReturnMexico": "Return to Mexico · 1934–1940"
+      ,"kahloInternational": "International recognition · 1941–1949"
+      ,"kahloLate": "Late work · 1950–1954"
     },
     "theme": {
       "sunflowers": "Sunflowers",
@@ -158,6 +163,10 @@
       ,"klimtLandscapes": "Landscapes"
       ,"klimtAllegory": "Allegory and murals"
       ,"klimtNudes": "Nudes and lovers"
+      ,"kahloStillLifes": "Still lifes"
+      ,"kahloDiego": "Diego Rivera"
+      ,"kahloBody": "Body and illness"
+      ,"kahloPortraits": "Portraits of others"
     },
     "type": {
       "painting": "Paintings",
