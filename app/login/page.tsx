@@ -73,18 +73,21 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center">
-      <div className="w-full max-w-sm space-y-6">
+    <div className="relative flex min-h-[75vh] items-center justify-center overflow-hidden">
+      <div className="pointer-events-none absolute -left-24 top-10 size-72 rounded-full bg-[#5368df]/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 bottom-0 size-72 rounded-full bg-[#ed694c]/20 blur-3xl" />
+
+      <div className="paper-card relative w-full max-w-sm space-y-6 rounded-[1.75rem] p-8 sm:p-10">
         <div className="text-center">
-          <LogoMark size={40} className="mx-auto mb-3" />
-          <h1 className="text-2xl font-bold">Pinacot</h1>
-          <p className="text-slate-400 mt-1 text-sm">
+          <LogoMark size={44} className="mx-auto mb-4" />
+          <h1 className="font-display text-3xl font-medium text-stone-900">Pinacot</h1>
+          <p className="mt-1.5 text-sm text-stone-500">
             {mode === 'login' ? t('signInSubtitle') : t('registerSubtitle')}
           </p>
         </div>
 
         <Button
-          className="w-full gap-2"
+          className="h-11 w-full gap-2 rounded-full border-black/10 bg-white/70 text-stone-800 hover:bg-white"
           variant="outline"
           onClick={() => signIn('google', { callbackUrl: '/' })}
           type="button"
@@ -99,9 +102,9 @@ function LoginForm() {
         </Button>
 
         <div className="flex items-center gap-3">
-          <div className="flex-1 h-px bg-slate-800" />
-          <span className="text-slate-500 text-xs">{t('or')}</span>
-          <div className="flex-1 h-px bg-slate-800" />
+          <div className="flex-1 h-px bg-black/10" />
+          <span className="text-xs text-stone-400">{t('or')}</span>
+          <div className="flex-1 h-px bg-black/10" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -110,7 +113,7 @@ function LoginForm() {
               placeholder={t('namePlaceholder')}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-slate-900 border-slate-700"
+              className="h-11 rounded-xl border-black/10 bg-white/70 text-stone-900 placeholder:text-stone-400"
             />
           )}
           <Input
@@ -119,7 +122,7 @@ function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="bg-slate-900 border-slate-700"
+            className="h-11 rounded-xl border-black/10 bg-white/70 text-stone-900 placeholder:text-stone-400"
           />
           <Input
             type="password"
@@ -128,24 +131,24 @@ function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="bg-slate-900 border-slate-700"
+            className="h-11 rounded-xl border-black/10 bg-white/70 text-stone-900 placeholder:text-stone-400"
           />
           {error && (
-            <p className={`text-sm px-3 py-2 rounded-lg ${error === t('errAlreadyRegistered') ? 'text-amber-400 bg-amber-950/30' : 'text-red-400 bg-red-950/30'}`}>
+            <p className={`text-sm px-3 py-2 rounded-lg ${error === t('errAlreadyRegistered') ? 'text-amber-700 bg-amber-100/70' : 'text-red-700 bg-red-100/70'}`}>
               {error}
             </p>
           )}
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="h-11 w-full rounded-full bg-[#4256cc] text-white hover:bg-[#3447b8]" disabled={loading}>
             {loading ? t('busy') : mode === 'login' ? t('signIn') : t('register')}
           </Button>
         </form>
 
-        <div className="text-center space-y-2">
-          <p className="text-sm text-slate-400">
+        <div className="space-y-2 text-center">
+          <p className="text-sm text-stone-500">
             {mode === 'login' ? t('noAccount') : t('haveAccount')}{' '}
             <button
               type="button"
-              className="text-indigo-400 hover:underline"
+              className="text-[#4256cc] hover:underline"
               onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError('') }}
             >
               {mode === 'login' ? t('registerHere') : t('signIn')}
@@ -153,7 +156,7 @@ function LoginForm() {
           </p>
           {mode === 'login' && (
             <p className="text-sm">
-              <a href="/reset-password" className="text-slate-500 hover:text-slate-300 hover:underline">
+              <a href="/reset-password" className="text-stone-400 hover:text-stone-600 hover:underline">
                 {t('forgot')}
               </a>
             </p>
