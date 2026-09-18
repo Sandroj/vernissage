@@ -46,7 +46,7 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
           <Button
             variant="outline"
             role="combobox"
-            className="w-full justify-start gap-2 text-left font-normal bg-white/70 border-black/10 text-stone-800 hover:bg-white"
+            className="h-10 w-full justify-start gap-2 px-3 text-left font-normal bg-white/70 border-black/10 text-stone-800 hover:bg-white focus-visible:ring-1 focus-visible:ring-[#4256cc]/40"
           />
         }
       >
