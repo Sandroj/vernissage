@@ -32,7 +32,8 @@ export async function POST(req: Request) {
   if (photo_url) {
     try {
       storedKey = await storePhoto(userId, photo_url)
-    } catch {
+    } catch (err) {
+      console.error('POST /api/visits: storePhoto failed', { userId, artworkId }, err)
       return NextResponse.json({ error: 'Kon de foto niet opslaan' }, { status: 400 })
     }
   }
