@@ -55,6 +55,20 @@ De volledige verplichte workflow staat in de buitenste datarepo in
 `docs/catalogue-and-image-standard.md`; volg ook altijd het bestaande
 R2-upload → dev.db-update → gerichte Turso-sync-pad.
 
+### ⚠️ Belangrijk: privéfoto's (Seen/Visit) staan in een tweede, private R2-bucket
+Sinds 18 september 2026 zijn er twee R2-buckets naast elkaar: de bestaande
+publieke `arttracker-images` (kunstwerkafbeeldingen, `Artwork.image_url`,
+onveranderd) en een nieuwe **private** bucket voor door gebruikers geüploade
+foto's ("gezien"/bezoek-foto's), env-var `R2_PRIVATE_BUCKET` — geen publieke
+custom domain eraan gekoppeld, dat is een eenmalige handmatige stap in het
+Cloudflare-dashboard, niet iets dat vanuit code geregeld kan worden.
+`Seen.photo_url`/`Visit.photo_url` bevatten nu een R2-**key**
+(`photos/<userId>/<uuid>.jpg`), geen URL meer — lees ze altijd via
+`signedPhotoUrl`/`signPhotoUrls` uit `lib/photo-storage.ts`, nooit
+rechtstreeks in een `<img src>` renderen. De 5 bestaande `data:`-rijen in
+productie blijven permanent ongemigreerd (bewuste productbeslissing, geen
+TODO) — `signedPhotoUrl` herkent en passeert ze ongewijzigd.
+
 ## Stack & structuur
 - Taal / framework:
 - Hoe draai je het lokaal:
