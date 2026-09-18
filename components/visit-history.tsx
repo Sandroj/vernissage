@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import VisitModal from '@/components/visit-modal'
 import { useTranslations, useFormatter } from 'next-intl'
@@ -85,6 +86,10 @@ export default function VisitHistory({ artworkId, artworkTitle, isPlus }: VisitH
           <Button
             onClick={async () => {
               const res = await fetch('/api/billing/checkout', { method: 'POST' })
+              if (!res.ok) {
+                toast.error(t('checkoutError'))
+                return
+              }
               const data = await res.json()
               if (data.url) window.location.href = data.url
             }}

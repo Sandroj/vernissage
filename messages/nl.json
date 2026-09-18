@@ -254,7 +254,8 @@
     "deleteVisit": "Verwijderen",
     "upsellTitle": "Bewaar meerdere bezoeken",
     "upsellBody": "Bewaar meerdere bezoeken aan dit werk met Pinacot Plus — €24,99/jaar.",
-    "upgradeButton": "Upgrade naar Plus"
+    "upgradeButton": "Upgrade naar Plus",
+    "checkoutError": "Kon de checkout niet starten. Probeer het opnieuw."
   },
   "StarRating": {
     "label": "Waardering",
