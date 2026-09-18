@@ -254,7 +254,8 @@
     "deleteVisit": "Delete",
     "upsellTitle": "Save more than one visit",
     "upsellBody": "Save multiple visits to this artwork with Pinacot Plus — €24.99/year.",
-    "upgradeButton": "Upgrade to Plus"
+    "upgradeButton": "Upgrade to Plus",
+    "checkoutError": "Could not start checkout. Please try again."
   },
   "StarRating": {
     "label": "Rating",
