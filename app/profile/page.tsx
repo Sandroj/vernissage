@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { signedPhotoUrl } from '@/lib/photo-storage'
 import ProfileClient from './profile-client'
 
 export default async function ProfilePage() {
@@ -65,12 +66,16 @@ export default async function ProfilePage() {
   // a synced cache of the latest Visit for Plus users, so without this the
   // same photo would appear twice.
   const visitPhotoUrls = new Set(visitPhotos.map((v) => v.photo_url))
-  const myPhotos = [
+  const myPhotosUnsigned = [
     ...visitPhotos.map((v) => ({ id: `visit-${v.id}`, dateSeen: v.dateSeen, photo_url: v.photo_url!, artwork: v.artwork })),
     ...seenPhotos.filter((s) => !visitPhotoUrls.has(s.photo_url)).map((s) => ({ id: `seen-${s.id}`, dateSeen: s.dateSeen, photo_url: s.photo_url!, artwork: s.artwork })),
   ]
     .sort((a, b) => +new Date(b.dateSeen) - +new Date(a.dateSeen))
     .slice(0, 60)
+
+  const myPhotos = await Promise.all(
+    myPhotosUnsigned.map(async (photo) => ({ ...photo, photo_url: await signedPhotoUrl(photo.photo_url) }))
+  )
 
   const seenByArtist = Object.values(seenRecords.reduce<Record<number, {
     artist: { id: number; name: string; slug: string }
