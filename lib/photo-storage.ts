@@ -2,6 +2,7 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } fro
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { randomUUID } from 'crypto'
 import sharp from 'sharp'
+import { prisma } from '@/lib/prisma'
 
 const MAX_PHOTO_BYTES = 15 * 1024 * 1024
 const SIGNED_URL_TTL_SECONDS = 60 * 60
@@ -59,4 +60,13 @@ export async function signedPhotoUrl(key: string): Promise<string> {
 export async function deletePhoto(key: string): Promise<void> {
   if (key.startsWith('data:')) return
   await client().send(new DeleteObjectCommand({ Bucket: bucket(), Key: key })).catch(() => {})
+}
+
+export async function deletePhotoIfOrphaned(userId: string, artworkId: number, key: string): Promise<void> {
+  if (key.startsWith('data:')) return
+  const [seenMatch, visitMatch] = await Promise.all([
+    prisma.seen.findFirst({ where: { userId, artworkId, photo_url: key }, select: { id: true } }),
+    prisma.visit.findFirst({ where: { userId, artworkId, photo_url: key }, select: { id: true } }),
+  ])
+  if (!seenMatch && !visitMatch) await deletePhoto(key)
 }

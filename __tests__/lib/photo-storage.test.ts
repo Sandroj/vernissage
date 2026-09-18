@@ -18,10 +18,17 @@ jest.mock('sharp', () => jest.fn(() => ({
   jpeg: jest.fn().mockReturnThis(),
   toBuffer: mockToBuffer,
 })))
+jest.mock('@/lib/prisma', () => ({
+  prisma: {
+    seen: { findFirst: jest.fn() },
+    visit: { findFirst: jest.fn() },
+  },
+}))
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import sharp from 'sharp'
-import { storePhoto, signedPhotoUrl, deletePhoto } from '@/lib/photo-storage'
+import { storePhoto, signedPhotoUrl, deletePhoto, deletePhotoIfOrphaned } from '@/lib/photo-storage'
+import { prisma } from '@/lib/prisma'
 
 const ORIGINAL_ENV = process.env
 
@@ -88,5 +95,43 @@ describe('deletePhoto', () => {
   it('swallows an R2 delete failure instead of throwing', async () => {
     mockSend.mockRejectedValue(new Error('network down'))
     await expect(deletePhoto('photos/user-1/abc.jpg')).resolves.toBeUndefined()
+  })
+})
+
+describe('deletePhotoIfOrphaned', () => {
+  it('deletes the key when neither Seen nor Visit reference it', async () => {
+    mockSend.mockResolvedValue({})
+    ;(prisma.seen.findFirst as jest.Mock).mockResolvedValue(null)
+    ;(prisma.visit.findFirst as jest.Mock).mockResolvedValue(null)
+
+    await deletePhotoIfOrphaned('user-1', 42, 'photos/user-1/abc.jpg')
+
+    expect(mockSend).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not delete when Seen still references the key', async () => {
+    ;(prisma.seen.findFirst as jest.Mock).mockResolvedValue({ id: 1 })
+    ;(prisma.visit.findFirst as jest.Mock).mockResolvedValue(null)
+
+    await deletePhotoIfOrphaned('user-1', 42, 'photos/user-1/abc.jpg')
+
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
+  it('does not delete when another Visit still references the key', async () => {
+    ;(prisma.seen.findFirst as jest.Mock).mockResolvedValue(null)
+    ;(prisma.visit.findFirst as jest.Mock).mockResolvedValue({ id: 7 })
+
+    await deletePhotoIfOrphaned('user-1', 42, 'photos/user-1/abc.jpg')
+
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
+  it('skips both DB lookups for a legacy data: value', async () => {
+    await deletePhotoIfOrphaned('user-1', 42, 'data:image/jpeg;base64,aGVsbG8=')
+
+    expect(prisma.seen.findFirst).not.toHaveBeenCalled()
+    expect(prisma.visit.findFirst).not.toHaveBeenCalled()
+    expect(mockSend).not.toHaveBeenCalled()
   })
 })
