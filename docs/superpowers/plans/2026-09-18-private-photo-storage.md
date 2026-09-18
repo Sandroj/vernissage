@@ -888,20 +888,9 @@ describe('GET /api/visits', () => {
 })
 ```
 
-Add to `describe('DELETE /api/visits/[id]', ...)`, after the existing two tests:
-
-```ts
-  it('cleans up the deleted visit\'s photo when nothing else references it', async () => {
-    ;(getServerSession as jest.Mock).mockResolvedValue(session)
-    ;(hasActiveEntitlement as jest.Mock).mockResolvedValue(true)
-    ;(prisma.visit.delete as jest.Mock).mockResolvedValue({ id: 10, artworkId: 1, userId: 'user-1', photo_url: 'photos/user-1/deleted.jpg' })
-    ;(prisma.visit.findFirst as jest.Mock).mockResolvedValue(null)
-
-    await DELETE(new Request('http://localhost/api/visits/10', { method: 'DELETE' }), { params: { id: '10' } })
-
-    expect(deletePhotoIfOrphaned).toHaveBeenCalledWith('user-1', 1, 'photos/user-1/deleted.jpg')
-  })
-```
+*(Note: the DELETE route's cleanup behavior is Task 5's responsibility —
+its test is written and verified there, not here, so this task's own test
+run below is fully green on its own.)*
 
 *(Note on the GET test above: `prisma.visit.findMany` was never part of the
 original mock object at the top of the file, since GET wasn't tested before
@@ -914,7 +903,7 @@ either is acceptable, the implementer's choice.)*
 - [ ] **Step 3: Run tests to verify the new ones fail**
 
 Run: `npx jest __tests__/api/visits.test.ts`
-Expected: the 5 new tests FAIL; the 4 original tests still PASS.
+Expected: the 4 new tests FAIL; the 4 original tests still PASS.
 
 - [ ] **Step 4: Implement the route**
 
@@ -1015,7 +1004,7 @@ export async function GET(req: Request) {
 - [ ] **Step 5: Run tests to verify they pass**
 
 Run: `npx jest __tests__/api/visits.test.ts`
-Expected: PASS (9 tests)
+Expected: PASS (8 tests)
 
 - [ ] **Step 6: Commit**
 
@@ -1030,10 +1019,12 @@ git commit -m "Wire private photo storage into POST/GET /api/visits"
 
 **Files:**
 - Modify: `app/api/visits/[id]/route.ts`
-- Modify: `__tests__/api/visits.test.ts` (already has the new test from Task 4, Step 2 — this task just makes it pass)
+- Modify: `__tests__/api/visits.test.ts`
 
 **Interfaces:**
-- Consumes: `deletePhotoIfOrphaned` from `@/lib/photo-storage`.
+- Consumes: `deletePhotoIfOrphaned` from `@/lib/photo-storage` (already
+  imported and mocked at the top of `__tests__/api/visits.test.ts` by
+  Task 4 — nothing to add there).
 
 **Ordering matters:** the orphan check must run *after* both the visit
 delete and the Seen resync have already happened, so it sees the
@@ -1041,12 +1032,30 @@ already-updated state of both tables — see the spec's "Read paths" section
 for why (Seen may or may not still hold the same key, depending on whether
 any visits remain).
 
-- [ ] **Step 1: Run the Task-4 test to verify it fails here too**
+- [ ] **Step 1: Write the failing test**
+
+Add to `describe('DELETE /api/visits/[id]', ...)` in
+`__tests__/api/visits.test.ts`, after the existing two tests:
+
+```ts
+  it('cleans up the deleted visit\'s photo when nothing else references it', async () => {
+    ;(getServerSession as jest.Mock).mockResolvedValue(session)
+    ;(hasActiveEntitlement as jest.Mock).mockResolvedValue(true)
+    ;(prisma.visit.delete as jest.Mock).mockResolvedValue({ id: 10, artworkId: 1, userId: 'user-1', photo_url: 'photos/user-1/deleted.jpg' })
+    ;(prisma.visit.findFirst as jest.Mock).mockResolvedValue(null)
+
+    await DELETE(new Request('http://localhost/api/visits/10', { method: 'DELETE' }), { params: { id: '10' } })
+
+    expect(deletePhotoIfOrphaned).toHaveBeenCalledWith('user-1', 1, 'photos/user-1/deleted.jpg')
+  })
+```
+
+- [ ] **Step 2: Run the test to verify it fails**
 
 Run: `npx jest __tests__/api/visits.test.ts -t "cleans up the deleted visit"`
 Expected: FAIL — `deletePhotoIfOrphaned` not called (route doesn't call it yet).
 
-- [ ] **Step 2: Implement the route**
+- [ ] **Step 3: Implement the route**
 
 Replace the full contents of `app/api/visits/[id]/route.ts`:
 
@@ -1108,20 +1117,20 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
 }
 ```
 
-- [ ] **Step 3: Run the full visits test file**
+- [ ] **Step 4: Run the full visits test file**
 
 Run: `npx jest __tests__/api/visits.test.ts`
 Expected: PASS (9 tests)
 
-- [ ] **Step 4: Run the full suite**
+- [ ] **Step 5: Run the full suite**
 
 Run: `npx jest`
 Expected: PASS, no regressions.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add app/api/visits/[id]/route.ts
+git add app/api/visits/[id]/route.ts __tests__/api/visits.test.ts
 git commit -m "Clean up orphaned R2 photo when a visit is deleted"
 ```
 
