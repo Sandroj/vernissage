@@ -62,6 +62,16 @@
   ::selection {
     background-color: rgba(71, 88, 210, 0.22);
   }
+
+  /* Browser-native autofill paints its own bg/text colors over ours
+     (often unreadable against a themed input) unless overridden this way. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #24211c;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(255, 253, 248, 0.9) inset;
+    transition: background-color 9999s ease-in-out 0s;
+  }
 }
 
 @layer components {
