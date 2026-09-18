@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import VisitModal from '@/components/visit-modal'
+import Lightbox from '@/components/lightbox'
 import { useTranslations, useFormatter } from 'next-intl'
 
 interface Visit {
@@ -22,6 +23,7 @@ interface VisitHistoryProps {
 export default function VisitHistory({ artworkId, artworkTitle, isPlus }: VisitHistoryProps) {
   const [visits, setVisits] = useState<Visit[]>([])
   const [modalOpen, setModalOpen] = useState(false)
+  const [openPhoto, setOpenPhoto] = useState<string | null>(null)
   const t = useTranslations('VisitHistory')
   const fmt = useFormatter()
 
@@ -50,7 +52,14 @@ export default function VisitHistory({ artworkId, artworkTitle, isPlus }: VisitH
             <li key={visit.id} className="flex items-start justify-between gap-3 rounded-xl bg-white/70 p-3">
               <div className="flex items-center gap-3">
                 {visit.photo_url && (
-                  <img src={visit.photo_url} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setOpenPhoto(visit.photo_url)}
+                    className="flex-shrink-0 cursor-zoom-in"
+                    aria-label={artworkTitle}
+                  >
+                    <img src={visit.photo_url} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                  </button>
                 )}
                 <div>
                   <p className="text-sm text-stone-800">{fmt.dateTime(new Date(visit.dateSeen), { day: 'numeric', month: 'long', year: 'numeric' })}</p>
@@ -107,6 +116,10 @@ export default function VisitHistory({ artworkId, artworkTitle, isPlus }: VisitH
         onOpenChange={setModalOpen}
         onSaved={refresh}
       />
+
+      {openPhoto && (
+        <Lightbox src={openPhoto} alt={artworkTitle} onClose={() => setOpenPhoto(null)} />
+      )}
     </div>
   )
 }
