@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { CheckCircle2, ChevronDown, Eye, LogOut, Mail, Settings2, Sparkles, User } from 'lucide-react'
 import { useTranslations, useFormatter } from 'next-intl'
 import { proxyImg } from '@/lib/utils'
+import Lightbox from '@/components/lightbox'
 
 interface RecentSeen {
   id: number
@@ -30,12 +31,14 @@ interface ProfileClientProps {
     artworks: Array<{ id: number; title: string; image_local_path: string | null; image_url: string | null }>
   }>
   recentSeen: RecentSeen[]
+  myPhotos: Array<{ id: string; dateSeen: Date | string; photo_url: string; artwork: { id: number; title: string } }>
 }
 
-export default function ProfileClient({ user, seenCount, seenByArtist, recentSeen }: ProfileClientProps) {
+export default function ProfileClient({ user, seenCount, seenByArtist, recentSeen, myPhotos }: ProfileClientProps) {
   const [name, setName] = useState(user.name ?? '')
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)
+  const [openPhoto, setOpenPhoto] = useState<{ url: string; title: string; artworkId: number } | null>(null)
   const t = useTranslations('Profile')
   const fmt = useFormatter()
 
@@ -161,6 +164,36 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
           </div>
         </section>
       </div>
+
+      {myPhotos.length > 0 && (
+        <section className="paper-card mt-6 rounded-[1.75rem] p-5 sm:p-7">
+          <div className="mb-5">
+            <p className="eyebrow mb-1">{t('photosEyebrow')}</p>
+            <h2 className="font-display text-3xl font-medium text-stone-900">{t('photosTitle')}</h2>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+            {myPhotos.map((photo) => (
+              <button
+                key={photo.id}
+                type="button"
+                onClick={() => setOpenPhoto({ url: photo.photo_url, title: photo.artwork.title, artworkId: photo.artwork.id })}
+                className="aspect-square cursor-zoom-in overflow-hidden rounded-xl bg-stone-200 transition hover:opacity-90"
+              >
+                <img src={photo.photo_url} alt="" className="size-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {openPhoto && (
+        <Lightbox
+          src={openPhoto.url}
+          alt={openPhoto.title}
+          onClose={() => setOpenPhoto(null)}
+          meta={{ title: openPhoto.title, artworkHref: `/artworks/${openPhoto.artworkId}` }}
+        />
+      )}
     </div>
   )
 }
