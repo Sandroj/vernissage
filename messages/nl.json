@@ -130,6 +130,11 @@
       ,"klimtSecession": "Weense Secession · 1893–1904"
       ,"klimtGolden": "Gouden periode · 1905–1909"
       ,"klimtLate": "Late periode · 1910–1918"
+      ,"kahloEarly": "Vroege portretten · 1924–1929"
+      ,"kahloUnitedStates": "Verenigde Staten · 1930–1933"
+      ,"kahloReturnMexico": "Terug in Mexico · 1934–1940"
+      ,"kahloInternational": "Internationale erkenning · 1941–1949"
+      ,"kahloLate": "Late werk · 1950–1954"
     },
     "theme": {
       "sunflowers": "Zonnebloemen",
@@ -158,6 +163,10 @@
       ,"klimtLandscapes": "Landschappen"
       ,"klimtAllegory": "Allegorie en muurschilderingen"
       ,"klimtNudes": "Naakten en geliefden"
+      ,"kahloStillLifes": "Stillevens"
+      ,"kahloDiego": "Diego Rivera"
+      ,"kahloBody": "Lichaam en ziekte"
+      ,"kahloPortraits": "Portretten van anderen"
     },
     "type": {
       "painting": "Schilderijen",

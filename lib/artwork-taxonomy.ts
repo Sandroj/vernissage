@@ -108,4 +108,20 @@ export const ARTIST_TAXONOMIES: Record<string, ArtistTaxonomy> = {
       { key: 'klimt-nudes', labelKey: 'theme.klimtNudes', matches: titleMatches(/nude|nymph|water serpent|love|adam and eve/i) },
     ],
   },
+  'frida-kahlo': {
+    periods: [
+      { key: 'kahlo-early', labelKey: 'period.kahloEarly', matches: yearIn(1924, 1929) },
+      { key: 'kahlo-united-states', labelKey: 'period.kahloUnitedStates', matches: yearIn(1930, 1933) },
+      { key: 'kahlo-return-mexico', labelKey: 'period.kahloReturnMexico', matches: yearIn(1934, 1940) },
+      { key: 'kahlo-international', labelKey: 'period.kahloInternational', matches: yearIn(1941, 1949) },
+      { key: 'kahlo-late', labelKey: 'period.kahloLate', matches: yearIn(1950, 1954) },
+    ],
+    themes: [
+      { key: 'kahlo-self-portraits', labelKey: 'theme.selfPortraits', matches: titleMatches(/self[- ]portrait|autorretrato/i) },
+      { key: 'kahlo-still-lifes', labelKey: 'theme.kahloStillLifes', matches: titleMatches(/still life|naturaleza muerta|\bfruits?\b|\bfrutas?\b|coconuts?|watermelons?|sandías?/i) },
+      { key: 'kahlo-diego', labelKey: 'theme.kahloDiego', matches: titleMatches(/\bdiego\b/i) },
+      { key: 'kahlo-body', labelKey: 'theme.kahloBody', matches: titleMatches(/hospital|broken column|columna rota|\bbirth\b|nacimiento|wounded|herid[ao]|tree of hope|árbol de la esperanza|without hope|sin esperanza/i) },
+      { key: 'kahlo-portraits', labelKey: 'theme.kahloPortraits', matches: titleMatches(/\bportrait of\b|\bretrato de\b/i) },
+    ],
+  },
 }
