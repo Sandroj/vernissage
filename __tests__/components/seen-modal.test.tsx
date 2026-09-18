@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { NextIntlClientProvider } from 'next-intl'
+import { toast } from 'sonner'
 import SeenModal from '@/components/seen-modal'
 import messages from '@/messages/nl.json'
 
+jest.mock('sonner', () => ({ toast: { error: jest.fn() } }))
 jest.mock('@/components/museum-search', () => () => <div>MuseumSearch</div>)
 jest.mock('@/components/star-rating', () => () => <div>StarRating</div>)
 jest.mock('@/components/ui/calendar', () => ({ Calendar: () => <div>Calendar</div> }))
@@ -46,5 +49,27 @@ describe('SeenModal', () => {
     )
     expect(screen.getByText('Colorful Life')).toBeInTheDocument()
     expect(screen.getByText('Markeer als gezien')).toBeInTheDocument()
+  })
+
+  it('shows an error toast when saving fails', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false })
+    const user = userEvent.setup()
+
+    render(
+      <NextIntlClientProvider locale="nl" messages={messages} timeZone="Europe/Amsterdam" now={new Date('2026-09-18T00:00:00Z')}>
+        <SeenModal
+          artworkId={1}
+          artworkTitle="Colorful Life"
+          open={true}
+          onOpenChange={jest.fn()}
+          onSaved={jest.fn()}
+          onRemoved={jest.fn()}
+        />
+      </NextIntlClientProvider>
+    )
+
+    await user.click(screen.getByText('Opslaan'))
+
+    expect(toast.error).toHaveBeenCalledWith('Kon niet opslaan. Probeer het opnieuw.')
   })
 })

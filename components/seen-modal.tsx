@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import VisitFormFields from '@/components/visit-form-fields'
 import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
 
 interface SeenModalProps {
   artworkId: number
@@ -40,12 +41,13 @@ export default function SeenModal({
   const [notes, setNotes] = useState(existingSeen?.notes ?? '')
   const [rating, setRating] = useState<number | null>(existingSeen?.rating ?? null)
   const [photoUrl, setPhotoUrl] = useState(existingSeen?.photo_url ?? '')
+  const [photoTouched, setPhotoTouched] = useState(false)
   const [saving, setSaving] = useState(false)
   const t = useTranslations('SeenModal')
 
   async function handleSave() {
     setSaving(true)
-    await fetch('/api/seen', {
+    const res = await fetch('/api/seen', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -54,12 +56,21 @@ export default function SeenModal({
         locationSeen: location || null,
         notes: notes || null,
         rating,
-        photo_url: photoUrl || null,
+        ...(photoTouched ? { photo_url: photoUrl || null } : {}),
       }),
     })
     setSaving(false)
+    if (!res.ok) {
+      toast.error(t('saveError'))
+      return
+    }
     onOpenChange(false)
     onSaved()
+  }
+
+  function handlePhotoUrlChange(value: string) {
+    setPhotoTouched(true)
+    setPhotoUrl(value)
   }
 
   async function handleRemove() {
@@ -102,7 +113,7 @@ export default function SeenModal({
             notes={notes}
             onNotesChange={setNotes}
             photoUrl={photoUrl}
-            onPhotoUrlChange={setPhotoUrl}
+            onPhotoUrlChange={handlePhotoUrlChange}
           />
 
           <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:justify-between">

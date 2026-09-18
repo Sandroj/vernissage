@@ -242,7 +242,8 @@
     "saving": "Saving...",
     "save": "Save",
     "removeSeen": "Mark as unseen",
-    "confirmUnmarkWithVisits": "You've logged visits for this artwork. They'll stay saved, but disappear from view until you mark it as seen again. Continue?"
+    "confirmUnmarkWithVisits": "You've logged visits for this artwork. They'll stay saved, but disappear from view until you mark it as seen again. Continue?",
+    "saveError": "Could not save. Please try again."
   },
   "VisitModal": {
     "title": "Add another visit",

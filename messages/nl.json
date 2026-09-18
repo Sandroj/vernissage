@@ -242,7 +242,8 @@
     "saving": "Opslaan...",
     "save": "Opslaan",
     "removeSeen": "Markeer als niet gezien",
-    "confirmUnmarkWithVisits": "Je hebt bezoeken gelogd bij dit werk. Die blijven bewaard, maar verdwijnen uit beeld totdat je het werk opnieuw als gezien markeert. Doorgaan?"
+    "confirmUnmarkWithVisits": "Je hebt bezoeken gelogd bij dit werk. Die blijven bewaard, maar verdwijnen uit beeld totdat je het werk opnieuw als gezien markeert. Doorgaan?",
+    "saveError": "Kon niet opslaan. Probeer het opnieuw."
   },
   "VisitModal": {
     "title": "Nog een bezoek toevoegen",
