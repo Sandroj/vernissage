@@ -26,7 +26,10 @@ interface Artwork {
   attribution_status?: string | null
   museum?: { id: number; name: string; city: string; country?: string } | null
   artist?: { name: string; slug: string } | null
+  _count?: { seenBy: number }
 }
+
+type SortBy = 'popular' | 'chronological'
 
 interface SeenRecord {
   id: number
@@ -84,6 +87,7 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
   // explicit choice in the collapsed filter panel.
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set())
   const [filtersHydrated, setFiltersHydrated] = useState(false)
+  const [sortBy, setSortBy] = useState<SortBy>('popular')
   const [internalFilterSeen, setInternalFilterSeen] = useState<SeenFilter>('all')
   const filterSeen = seenFilter ?? internalFilterSeen
   const setFilterSeen = onSeenFilterChange ?? setInternalFilterSeen
@@ -161,24 +165,33 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
     )
   }, [artworks, locale])
 
-  const filtered = useMemo(() => artworks.filter((a) => {
-    if (filterTitle) {
-      const haystack = [a.title, a.alternate_titles, a.catalogue_id, a.jh_catalogue_id, a.artist?.name, a.museum?.name, a.museum?.city].filter(Boolean).join(' ').toLowerCase()
-      if (!haystack.includes(filterTitle.toLowerCase())) return false
+  const filtered = useMemo(() => {
+    const result = artworks.filter((a) => {
+      if (filterTitle) {
+        const haystack = [a.title, a.alternate_titles, a.catalogue_id, a.jh_catalogue_id, a.artist?.name, a.museum?.name, a.museum?.city].filter(Boolean).join(' ').toLowerCase()
+        if (!haystack.includes(filterTitle.toLowerCase())) return false
+      }
+      const artworkTypes = splitTypes(a.type_normalized)
+      const hasImage = Boolean(a.image_local_path || a.image_url)
+      // Image-less records have their own filter chip. When enabled, that chip
+      // must show them even if every regular artwork type is hidden.
+      if (hasImage && artworkTypes.length > 0 && artworkTypes.every((type) => hiddenTypes.has(type))) return false
+      if (filterSeen === 'seen' && !seenMap[a.id]) return false
+      if (filterSeen === 'unseen' && seenMap[a.id]) return false
+      if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
+      if (filterPeriod !== 'all' && !taxonomy?.periods.find((option) => option.key === filterPeriod)?.matches(a)) return false
+      if (filterTheme !== 'all' && !taxonomy?.themes.find((option) => option.key === filterTheme)?.matches(a)) return false
+      if (!showMissingImages && !hasImage) return false
+      return true
+    })
+    // artworks arrives pre-sorted chronologically from the server, so
+    // 'chronological' needs no extra work here. 'popular' re-sorts by seen
+    // count (stable sort keeps chronological order within ties).
+    if (sortBy === 'popular') {
+      return [...result].sort((a, b) => (b._count?.seenBy ?? 0) - (a._count?.seenBy ?? 0))
     }
-    const artworkTypes = splitTypes(a.type_normalized)
-    const hasImage = Boolean(a.image_local_path || a.image_url)
-    // Image-less records have their own filter chip. When enabled, that chip
-    // must show them even if every regular artwork type is hidden.
-    if (hasImage && artworkTypes.length > 0 && artworkTypes.every((type) => hiddenTypes.has(type))) return false
-    if (filterSeen === 'seen' && !seenMap[a.id]) return false
-    if (filterSeen === 'unseen' && seenMap[a.id]) return false
-    if (filterMuseum !== 'all' && (!a.museum || a.museum.id.toString() !== filterMuseum)) return false
-    if (filterPeriod !== 'all' && !taxonomy?.periods.find((option) => option.key === filterPeriod)?.matches(a)) return false
-    if (filterTheme !== 'all' && !taxonomy?.themes.find((option) => option.key === filterTheme)?.matches(a)) return false
-    if (!showMissingImages && !hasImage) return false
-    return true
-  }), [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, filterPeriod, filterTheme, showMissingImages, seenMap, taxonomy])
+    return result
+  }, [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, filterPeriod, filterTheme, showMissingImages, seenMap, taxonomy, sortBy])
 
   // Reset pagination when filters change
   const visible = filtered.slice(0, visibleCount)
@@ -245,6 +258,12 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
         </div>
 
         <div className="flex flex-wrap items-center gap-2 border-t border-black/5 pt-3 sm:border-l sm:border-t-0 sm:pl-3 sm:pt-0">
+          {artistSlug && (
+            <Dropdown value={sortBy} onChange={handleFilterChange(setSortBy)} options={[
+              { value: 'popular', label: t('sortPopular') },
+              { value: 'chronological', label: t('sortChronological') },
+            ]} />
+          )}
           <Dropdown value={filterSeen} onChange={handleFilterChange(setFilterSeen)} options={seenOptions} />
           <button
             type="button"

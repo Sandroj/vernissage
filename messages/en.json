@@ -91,6 +91,8 @@
     "seen": "{count} seen",
     "visible": "{count} shown",
     "searchPlaceholder": "Search by title…",
+    "sortPopular": "Popular",
+    "sortChronological": "Chronological",
     "allWorks": "All works",
     "seenOnly": "Seen",
     "unseenOnly": "Not seen",
