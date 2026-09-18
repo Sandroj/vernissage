@@ -125,7 +125,7 @@ export default function VisitFormFields({
         <Popover open={calOpen} onOpenChange={setCalOpen}>
           <PopoverTrigger
             render={
-              <Button variant="outline" className="w-full justify-start gap-2 bg-white/70 border-black/10 text-stone-800 hover:bg-white" />
+              <Button variant="outline" className="h-10 w-full justify-start gap-2 px-3 bg-white/70 border-black/10 text-stone-800 hover:bg-white focus-visible:ring-1 focus-visible:ring-[#4256cc]/40" />
             }
           >
             <CalendarIcon size={14} className="text-stone-500" />
