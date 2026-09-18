@@ -157,6 +157,17 @@ describe('DELETE /api/visits/[id]', () => {
     expect(res.status).toBe(200)
     expect(prisma.seen.update).not.toHaveBeenCalled()
   })
+
+  it('cleans up the deleted visit\'s photo when nothing else references it', async () => {
+    ;(getServerSession as jest.Mock).mockResolvedValue(session)
+    ;(hasActiveEntitlement as jest.Mock).mockResolvedValue(true)
+    ;(prisma.visit.delete as jest.Mock).mockResolvedValue({ id: 10, artworkId: 1, userId: 'user-1', photo_url: 'photos/user-1/deleted.jpg' })
+    ;(prisma.visit.findFirst as jest.Mock).mockResolvedValue(null)
+
+    await DELETE(new Request('http://localhost/api/visits/10', { method: 'DELETE' }), { params: { id: '10' } })
+
+    expect(deletePhotoIfOrphaned).toHaveBeenCalledWith('user-1', 1, 'photos/user-1/deleted.jpg')
+  })
 })
 
 describe('GET /api/visits', () => {

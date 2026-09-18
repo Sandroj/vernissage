@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { hasActiveEntitlement } from '@/lib/entitlement'
+import { deletePhotoIfOrphaned } from '@/lib/photo-storage'
 
 // DELETE /api/visits/[id] — Plus-only. Removes a visit and resyncs the
 // existing Seen row (read by 11 other places in the app) to the
@@ -40,6 +41,15 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
     }).catch(() => {}) // no Seen row to update — fine, nothing to sync
   }
   // No visits left: Seen stays exactly as it was, per the spec's edge cases.
+
+  // Runs after the delete and the (possible) Seen resync above, so it sees
+  // current state: if Seen was resynced away from this key, or no other
+  // visit shares it, it's genuinely orphaned now. If no visits remained and
+  // Seen still holds this exact key (the untouched-Seen case just above),
+  // the lookup inside deletePhotoIfOrphaned finds that and skips deletion.
+  if (deleted.photo_url) {
+    await deletePhotoIfOrphaned(userId, deleted.artworkId, deleted.photo_url)
+  }
 
   return NextResponse.json({ ok: true })
 }
