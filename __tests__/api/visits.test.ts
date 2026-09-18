@@ -168,6 +168,43 @@ describe('DELETE /api/visits/[id]', () => {
 
     expect(deletePhotoIfOrphaned).toHaveBeenCalledWith('user-1', 1, 'photos/user-1/deleted.jpg')
   })
+
+  it('cleans up the deleted visit\'s photo after resyncing Seen to another visit', async () => {
+    ;(getServerSession as jest.Mock).mockResolvedValue(session)
+    ;(hasActiveEntitlement as jest.Mock).mockResolvedValue(true)
+    ;(prisma.visit.delete as jest.Mock).mockResolvedValue({
+      id: 10,
+      artworkId: 1,
+      userId: 'user-1',
+      photo_url: 'photos/user-1/deleted.jpg',
+    })
+    const remaining = {
+      id: 9,
+      dateSeen: new Date('2025-06-01T00:00:00Z'),
+      locationSeen: null,
+      notes: null,
+      rating: null,
+      photo_url: 'photos/user-1/still-here.jpg',
+    }
+    ;(prisma.visit.findFirst as jest.Mock).mockResolvedValue(remaining)
+    ;(prisma.seen.update as jest.Mock).mockResolvedValue({})
+
+    await DELETE(new Request('http://localhost/api/visits/10', { method: 'DELETE' }), { params: { id: '10' } })
+
+    // Verify resync happened
+    expect(prisma.seen.update).toHaveBeenCalledTimes(1)
+    expect(prisma.seen.update).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({ photo_url: 'photos/user-1/still-here.jpg' }),
+    }))
+
+    // Verify cleanup called with DELETED visit's photo, not the remaining one
+    expect(deletePhotoIfOrphaned).toHaveBeenCalledWith('user-1', 1, 'photos/user-1/deleted.jpg')
+
+    // Verify order: resync must happen before cleanup
+    const seenUpdateOrder = (prisma.seen.update as jest.Mock).mock.invocationCallOrder[0]
+    const cleanupOrder = (deletePhotoIfOrphaned as jest.Mock).mock.invocationCallOrder[0]
+    expect(seenUpdateOrder).toBeLessThan(cleanupOrder)
+  })
 })
 
 describe('GET /api/visits', () => {
