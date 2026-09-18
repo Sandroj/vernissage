@@ -44,7 +44,6 @@ export default function VisitFormFields({
 }: VisitFormFieldsProps) {
   const [calOpen, setCalOpen] = useState(false)
   const [compressing, setCompressing] = useState(false)
-  const [urlDraft, setUrlDraft] = useState('')
   const t = useTranslations('VisitForm')
   const fmt = useFormatter()
 
@@ -100,22 +99,6 @@ export default function VisitFormFields({
             <span className="text-2xl">📷</span>
             <span>{compressing ? t('compressing') : t('photoUpload')}</span>
           </label>
-        )}
-
-        {!photoUrl && (
-          <input
-            type="url"
-            value={urlDraft}
-            onChange={(e) => setUrlDraft(e.target.value)}
-            onBlur={() => { if (urlDraft.trim()) onPhotoUrlChange(urlDraft.trim()) }}
-            onKeyDown={(e) => {
-              if (e.key !== 'Enter') return
-              e.preventDefault()
-              if (urlDraft.trim()) onPhotoUrlChange(urlDraft.trim())
-            }}
-            placeholder={t('photoUrlPlaceholder')}
-            className="w-full bg-white/70 border border-black/10 rounded-lg px-3 py-2 text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#4256cc]/40"
-          />
         )}
       </div>
 
