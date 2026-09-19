@@ -45,7 +45,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
   const [imgError, setImgError] = useState(false)
   const rawSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const imgSrc = proxyImg(rawSrc)
-  const missingImageLabel = artwork.artist?.slug === 'frida-kahlo' ? t('rightsRestricted') : t('missingImage')
+  const missingImageLabel = t('missingImage')
 
   return (
     <>

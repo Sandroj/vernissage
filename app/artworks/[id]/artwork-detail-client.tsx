@@ -74,7 +74,7 @@ export default function ArtworkDetailClient({
   }, [modalOpen, seen, artwork.id])
 
   const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url)
-  const missingImageLabel = artwork.artist.slug === 'frida-kahlo' ? t('rightsRestricted') : t('missingImage')
+  const missingImageLabel = t('missingImage')
   const yearLabel = artwork.year_end && artwork.year_end !== artwork.year_start
     ? `${artwork.year_start}–${artwork.year_end}`
     : artwork.year_start?.toString() ?? null

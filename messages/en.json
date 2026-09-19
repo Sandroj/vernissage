@@ -182,8 +182,7 @@
     "disputedBadge": "disputed",
     "edit": "Edit",
     "markSeen": "Mark as seen",
-    "missingImage": "No image available",
-    "rightsRestricted": "Image withheld for rights reasons"
+    "missingImage": "No image available"
   },
   "Lightbox": {
     "close": "Close",
@@ -215,7 +214,6 @@
     "saved": "Saved",
     "removed": "Marked as unseen",
     "missingImage": "No image available",
-    "rightsRestricted": "Image withheld for rights reasons",
     "source": "Source: {name}",
     "viewOriginal": "View original page",
     "loginToMark": "Sign in to mark as seen",
