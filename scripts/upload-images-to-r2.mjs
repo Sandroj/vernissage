@@ -15,6 +15,7 @@ const ACCOUNT_ID  = process.env.R2_ACCOUNT_ID
 const ACCESS_KEY  = process.env.R2_ACCESS_KEY
 const SECRET_KEY  = process.env.R2_SECRET_KEY
 const BUCKET      = process.env.R2_BUCKET ?? 'arttracker-images'
+const ONLY_PREFIX = process.env.R2_ONLY_PREFIX
 const PUBLIC_URL  = process.env.R2_PUBLIC_URL  // bijv. https://pub-xxx.r2.dev  (na public access aan te zetten)
 
 if (!ACCOUNT_ID || !ACCESS_KEY || !SECRET_KEY) {
@@ -38,7 +39,9 @@ const MIME = {
 
 const IMAGES_DIR = new URL('../public/images/artworks', import.meta.url).pathname
 const files = await readdir(IMAGES_DIR)
-const imageFiles = files.filter((f) => MIME[extname(f).toLowerCase()])
+const imageFiles = files
+  .filter((f) => MIME[extname(f).toLowerCase()])
+  .filter((f) => !ONLY_PREFIX || f.startsWith(ONLY_PREFIX))
 
 console.log(`${imageFiles.length} afbeeldingen gevonden in public/images/artworks/`)
 console.log(`Uploaden naar R2 bucket: ${BUCKET}\n`)
