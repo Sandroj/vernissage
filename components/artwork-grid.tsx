@@ -5,6 +5,7 @@ import { Search, ChevronDown, Check, SlidersHorizontal, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLocale, useTranslations } from 'next-intl'
 import { ARTIST_TAXONOMIES } from '@/lib/artwork-taxonomy'
+import { artworkPopularityScore } from '@/lib/artwork-popularity'
 
 const PAGE_SIZE = 200
 
@@ -188,13 +189,16 @@ export default function ArtworkGrid({ artworks, seenMap, isLoggedIn, onRefresh, 
       return true
     })
     // artworks arrives pre-sorted chronologically from the server, so
-    // 'chronological' needs no extra work here. 'popular' re-sorts by seen
-    // count (stable sort keeps chronological order within ties).
+    // 'chronological' needs no extra work here. 'popular' first uses a
+    // researched per-artist canon, then seen count within ties.
     if (sortBy === 'popular') {
-      return [...result].sort((a, b) => (b._count?.seenBy ?? 0) - (a._count?.seenBy ?? 0))
+      return [...result].sort((a, b) =>
+        artworkPopularityScore(artistSlug, b) - artworkPopularityScore(artistSlug, a) ||
+        (b._count?.seenBy ?? 0) - (a._count?.seenBy ?? 0)
+      )
     }
     return result
-  }, [artworks, filterTitle, hiddenTypes, filterSeen, filterMuseum, filterPeriod, filterTheme, showMissingImages, seenMap, taxonomy, sortBy])
+  }, [artworks, artistSlug, filterTitle, hiddenTypes, filterSeen, filterMuseum, filterPeriod, filterTheme, showMissingImages, seenMap, taxonomy, sortBy])
 
   // Reset pagination when filters change
   const visible = filtered.slice(0, visibleCount)

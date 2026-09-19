@@ -1,5 +1,20 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 19 september 2026 (populariteitssortering)
+
+- `Popular` in het werkenraster gebruikt nu een onderzochte curatoriële ranking
+  per huidige kunstenaar voordat `seenBy` als tie-breaker wordt gebruikt.
+  Hierdoor komen bekende werken/series zoals Van Goghs Sunflowers-varianten en
+  Bedroom-varianten bovenaan, ook wanneer ze nog weinig gebruikersregistraties
+  hebben.
+- Toegevoegd: `lib/artwork-popularity.ts` met titel-/cataloguscode-regels voor
+  Van Gogh, Monet, Vermeer, Klimt, Kandinsky en Kahlo.
+- `components/artwork-grid.tsx` sorteert bij `popular` op deze score en daarna
+  op bestaande `_count.seenBy`; chronologisch blijft ongewijzigd.
+- Verificatie: `npx jest __tests__/lib/artwork-popularity.test.ts --runInBand`,
+  `npx tsc --noEmit`, `npm run build`, `git diff --check` groen. Build toont
+  alleen bestaande `<img>`-lintwaarschuwingen.
+
 ## Aanvulling — 19 september 2026 (Kahlo visueel zonder reproducties)
 
 - Kahlo blijft bewust zonder kunstwerkreproducties vanwege de vastgelegde
