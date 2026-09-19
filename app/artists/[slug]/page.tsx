@@ -1,4 +1,4 @@
-import { prisma, hasImage, localizeArtist } from '@/lib/prisma'
+import { prisma, hasImage, localizeArtist, registerArtists } from '@/lib/prisma'
 import { getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -16,7 +16,7 @@ export default async function ArtistDetailPage({
   const session = await getServerSession(authOptions)
   const locale = await getLocale()
   const tc = await getTranslations('Countries')
-  const catalogueWhere = params.slug === 'vincent-van-gogh'
+  const catalogueWhere = registerArtists.some((a) => a.slug === params.slug)
     ? { catalogue_id: { not: null } }
     : {}
 

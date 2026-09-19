@@ -17,13 +17,19 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export const hasImage = { OR: [{ image_url: { not: null } }, { image_local_path: { not: null } }] }
 
-// Van Gogh Worldwide is the primary register for Vincent van Gogh. Legacy
-// WikiArt rows without a verified F number stay in the database for audit and
-// safe relation preservation, but are not part of the public catalogue.
+// Artists with a frozen primary register (Van Gogh Worldwide F numbers,
+// Wildenstein W numbers). Legacy WikiArt rows without a verified register
+// number stay in the database for audit and safe relation preservation, but
+// are not part of the public catalogue.
+export const registerArtists = [
+  { name: 'Vincent van Gogh', slug: 'vincent-van-gogh' },
+  { name: 'Claude Monet', slug: 'claude-monet' },
+]
+
 export const primaryCatalogue = {
   OR: [
     { catalogue_id: { not: null } },
-    { artist: { is: { name: { not: 'Vincent van Gogh' } } } },
+    { artist: { is: { name: { notIn: registerArtists.map((a) => a.name) } } } },
   ],
 }
 
