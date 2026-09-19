@@ -1,5 +1,23 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 19 september 2026 (Kahlo visueel zonder reproducties)
+
+- Kahlo blijft bewust zonder kunstwerkreproducties vanwege de vastgelegde
+  rechtenkeuze in de datarepo: geen Banco de México/ARS-licentie en nog geen
+  geofenced beeldroute. Deze wijziging publiceert dus géén Kahlo-werken.
+- Wel toegevoegd: een gedeelde `ArtworkPlaceholder` met per werk variërende
+  grafische, niet-reproductieve vlakken. Kahlo-kaarten en werkdetails tonen nu
+  "Beeld niet gepubliceerd wegens rechten" in plaats van een kaal
+  "Geen afbeelding"-blok.
+- Kunstenaarskaarten vallen terug op `artist.portrait_url` als een kunstenaar
+  geen werkbeeld heeft; de Kahlo-hero gebruikt ook haar portret als
+  achtergrond wanneer er geen artwork-cover is.
+- Gewijzigd: `components/artwork-placeholder.tsx`, `artwork-card.tsx`,
+  `artist-card.tsx`, `app/artists/[slug]/artist-detail-client.tsx`,
+  `app/artworks/[id]/artwork-detail-client.tsx`, `messages/{nl,en}.json`.
+- Verificatie: `npx tsc --noEmit`, `git diff --check`, `npm run build` groen.
+  Build toont alleen de bestaande `<img>`-lintwaarschuwingen.
+
 ## Aanvulling — 16 september 2026 (admin-tabindeling)
 
 - De admin opent nu standaard met `Werk bewerken`: zoeken, een bestaand record

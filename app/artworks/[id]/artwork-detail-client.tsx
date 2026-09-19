@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, ImageOff, MapPin } from 'lucide-react'
+import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
@@ -10,6 +10,7 @@ import ShareMenu from '@/components/share-menu'
 import { cn, proxyImg } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
+import ArtworkPlaceholder from '@/components/artwork-placeholder'
 
 interface ArtworkDetailClientProps {
   artwork: {
@@ -73,6 +74,7 @@ export default function ArtworkDetailClient({
   }, [modalOpen, seen, artwork.id])
 
   const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url)
+  const missingImageLabel = artwork.artist.slug === 'frida-kahlo' ? t('rightsRestricted') : t('missingImage')
   const yearLabel = artwork.year_end && artwork.year_end !== artwork.year_start
     ? `${artwork.year_start}–${artwork.year_end}`
     : artwork.year_start?.toString() ?? null
@@ -141,9 +143,13 @@ export default function ArtworkDetailClient({
                 className="max-h-[78vh] w-full rounded-[1.2rem] object-contain"
               />
             ) : (
-              <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-[1.2rem] bg-[#ddd4c4] text-stone-500">
-                <ImageOff size={38} aria-hidden="true" />
-                <p className="text-sm font-medium">{t('missingImage')}</p>
+              <div className="aspect-[4/3] w-full overflow-hidden rounded-[1.2rem]">
+                <ArtworkPlaceholder
+                  title={artwork.title}
+                  year={artwork.year_start}
+                  artistSlug={artwork.artist.slug}
+                  label={missingImageLabel}
+                />
               </div>
             )}
           </div>

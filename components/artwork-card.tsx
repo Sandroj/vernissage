@@ -1,10 +1,11 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, CheckCircle2, HelpCircle, ImageOff, MapPin } from 'lucide-react'
+import { Check, CheckCircle2, HelpCircle, MapPin } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
 import { cn, proxyImg } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
+import ArtworkPlaceholder from '@/components/artwork-placeholder'
 
 interface Artwork {
   id: number
@@ -44,6 +45,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
   const [imgError, setImgError] = useState(false)
   const rawSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const imgSrc = proxyImg(rawSrc)
+  const missingImageLabel = artwork.artist?.slug === 'frida-kahlo' ? t('rightsRestricted') : t('missingImage')
 
   return (
     <>
@@ -63,10 +65,13 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
               loading="lazy"
             />
           ) : (
-            <span className="flex size-full flex-col items-center justify-center gap-2 bg-[#e7e1d6] px-4 text-center text-stone-400">
-              <ImageOff size={25} aria-hidden="true" />
-              <span className="text-[11px] font-medium uppercase tracking-[.08em]">{t('missingImage')}</span>
-            </span>
+            <ArtworkPlaceholder
+              title={artwork.title}
+              year={artwork.year_start}
+              artistSlug={artwork.artist?.slug}
+              label={missingImageLabel}
+              compact
+            />
           )}
         </Link>
 

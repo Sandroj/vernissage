@@ -182,7 +182,8 @@
     "disputedBadge": "omstreden",
     "edit": "Bewerken",
     "markSeen": "Markeer gezien",
-    "missingImage": "Geen afbeelding beschikbaar"
+    "missingImage": "Geen afbeelding beschikbaar",
+    "rightsRestricted": "Beeld niet gepubliceerd wegens rechten"
   },
   "Lightbox": {
     "close": "Sluiten",
@@ -214,6 +215,7 @@
     "saved": "Opgeslagen",
     "removed": "Markering verwijderd",
     "missingImage": "Geen afbeelding beschikbaar",
+    "rightsRestricted": "Beeld niet gepubliceerd wegens rechten",
     "source": "Bron: {name}",
     "viewOriginal": "Bekijk originele pagina",
     "loginToMark": "Inloggen om te markeren",

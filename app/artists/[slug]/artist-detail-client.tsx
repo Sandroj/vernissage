@@ -65,6 +65,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   const total = artist.artworks.length
   const pct = total > 0 ? (seenCount / total) * 100 : 0
   const cover = proxyImg(artist.artworks.find((a) => a.image_url || a.image_local_path)?.image_local_path ?? artist.artworks.find((a) => a.image_url || a.image_local_path)?.image_url)
+  const heroImage = cover ?? artist.portrait_url ?? undefined
 
   const years = artist.birth_year
     ? artist.death_year
@@ -120,7 +121,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
     <div className="pb-12">
       {/* Artist hero */}
       <div className="relative mb-10 min-h-[430px] overflow-hidden rounded-[2rem] bg-[#25231f] p-6 text-white sm:p-9 lg:p-12">
-        {cover && <img src={cover} alt="" className="absolute inset-0 size-full object-cover opacity-25 blur-[1px]" />}
+        {heroImage && <img src={heroImage} alt="" className="absolute inset-0 size-full object-cover opacity-25 blur-[1px]" />}
         <div className="absolute inset-0 bg-gradient-to-r from-[#24211d] via-[#24211d]/88 to-[#24211d]/30" />
         <div className="relative flex min-h-[350px] flex-col justify-end gap-7 sm:flex-row sm:items-end sm:justify-start">
           {/* Portrait */}

@@ -33,7 +33,7 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
     : null
 
   const [imgError, setImgError] = useState(false)
-  const imgSrc = imgError ? null : proxyImg(featuredImage)
+  const imgSrc = imgError ? null : proxyImg(featuredImage ?? artist.portrait_url)
 
   return (
     <Link
