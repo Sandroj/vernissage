@@ -140,6 +140,11 @@
       ,"rembrandtPeak": "Bloeiperiode · 1635–1642"
       ,"rembrandtDeepening": "Verdieping · 1643–1656"
       ,"rembrandtLate": "Late werk · 1657–1669"
+      ,"kusamaEarlyJapan": "Vroeg Japan · 1945–1957"
+      ,"kusamaNewYork": "New York-jaren · 1958–1973"
+      ,"kusamaReturnJapan": "Terug in Japan · 1974–1992"
+      ,"kusamaInternational": "Internationale erkenning · 1993–2006"
+      ,"kusamaLate": "Late werk · 2007–2026"
     },
     "theme": {
       "sunflowers": "Zonnebloemen",
@@ -176,6 +181,11 @@
       ,"rembrandtGroupPortraits": "Groepsportretten"
       ,"rembrandtPortraits": "Portretten van anderen"
       ,"rembrandtLandscapes": "Landschappen"
+      ,"kusamaInfinityNets": "Infinity Nets"
+      ,"kusamaAccumulation": "Accumulation"
+      ,"kusamaPumpkins": "Pompoenen"
+      ,"kusamaInfinityMirrorRooms": "Infinity Mirror Rooms"
+      ,"kusamaDotsFlowers": "Stippen en bloemen"
     },
     "type": {
       "painting": "Schilderijen",
@@ -183,6 +193,9 @@
       "watercolor": "Aquarellen",
       "work on paper": "Werk op papier",
       "print": "Prenten",
+      "sculpture": "Sculpturen",
+      "installation": "Installaties",
+      "photograph": "Foto's",
       "unclassified": "Ongeclassificeerd"
     }
   },
@@ -236,6 +249,9 @@
       "watercolor": "Aquarel",
       "work on paper": "Werk op papier",
       "print": "Prent",
+      "sculpture": "Sculptuur",
+      "installation": "Installatie",
+      "photograph": "Foto",
       "unclassified": "Ongeclassificeerd"
     }
   },

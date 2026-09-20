@@ -140,6 +140,11 @@
       ,"rembrandtPeak": "Peak years · 1635–1642"
       ,"rembrandtDeepening": "Deepening · 1643–1656"
       ,"rembrandtLate": "Late work · 1657–1669"
+      ,"kusamaEarlyJapan": "Early Japan · 1945–1957"
+      ,"kusamaNewYork": "New York years · 1958–1973"
+      ,"kusamaReturnJapan": "Return to Japan · 1974–1992"
+      ,"kusamaInternational": "International recognition · 1993–2006"
+      ,"kusamaLate": "Late work · 2007–2026"
     },
     "theme": {
       "sunflowers": "Sunflowers",
@@ -176,6 +181,11 @@
       ,"rembrandtGroupPortraits": "Group portraits"
       ,"rembrandtPortraits": "Portraits of others"
       ,"rembrandtLandscapes": "Landscapes"
+      ,"kusamaInfinityNets": "Infinity Nets"
+      ,"kusamaAccumulation": "Accumulation"
+      ,"kusamaPumpkins": "Pumpkins"
+      ,"kusamaInfinityMirrorRooms": "Infinity Mirror Rooms"
+      ,"kusamaDotsFlowers": "Dots and flowers"
     },
     "type": {
       "painting": "Paintings",
@@ -183,6 +193,9 @@
       "watercolor": "Watercolours",
       "work on paper": "Works on paper",
       "print": "Prints",
+      "sculpture": "Sculptures",
+      "installation": "Installations",
+      "photograph": "Photographs",
       "unclassified": "Unclassified"
     }
   },
@@ -236,6 +249,9 @@
       "watercolor": "Watercolour",
       "work on paper": "Work on paper",
       "print": "Print",
+      "sculpture": "Sculpture",
+      "installation": "Installation",
+      "photograph": "Photograph",
       "unclassified": "Unclassified"
     }
   },

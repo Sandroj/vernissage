@@ -140,4 +140,21 @@ export const ARTIST_TAXONOMIES: Record<string, ArtistTaxonomy> = {
       { key: 'rembrandt-landscapes', labelKey: 'theme.rembrandtLandscapes', matches: titleMatches(/landscape/i) },
     ],
   },
+  'yayoi-kusama': {
+    periods: [
+      { key: 'kusama-early-japan', labelKey: 'period.kusamaEarlyJapan', matches: yearIn(1945, 1957) },
+      { key: 'kusama-new-york', labelKey: 'period.kusamaNewYork', matches: yearIn(1958, 1973) },
+      { key: 'kusama-return-japan', labelKey: 'period.kusamaReturnJapan', matches: yearIn(1974, 1992) },
+      { key: 'kusama-international', labelKey: 'period.kusamaInternational', matches: yearIn(1993, 2006) },
+      { key: 'kusama-late', labelKey: 'period.kusamaLate', matches: yearIn(2007, 2026) },
+    ],
+    themes: [
+      { key: 'kusama-infinity-nets', labelKey: 'theme.kusamaInfinityNets', matches: titleMatches(/\bnets?\b/i) },
+      { key: 'kusama-accumulation', labelKey: 'theme.kusamaAccumulation', matches: titleMatches(/\baccumulation/i) },
+      { key: 'kusama-pumpkins', labelKey: 'theme.kusamaPumpkins', matches: titleMatches(/\bpumpkins?\b/i) },
+      { key: 'kusama-infinity-mirror-rooms', labelKey: 'theme.kusamaInfinityMirrorRooms', matches: titleMatches(/infinity mirror room/i) },
+      { key: 'kusama-dots-flowers', labelKey: 'theme.kusamaDotsFlowers', matches: titleMatches(/\bdots?\b|\bflowers?\b|tulips?/i) },
+      { key: 'kusama-self-portraits', labelKey: 'theme.selfPortraits', matches: titleMatches(/self[- ]?portrait/i) },
+    ],
+  },
 }
