@@ -125,6 +125,34 @@ const RULES: Record<string, PopularityRule[]> = {
     { score: 820, matches: titleIs('Diego in My Thoughts (Thinking of Diego) (Self-Portrait as a Tehuana)') },
     { score: 800, matches: titleIs('Viva la Vida (Long Live Life)') },
   ],
+  'rembrandt': [
+    { score: 1000, matches: codeMatches('RRP-190') }, // The Night Watch
+    { score: 980, matches: codeMatches('RRP-76') }, // The Anatomy Lesson of Dr. Tulp
+    { score: 960, matches: codeMatches('RRP-319') }, // Self Portrait with Two Circles
+    { score: 940, matches: codeMatches('RRP-312') }, // The Jewish Bride
+    { score: 920, matches: codeMatches('RRP-320') }, // The Return of the Prodigal Son
+    { score: 900, matches: codeMatches('RRP-299') }, // The Syndics ('Staalmeesters')
+    { score: 880, matches: codeMatches('RRP-143') }, // Belshazzar's Feast
+    { score: 860, matches: codeMatches('RRP-236') }, // The Polish Rider
+    { score: 840, matches: codeMatches('RRP-149') }, // Danaë
+    { score: 820, matches: codeMatches('RRP-231') }, // Bathsheba at her Toilet
+    { score: 800, matches: codeMatches('RRP-228') }, // Aristotle with a Bust of Homer
+    { score: 780, matches: codeMatches('RRP-135') }, // Self-portrait as the Prodigal Son in the Tavern (with Saskia)
+    { score: 760, matches: textMatches(/self[- ]?portrait/) },
+  ],
+  'yayoi-kusama': [
+    { score: 1000, matches: codeMatches('YK-1994-pumpkin-no-1') }, // the yellow Pumpkin, Naoshima
+    { score: 980, matches: codeMatches('YK-2013-infinity-mirrored-room-the-souls-of-millions-of-light-years-away') }, // The Broad
+    { score: 960, matches: textMatches(/narcissus garden/) },
+    { score: 940, matches: codeMatches('YK-2017-infinity-mirrored-room-filled-with-the-brilliance-of-life') }, // Tate
+    { score: 920, matches: codeMatches('YK-2020-dancing-pumpkin') }, // NGV
+    { score: 900, matches: codeMatches('YK-2006-red-pumpkin') }, // Naoshima
+    { score: 880, matches: codeMatches('YK-2024-infinite-accumulation') }, // Liverpool Street Station
+    { score: 860, matches: textMatches(/infinity nets?/) },
+    { score: 840, matches: codeMatches('YK-2002-the-obliteration-room') }, // QAGOMA
+    { score: 820, matches: codeMatches('YK-2016-all-the-eternal-love-i-have-for-the-pumpkins') }, // Dallas
+    { score: 800, matches: textMatches(/\baccumulation\b/) },
+  ],
 }
 
 export function artworkPopularityScore(artistSlug: string | undefined, artwork: PopularityArtwork) {
