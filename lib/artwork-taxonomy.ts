@@ -124,4 +124,20 @@ export const ARTIST_TAXONOMIES: Record<string, ArtistTaxonomy> = {
       { key: 'kahlo-portraits', labelKey: 'theme.kahloPortraits', matches: titleMatches(/\bportrait of\b|\bretrato de\b/i) },
     ],
   },
+  'rembrandt': {
+    periods: [
+      { key: 'rembrandt-leiden', labelKey: 'period.rembrandtLeiden', matches: yearIn(1620, 1631) },
+      { key: 'rembrandt-early-amsterdam', labelKey: 'period.rembrandtEarlyAmsterdam', matches: yearIn(1632, 1634) },
+      { key: 'rembrandt-peak', labelKey: 'period.rembrandtPeak', matches: yearIn(1635, 1642) },
+      { key: 'rembrandt-deepening', labelKey: 'period.rembrandtDeepening', matches: yearIn(1643, 1656) },
+      { key: 'rembrandt-late', labelKey: 'period.rembrandtLate', matches: yearIn(1657, 1669) },
+    ],
+    themes: [
+      { key: 'rembrandt-self-portraits', labelKey: 'theme.selfPortraits', matches: titleMatches(/self[- ]?portrait/i) },
+      { key: 'rembrandt-biblical', labelKey: 'theme.rembrandtBiblical', matches: titleMatches(/prodigal|susanna|bathsheba|jacob|joseph|abraham|\bdavid\b|christ|apostle|tobit|samson|belshazzar|potiphar/i) },
+      { key: 'rembrandt-group-portraits', labelKey: 'theme.rembrandtGroupPortraits', matches: titleMatches(/night watch|anatomy lesson|syndics|company of/i) },
+      { key: 'rembrandt-portraits', labelKey: 'theme.rembrandtPortraits', matches: titleMatches(/\bportrait of\b/i) },
+      { key: 'rembrandt-landscapes', labelKey: 'theme.rembrandtLandscapes', matches: titleMatches(/landscape/i) },
+    ],
+  },
 }
