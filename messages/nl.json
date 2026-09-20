@@ -135,6 +135,11 @@
       ,"kahloReturnMexico": "Terug in Mexico · 1934–1940"
       ,"kahloInternational": "Internationale erkenning · 1941–1949"
       ,"kahloLate": "Late werk · 1950–1954"
+      ,"kusamaEarlyJapan": "Vroeg Japan · 1945–1957"
+      ,"kusamaNewYork": "New York-jaren · 1958–1973"
+      ,"kusamaReturnJapan": "Terug in Japan · 1974–1992"
+      ,"kusamaInternational": "Internationale erkenning · 1993–2006"
+      ,"kusamaLate": "Late werk · 2007–2026"
     },
     "theme": {
       "sunflowers": "Zonnebloemen",
@@ -167,6 +172,11 @@
       ,"kahloDiego": "Diego Rivera"
       ,"kahloBody": "Lichaam en ziekte"
       ,"kahloPortraits": "Portretten van anderen"
+      ,"kusamaInfinityNets": "Infinity Nets"
+      ,"kusamaAccumulation": "Accumulation"
+      ,"kusamaPumpkins": "Pompoenen"
+      ,"kusamaInfinityMirrorRooms": "Infinity Mirror Rooms"
+      ,"kusamaDotsFlowers": "Stippen en bloemen"
     },
     "type": {
       "painting": "Schilderijen",
@@ -174,6 +184,9 @@
       "watercolor": "Aquarellen",
       "work on paper": "Werk op papier",
       "print": "Prenten",
+      "sculpture": "Sculpturen",
+      "installation": "Installaties",
+      "photograph": "Foto's",
       "unclassified": "Ongeclassificeerd"
     }
   },
@@ -227,6 +240,9 @@
       "watercolor": "Aquarel",
       "work on paper": "Werk op papier",
       "print": "Prent",
+      "sculpture": "Sculptuur",
+      "installation": "Installatie",
+      "photograph": "Foto",
       "unclassified": "Ongeclassificeerd"
     }
   },

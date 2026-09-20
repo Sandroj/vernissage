@@ -135,6 +135,11 @@
       ,"kahloReturnMexico": "Return to Mexico · 1934–1940"
       ,"kahloInternational": "International recognition · 1941–1949"
       ,"kahloLate": "Late work · 1950–1954"
+      ,"kusamaEarlyJapan": "Early Japan · 1945–1957"
+      ,"kusamaNewYork": "New York years · 1958–1973"
+      ,"kusamaReturnJapan": "Return to Japan · 1974–1992"
+      ,"kusamaInternational": "International recognition · 1993–2006"
+      ,"kusamaLate": "Late work · 2007–2026"
     },
     "theme": {
       "sunflowers": "Sunflowers",
@@ -167,6 +172,11 @@
       ,"kahloDiego": "Diego Rivera"
       ,"kahloBody": "Body and illness"
       ,"kahloPortraits": "Portraits of others"
+      ,"kusamaInfinityNets": "Infinity Nets"
+      ,"kusamaAccumulation": "Accumulation"
+      ,"kusamaPumpkins": "Pumpkins"
+      ,"kusamaInfinityMirrorRooms": "Infinity Mirror Rooms"
+      ,"kusamaDotsFlowers": "Dots and flowers"
     },
     "type": {
       "painting": "Paintings",
@@ -174,6 +184,9 @@
       "watercolor": "Watercolours",
       "work on paper": "Works on paper",
       "print": "Prints",
+      "sculpture": "Sculptures",
+      "installation": "Installations",
+      "photograph": "Photographs",
       "unclassified": "Unclassified"
     }
   },
@@ -227,6 +240,9 @@
       "watercolor": "Watercolour",
       "work on paper": "Work on paper",
       "print": "Print",
+      "sculpture": "Sculpture",
+      "installation": "Installation",
+      "photograph": "Photograph",
       "unclassified": "Unclassified"
     }
   },
