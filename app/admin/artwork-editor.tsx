@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Check, Image as ImageIcon, RotateCcw, Search, Upload, Save } from 'lucide-react'
+import { Check, Image as ImageIcon, Link as LinkIcon, RotateCcw, Search, Upload, Save } from 'lucide-react'
 
 type Museum = { id: number; name: string; city: string; country: string }
 type Result = { id: number; title: string; year_start: number | null; artist: { name: string } }
 type Loan = { id: number; current: boolean; fromOwnerName: string | null; fromMuseum: Museum | null; toMuseum: Museum; endAt: string | null; sourceUrl: string | null }
-type Artwork = { [key: string]: unknown; id: number; title: string; museumId: number | null; artist: { name: string }; museum: Museum | null; loans: Loan[]; edits: { id: number; editorEmail: string; createdAt: string }[] }
+type Artwork = { [key: string]: unknown; id: number; title: string; museumId: number | null; artist: { name: string }; museum: Museum | null; loans: Loan[]; edits: { id: number; editorEmail: string; createdAt: string; sourceUrl: string | null }[] }
 type FormValues = Record<string, string | number | null>
 
 const textFields = [
@@ -39,6 +39,8 @@ export default function ArtworkEditor() {
   const [endAt, setEndAt] = useState('')
   const [loanSource, setLoanSource] = useState('')
   const [notice, setNotice] = useState('')
+  const [fetchUrl, setFetchUrl] = useState('')
+  const [pendingSourceUrl, setPendingSourceUrl] = useState<string | null>(null)
 
   useEffect(() => { fetch('/api/admin/museums').then((r) => r.ok ? r.json() : []).then(setMuseums) }, [])
   useEffect(() => {
@@ -63,19 +65,22 @@ export default function ArtworkEditor() {
     setQuery(`${String(data.title)} — ${data.artist.name}`)
     setResults([])
     setFromMuseumId(data.museumId ? String(data.museumId) : '')
+    setFetchUrl(''); setPendingSourceUrl(null)
   }
 
   async function saveArtwork(event: React.FormEvent) {
     event.preventDefault()
     if (!artwork) return
     setBusy(true); setNotice('')
-    const payload: FormValues = { ...values, museumId: values.museumId || null }
+    const payload: FormValues & { sourceUrl?: string | null } = { ...values, museumId: values.museumId || null }
     for (const field of ['year_start', 'year_end']) payload[field] = values[field] === '' ? null : Number(values[field])
+    if (pendingSourceUrl) payload.sourceUrl = pendingSourceUrl
     const response = await fetch(`/api/admin/artworks/${artwork.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
     const data = await response.json()
     setBusy(false)
     if (!response.ok) { setNotice(data.error ?? 'Opslaan mislukt'); return }
     setNotice('Werkgegevens opgeslagen. De wijziging staat in de beheergeschiedenis.')
+    setPendingSourceUrl(null)
     await openArtwork(artwork.id)
   }
 
@@ -89,6 +94,27 @@ export default function ArtworkEditor() {
     if (!response.ok) { setNotice(data.error ?? 'Upload mislukt'); return }
     setValues((old) => ({ ...old, image_url: data.imageUrl, image_retrieved_at: new Date().toISOString().slice(0, 10) }))
     setNotice('Afbeelding staat in R2. Vul de bron en rechtennotitie in en sla het werk op.')
+  }
+
+  async function fetchFromUrl() {
+    if (!fetchUrl.trim()) return
+    setBusy(true); setNotice('Bron ophalen…')
+    const response = await fetch('/api/admin/images/fetch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: fetchUrl.trim() }) })
+    const data = await response.json()
+    setBusy(false)
+    if (!response.ok) { setNotice(data.error ?? 'Ophalen mislukt'); return }
+    setValues((old) => ({
+      ...old,
+      image_url: data.imageUrl,
+      image_source_url: data.image_source_url,
+      image_source_name: data.image_source_name,
+      image_retrieved_at: new Date().toISOString().slice(0, 10),
+      ...(data.title ? { title: old.title || data.title } : {}),
+      ...(data.medium_raw ? { medium_raw: old.medium_raw || data.medium_raw } : {}),
+      ...(data.dimensions_raw ? { dimensions_raw: old.dimensions_raw || data.dimensions_raw } : {}),
+    }))
+    setPendingSourceUrl(data.sourceUrl)
+    setNotice('Voorstel opgehaald. Controleer de velden, vul de rechtennotitie in en sla het werk op.')
   }
 
   async function addLoan(event: React.FormEvent) {
@@ -130,6 +156,11 @@ export default function ArtworkEditor() {
           {key.includes('note') || key === 'alternate_titles' ? <textarea value={values[key] == null ? '' : String(values[key])} onChange={(e) => setValues({ ...values, [key]: e.target.value })} rows={2} className="mt-1 w-full rounded-lg border border-stone-300 p-2.5" /> : <input type={key.startsWith('year_') ? 'number' : key === 'image_retrieved_at' ? 'date' : 'text'} value={values[key] ? String(values[key]).slice(0, 10) : ''} onChange={(e) => setValues({ ...values, [key]: e.target.value })} className="mt-1 w-full rounded-lg border border-stone-300 p-2.5" />}
         </label> })}</div></div>)}
         {values.image_url && <div className="rounded-xl border border-stone-200 bg-stone-50 p-3"><div className="mb-2 flex items-center gap-2 text-xs font-semibold text-stone-500"><ImageIcon size={14} /> Voorbeeld opgeslagen afbeelding</div><img src={String(values.image_url)} alt="Voorbeeld van de te koppelen afbeelding" className="max-h-80 rounded-lg object-contain" /></div>}
+        <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50 p-4 text-sm text-stone-600">
+          <span className="flex items-center gap-2 font-semibold"><LinkIcon size={15} /> Ophalen via URL</span>
+          <span className="mt-1 block text-xs text-stone-400">Plak een link naar de afbeelding zelf, of naar de pagina waarop hij staat — Vernissage haalt de afbeelding op en probeert titel, materiaal en afmetingen mee te lezen. Lege velden vullen zich; ingevulde velden blijven staan.</span>
+          <div className="mt-3 flex gap-2"><input type="url" value={fetchUrl} onChange={(e) => setFetchUrl(e.target.value)} placeholder="https://…" disabled={busy} className="w-full rounded-lg border border-stone-300 p-2.5 text-sm" /><button type="button" disabled={busy || !fetchUrl.trim()} onClick={fetchFromUrl} className="shrink-0 rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-xs font-semibold text-stone-700 disabled:opacity-50">Ophalen</button></div>
+        </div>
         <label className="block rounded-xl border border-dashed border-stone-300 bg-stone-50 p-4 text-sm text-stone-600"><span className="flex items-center gap-2 font-semibold"><Upload size={15} /> Nieuwe afbeelding uploaden</span><span className="mt-1 block text-xs text-stone-400">JPEG, PNG of WebP tot 25 MB. Vernissage draait de afbeelding automatisch recht, schaalt tot 2400 px en comprimeert naar WebP.</span><input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={(e) => uploadImage(e.target.files?.[0])} className="mt-3 block w-full text-sm" /></label>
         <div className="flex flex-wrap items-center gap-3 border-t border-stone-100 pt-4"><button disabled={busy} className="inline-flex items-center gap-2 rounded-lg bg-[#4256cc] px-4 py-2.5 text-sm font-semibold text-white shadow-sm disabled:opacity-50"><Save size={15} /> {busy ? 'Bezig…' : 'Wijzigingen opslaan'}</button><span className="inline-flex items-center gap-1.5 text-xs text-stone-400"><Check size={14} className="text-emerald-600" /> Iedere opslag wordt gelogd</span></div>
       </form>
@@ -146,7 +177,7 @@ export default function ArtworkEditor() {
           <button disabled={busy} className="w-fit rounded-lg border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-700 disabled:opacity-50">Bruikleen registreren</button>
         </form>
       </div>
-      <div className="text-xs text-stone-500">Recente aanpassingen: {artwork.edits.length ? artwork.edits.map((edit) => `${new Date(edit.createdAt).toLocaleDateString()} · ${edit.editorEmail}`).join(' / ') : 'nog geen'}</div>
+      <div className="text-xs text-stone-500">Recente aanpassingen: {artwork.edits.length ? artwork.edits.map((edit) => <span key={edit.id} className="mr-2">{new Date(edit.createdAt).toLocaleDateString()} · {edit.editorEmail}{edit.sourceUrl && <> · <a className="underline" href={edit.sourceUrl} target="_blank" rel="noreferrer">bron</a></>}</span>) : 'nog geen'}</div>
     </>}
   </section>
 }

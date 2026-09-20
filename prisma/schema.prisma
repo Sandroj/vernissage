@@ -235,6 +235,7 @@ model ArtworkEdit {
   editorEmail String
   beforeJson  String
   afterJson   String
+  sourceUrl   String?
   createdAt   DateTime @default(now())
   artwork     Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
 

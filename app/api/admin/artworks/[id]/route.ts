@@ -13,7 +13,7 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   if (!await getAdminEmail()) return NextResponse.json({ error: 'Niet bevoegd' }, { status: 403 })
   const id = Number(params.id)
   if (!Number.isInteger(id)) return NextResponse.json({ error: 'Ongeldig werk' }, { status: 400 })
-  const artwork = await prisma.artwork.findUnique({ where: { id }, include: { artist: true, museum: true, loans: { orderBy: { createdAt: 'desc' }, take: 8, include: { fromMuseum: true, toMuseum: true } }, edits: { orderBy: { createdAt: 'desc' }, take: 8, select: { id: true, editorEmail: true, createdAt: true } } } })
+  const artwork = await prisma.artwork.findUnique({ where: { id }, include: { artist: true, museum: true, loans: { orderBy: { createdAt: 'desc' }, take: 8, include: { fromMuseum: true, toMuseum: true } }, edits: { orderBy: { createdAt: 'desc' }, take: 8, select: { id: true, editorEmail: true, createdAt: true, sourceUrl: true } } } })
   return artwork ? NextResponse.json(artwork) : NextResponse.json({ error: 'Niet gevonden' }, { status: 404 })
 }
 
@@ -47,6 +47,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const value = data[urlField]
     if (typeof value === 'string' && value && !/^https:\/\//i.test(value)) return NextResponse.json({ error: `${urlField} moet een https-link zijn` }, { status: 400 })
   }
+  const sourceUrl = typeof body.sourceUrl === 'string' ? body.sourceUrl.trim() : null
+  if (sourceUrl && !/^https:\/\//i.test(sourceUrl)) return NextResponse.json({ error: 'sourceUrl moet een https-link zijn' }, { status: 400 })
 
   try {
     const before = await prisma.artwork.findUniqueOrThrow({ where: { id } })
@@ -58,7 +60,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
     const after = await prisma.$transaction(async (tx) => {
       const updated = await tx.artwork.update({ where: { id }, data: data as never })
-      await tx.artworkEdit.create({ data: { artworkId: id, editorEmail, beforeJson: JSON.stringify(before), afterJson: JSON.stringify(updated) } })
+      await tx.artworkEdit.create({ data: { artworkId: id, editorEmail, beforeJson: JSON.stringify(before), afterJson: JSON.stringify(updated), sourceUrl } })
       return updated
     })
     return NextResponse.json(after)
