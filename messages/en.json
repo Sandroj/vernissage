@@ -184,6 +184,9 @@
       "watercolor": "Watercolours",
       "work on paper": "Works on paper",
       "print": "Prints",
+      "sculpture": "Sculptures",
+      "installation": "Installations",
+      "photograph": "Photographs",
       "unclassified": "Unclassified"
     }
   },
@@ -237,6 +240,9 @@
       "watercolor": "Watercolour",
       "work on paper": "Work on paper",
       "print": "Print",
+      "sculpture": "Sculpture",
+      "installation": "Installation",
+      "photograph": "Photograph",
       "unclassified": "Unclassified"
     }
   },
