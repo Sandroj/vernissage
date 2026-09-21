@@ -43,16 +43,20 @@ jobs:
       - name: Boot simulator, install and launch the app
         run: |
           UDID=$(xcrun simctl list devices available | grep -m1 'iPhone 15 (' | grep -oE '[0-9A-F-]{36}')
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
           xcrun simctl boot "$UDID"
           xcrun simctl install "$UDID" build/Build/Products/Debug-iphonesimulator/App.app
+          xcrun simctl spawn "$UDID" log stream --predicate 'process == "App"' > ios-app-log.txt 2>&1 &
           xcrun simctl launch "$UDID" com.pinacot.app
-          sleep 15
+          sleep 30
           xcrun simctl io "$UDID" screenshot ios-screenshot.png
 
       - uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-screenshot
-          path: ios-screenshot.png
+          path: |
+            ios-screenshot.png
+            ios-app-log.txt
 
   android-emulator:
     runs-on: ubuntu-latest
@@ -84,12 +88,16 @@ jobs:
           api-level: 34
           arch: x86_64
           script: |
+            adb logcat -c
             adb install android/app/build/outputs/apk/debug/app-debug.apk
             adb shell monkey -p com.pinacot.app -c android.intent.category.LAUNCHER 1
-            sleep 15
+            sleep 30
             adb exec-out screencap -p > android-screenshot.png
+            adb logcat -d > android-logcat.txt
 
       - uses: actions/upload-artifact@v4
         with:
           name: android-emulator-screenshot
-          path: android-screenshot.png
+          path: |
+            android-screenshot.png
+            android-logcat.txt
