@@ -2,11 +2,12 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { signOut } from 'next-auth/react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { CheckCircle2, ChevronDown, Eye, LogOut, Mail, Settings2, Sparkles, User } from 'lucide-react'
+import { CheckCircle2, ChevronDown, Download, Eye, LogOut, Mail, Settings2, Sparkles, Trash2, User } from 'lucide-react'
 import { useTranslations, useFormatter } from 'next-intl'
 import { proxyImg } from '@/lib/utils'
 import Lightbox from '@/components/lightbox'
@@ -24,7 +25,7 @@ interface RecentSeen {
 }
 
 interface ProfileClientProps {
-  user: { id: string; name?: string | null; email: string; image?: string | null; seenPublic: boolean; createdAt: Date }
+  user: { id: string; name?: string | null; email: string; image?: string | null; seenPublic: boolean; createdAt: Date; hasPassword: boolean }
   seenCount: number
   seenByArtist: Array<{
     artist: { id: number; name: string; slug: string }
@@ -39,6 +40,10 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)
   const [openPhoto, setOpenPhoto] = useState<{ url: string; title: string; artworkId: number } | null>(null)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [confirmText, setConfirmText] = useState('')
+  const [deletePassword, setDeletePassword] = useState('')
+  const [deleting, setDeleting] = useState(false)
   const t = useTranslations('Profile')
   const fmt = useFormatter()
 
@@ -52,6 +57,22 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
     setSaving(false)
     if (res.ok) toast.success(t('saved'))
     else toast.error(t('error'))
+  }
+
+  async function deleteAccount() {
+    setDeleting(true)
+    const res = await fetch('/api/account', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: deletePassword }),
+    })
+    if (res.ok) {
+      await signOut({ callbackUrl: '/' })
+      return
+    }
+    setDeleting(false)
+    const body = await res.json().catch(() => ({}))
+    toast.error(body.error ?? t('error'))
   }
 
   const initials = (user.name ?? user.email)
@@ -164,6 +185,59 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
           </div>
         </section>
       </div>
+
+      <section className="paper-card mt-6 rounded-[1.75rem] p-5 sm:p-7">
+        <div className="mb-5 flex items-center gap-2"><User size={16} className="text-[#4256cc]" /><h2 className="font-display text-2xl font-medium text-stone-900">{t('dataTitle')}</h2></div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-stone-800">{t('exportTitle')}</p>
+            <p className="mt-1 text-xs leading-relaxed text-stone-500">{t('exportText')}</p>
+          </div>
+          <a
+            href="/api/account/export"
+            download
+            className={buttonVariants({ variant: 'outline', className: 'gap-2 rounded-full border-black/10 bg-white/60 text-stone-700 hover:bg-white' })}
+          >
+            <Download size={14} /> {t('exportButton')}
+          </a>
+        </div>
+        <div className="mt-5 flex flex-col gap-3 border-t border-black/[.07] pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-red-700">{t('deleteTitle')}</p>
+            <p className="mt-1 text-xs leading-relaxed text-stone-500">{t('deleteText')}</p>
+          </div>
+          <Button variant="outline" onClick={() => setDeleteOpen(true)} className="gap-2 rounded-full border-red-200 bg-white/60 text-red-700 hover:bg-red-50">
+            <Trash2 size={14} /> {t('deleteButton')}
+          </Button>
+        </div>
+      </section>
+
+      <Dialog open={deleteOpen} onOpenChange={(open) => { setDeleteOpen(open); if (!open) { setConfirmText(''); setDeletePassword('') } }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle className="text-red-700">{t('deleteTitle')}</DialogTitle></DialogHeader>
+          <p className="text-sm leading-relaxed text-stone-600">{t('deleteWarning')}</p>
+          {user.hasPassword && (
+            <div className="mt-3 space-y-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider text-stone-400">{t('deletePasswordLabel')}</label>
+              <Input type="password" value={deletePassword} onChange={(e) => setDeletePassword(e.target.value)} className="h-11 rounded-xl border-black/10" />
+            </div>
+          )}
+          <div className="mt-3 space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-stone-400">{t('deleteConfirmLabel')}</label>
+            <Input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder={t('deleteConfirmWord')} className="h-11 rounded-xl border-black/10" />
+          </div>
+          <div className="mt-5 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeleteOpen(false)} className="rounded-full">{t('deleteCancel')}</Button>
+            <Button
+              onClick={deleteAccount}
+              disabled={deleting || confirmText !== t('deleteConfirmWord') || (user.hasPassword && !deletePassword)}
+              className="rounded-full bg-red-600 text-white hover:bg-red-700"
+            >
+              {deleting ? t('deleting') : t('deleteConfirmButton')}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {myPhotos.length > 0 && (
         <section className="paper-card mt-6 rounded-[1.75rem] p-5 sm:p-7">

@@ -53,13 +53,17 @@ export const authOptions: NextAuthOptions = {
       }
       // Wachtwoordreset trekt bestaande sessies in: als het wachtwoord na het
       // uitgeven van dit token is gewijzigd, is de sessie niet meer geldig.
+      // Ontbreekt de gebruiker zelf (account verwijderd), dan ook direct
+      // ongeldig — anders blijft een JWT-only sessie tot expiry "ingelogd"
+      // op een niet meer bestaand account.
       if (token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id },
           select: { passwordChangedAt: true },
         })
-        const currentPwv = dbUser?.passwordChangedAt?.getTime() ?? 0
-        if (currentPwv !== token.pwv) {
+        if (!dbUser) {
+          token.id = undefined
+        } else if ((dbUser.passwordChangedAt?.getTime() ?? 0) !== token.pwv) {
           token.id = undefined
         }
       }

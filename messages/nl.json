@@ -409,7 +409,21 @@
     "save": "Profiel opslaan",
     "saved": "Profiel opgeslagen",
     "error": "Er ging iets mis",
-    "signOut": "Uitloggen"
+    "signOut": "Uitloggen",
+    "dataTitle": "Gegevens en account",
+    "exportTitle": "Download mijn gegevens",
+    "exportText": "Een JSON-bestand met je profiel, geziene werken, bezoeken, stemmen en meldingen.",
+    "exportButton": "Downloaden",
+    "deleteTitle": "Account verwijderen",
+    "deleteText": "Verwijdert je account en alle bijbehorende gegevens definitief. Dit kan niet ongedaan worden gemaakt.",
+    "deleteButton": "Account verwijderen",
+    "deleteWarning": "Dit verwijdert je account, geziene werken, bezoeken, foto's en een eventueel lopend abonnement definitief. Dit kan niet ongedaan worden gemaakt.",
+    "deletePasswordLabel": "Wachtwoord",
+    "deleteConfirmLabel": "Typ VERWIJDER om te bevestigen",
+    "deleteConfirmWord": "VERWIJDER",
+    "deleteCancel": "Annuleren",
+    "deleteConfirmButton": "Definitief verwijderen",
+    "deleting": "Bezig met verwijderen..."
   },
   "Discover": {
     "title": "Welke kunstenaars wil jij in de app?",

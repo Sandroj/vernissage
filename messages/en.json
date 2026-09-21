@@ -409,7 +409,21 @@
     "save": "Save profile",
     "saved": "Profile saved",
     "error": "Something went wrong",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "dataTitle": "Data and account",
+    "exportTitle": "Download my data",
+    "exportText": "A JSON file with your profile, seen works, visits, votes and reports.",
+    "exportButton": "Download",
+    "deleteTitle": "Delete account",
+    "deleteText": "Permanently deletes your account and all related data. This cannot be undone.",
+    "deleteButton": "Delete account",
+    "deleteWarning": "This permanently deletes your account, seen works, visits, photos and any active subscription. This cannot be undone.",
+    "deletePasswordLabel": "Password",
+    "deleteConfirmLabel": "Type DELETE to confirm",
+    "deleteConfirmWord": "DELETE",
+    "deleteCancel": "Cancel",
+    "deleteConfirmButton": "Permanently delete",
+    "deleting": "Deleting..."
   },
   "Discover": {
     "title": "Which artists would you like in the app?",

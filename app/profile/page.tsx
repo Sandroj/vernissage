@@ -12,7 +12,7 @@ export default async function ProfilePage() {
   const [user, seenCount, seenRecords, recentSeen, seenPhotos, visitPhotos] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { id: true, name: true, email: true, image: true, seenPublic: true, createdAt: true },
+      select: { id: true, name: true, email: true, image: true, seenPublic: true, createdAt: true, password: true },
     }),
     prisma.seen.count({ where: { userId: session.user.id } }),
     prisma.seen.findMany({
@@ -85,5 +85,14 @@ export default async function ProfilePage() {
     return groups
   }, {})).sort((a, b) => a.artist.name.localeCompare(b.artist.name))
 
-  return <ProfileClient user={user!} seenCount={seenCount} seenByArtist={seenByArtist} recentSeen={recentSeen} myPhotos={myPhotos} />
+  const { password, ...userWithoutPassword } = user!
+  return (
+    <ProfileClient
+      user={{ ...userWithoutPassword, hasPassword: !!password }}
+      seenCount={seenCount}
+      seenByArtist={seenByArtist}
+      recentSeen={recentSeen}
+      myPhotos={myPhotos}
+    />
+  )
 }
