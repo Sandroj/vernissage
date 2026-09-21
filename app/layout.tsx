@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
 import Providers from '@/components/session-provider'
@@ -14,7 +14,15 @@ const geist = localFont({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Meta')
-  return { title: 'Pinacot', description: t('description') }
+  return {
+    title: 'Pinacot',
+    description: t('description'),
+    appleWebApp: { title: 'Pinacot', statusBarStyle: 'default' },
+  }
+}
+
+export const viewport: Viewport = {
+  themeColor: '#4256cc',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
