@@ -450,7 +450,7 @@
   },
   "Privacy": {
     "title": "Privacy",
-    "updated": "Last updated: 11 September 2026",
+    "updated": "Last updated: 21 September 2026",
     "intro": "Pinacot is a personal, non-commercial app for keeping track of the artworks you've seen. Here is what we do with your data.",
     "collectTitle": "What we store",
     "collect1": "Your email address and name — to recognise your account. If you sign in with Google, we only receive your name, email address and profile picture; never your password or any other Google data.",
@@ -461,9 +461,9 @@
     "use2": "If you enable “Seen items public”, other users only see how many people have seen a work — never who.",
     "use3": "We do not sell or share your data with third parties and do not use it for advertising.",
     "storageTitle": "Where it lives",
-    "storage": "The database is hosted by Turso and the app by Vercel, under their standard security. Artwork images are loaded via Cloudflare R2 and an image proxy (wsrv.nl); no personal data is sent along with those requests.",
+    "storage": "The database is hosted by Turso and the app by Vercel, under their standard security. Artwork images are loaded via Cloudflare R2 and an image proxy (wsrv.nl); no personal data is sent along with those requests. Photos you add to a seen work or visit are stored separately, in a non-public Cloudflare R2 storage; they're only visible to you via a temporary secure link. For password resets and account notifications we send email via Resend. If you choose Pinacot Plus, Stripe processes your email address and payment details to handle the payment; we ourselves only store your subscription status, never your card or bank details.",
     "rightsTitle": "Your rights",
-    "rights": "You can change your name and privacy setting yourself on your profile page. To have your account and all associated data deleted, email <email></email> — we'll take care of it within 30 days.",
+    "rights": "You can change your name and privacy setting yourself on your profile page. From there you can also export all your data or delete your account and all associated data yourself, immediately — no email needed. If you still need help, email <email></email>.",
     "cookiesTitle": "Cookies",
     "cookies": "We only use functional cookies: a session cookie to keep you signed in and a cookie that remembers your language choice. No tracking, no analytics."
   },
