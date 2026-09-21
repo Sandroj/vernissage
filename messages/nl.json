@@ -426,6 +426,13 @@
     "deleting": "Bezig met verwijderen..."
   },
   "Discover": {
+    "introEyebrow": "Welkom bij Pinacot",
+    "introTitle1": "Onthoud wat je hebt gezien",
+    "introText1": "Leg in een paar tikken vast welk kunstwerk je zag, in welk museum en wanneer.",
+    "introTitle2": "Vind het moeiteloos terug",
+    "introText2": "Zoek op kunstenaar of museum, of blader gewoon door je eigen bezoekgeschiedenis.",
+    "introTitle3": "Bouw je eigen collectie",
+    "introText3": "Kies hieronder je favoriete kunstenaars — overslaan kan ook.",
     "title": "Welke kunstenaars wil jij in de app?",
     "subtitle": "Klik op kunstenaars die je interessant vindt. We voegen de populairste als eerste toe.",
     "previous": "← Vorige",

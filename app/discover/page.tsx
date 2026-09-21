@@ -3,7 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import DiscoverScreen from '@/components/discover-screen'
 
-export default async function DiscoverPage() {
+export default async function DiscoverPage({ searchParams }: { searchParams: { intro?: string } }) {
   const session = await getServerSession(authOptions)
   const votes = session?.user?.id
     ? await prisma.artistVote.findMany({
@@ -12,5 +12,11 @@ export default async function DiscoverPage() {
       })
     : []
 
-  return <DiscoverScreen initialVotes={votes.map((v) => v.artistName)} isLoggedIn={!!session?.user?.id} />
+  return (
+    <DiscoverScreen
+      initialVotes={votes.map((v) => v.artistName)}
+      isLoggedIn={!!session?.user?.id}
+      showIntro={searchParams.intro === '1'}
+    />
+  )
 }

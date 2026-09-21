@@ -426,6 +426,13 @@
     "deleting": "Deleting..."
   },
   "Discover": {
+    "introEyebrow": "Welcome to Pinacot",
+    "introTitle1": "Remember what you've seen",
+    "introText1": "Log which artwork you saw, in which museum and when, in a couple of taps.",
+    "introTitle2": "Find it again with ease",
+    "introText2": "Search by artist or museum, or just browse your own visit history.",
+    "introTitle3": "Build your own collection",
+    "introText3": "Pick your favorite artists below — skipping is fine too.",
     "title": "Which artists would you like in the app?",
     "subtitle": "Tap the artists you find interesting. We'll add the most popular ones first.",
     "previous": "← Previous",

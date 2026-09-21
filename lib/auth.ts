@@ -11,9 +11,11 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
   pages: {
     signIn: '/login',
-    // First-time Google users choose their preferred artists before landing
-    // on the dashboard; returning users still follow the requested callback.
-    newUser: '/discover',
+    // First-time users get a short "how this works" intro before choosing
+    // preferred artists; returning users clicking the nav's Discover link
+    // land on the same page without ?intro=1 and skip straight to the
+    // artist picker (see discover-screen.tsx).
+    newUser: '/discover?intro=1',
   },
   providers: [
     GoogleProvider({

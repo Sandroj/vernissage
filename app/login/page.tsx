@@ -67,7 +67,7 @@ function LoginForm() {
         setError(t('errInvalid'))
       }
     } else {
-      router.push(mode === 'register' ? '/discover' : '/')
+      router.push(mode === 'register' ? '/discover?intro=1' : '/')
       router.refresh()
     }
   }
