@@ -58,3 +58,19 @@ build/
 __pycache__/
 .venv/
 venv/
+
+# capacitor — ios
+ios/App/Pods/
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/App.xcodeproj/xcuserdata/
+ios/App/App.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
+
+# capacitor — android
+android/local.properties
+android/.gradle/
+android/.idea/
+android/app/build/
+android/build/
+android/capacitor-cordova-android-plugins/build/
+*.iml
