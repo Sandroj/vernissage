@@ -12,6 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install npm dependencies and sync Capacitor
+        run: |
+          npm ci
+          npx cap sync ios
+
       - name: Xcode version
         run: xcodebuild -version
 
@@ -49,10 +59,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install npm dependencies and sync Capacitor
+        run: |
+          npm ci
+          npx cap sync android
 
       - name: Build debug APK
         working-directory: android
