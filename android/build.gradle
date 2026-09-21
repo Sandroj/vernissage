@@ -22,6 +22,13 @@ allprojects {
         google()
         mavenCentral()
     }
+    // cordova-android (via cordovaAndroidVersion) still pulls the standalone
+    // kotlin-stdlib-jdk7/jdk8 artifacts; kotlin-stdlib 1.8+ (pulled in by AGP/
+    // google-services) already merged them in, so both together duplicate classes.
+    configurations.all {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+    }
 }
 
 task clean(type: Delete) {
