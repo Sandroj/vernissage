@@ -78,15 +78,19 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
       // no vendor tile API/key, no per-request tile costs.
       import('protomaps-leaflet').then((protomapsL) => {
         if (cancelled) return
-        protomapsL.leafletLayer({
+        const basemapLayer = protomapsL.leafletLayer({
           url: BASEMAP_URL,
           flavor: 'light',
           lang: 'en',
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://protomaps.com">Protomaps</a>',
         }).addTo(map)
-        // Canvas tiles don't always paint on the very first frame (container
-        // size/layout not settled yet at L.map() init) — this same nudge is
-        // what a manual scroll/zoom was doing by accident before this fix.
+        // The layer's very first tile pass can race the PMTiles archive's own
+        // async header fetch (PmtilesSource.load()) and render blank — the
+        // map otherwise stays empty until the user happens to zoom/pan,
+        // which forces GridLayer to re-request tiles once the source is
+        // ready. Force exactly that one extra pass ourselves, right after
+        // the layer's first load attempt (success or not) completes.
+        basemapLayer.once('load', () => basemapLayer.redraw())
         requestAnimationFrame(() => map.invalidateSize())
       })
 
