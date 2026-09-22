@@ -9,7 +9,7 @@ import VisitHistory from '@/components/visit-history'
 import ShareMenu from '@/components/share-menu'
 import { cn, proxyImg } from '@/lib/utils'
 import { toast } from 'sonner'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import ArtworkPlaceholder from '@/components/artwork-placeholder'
 
 interface ArtworkDetailClientProps {
@@ -36,7 +36,7 @@ interface ArtworkDetailClientProps {
     private_owner_name?: string | null
     artist: { id: number; name: string; slug: string }
     museum?: { id: number; name: string; city: string; country: string } | null
-    loans?: { id: number; fromOwnerName: string | null; fromMuseum?: { id: number; name: string } | null; toMuseum: { id: number; name: string } }[]
+    loans?: { id: number; endAt?: string | Date | null; fromOwnerName: string | null; fromMuseum?: { id: number; name: string } | null; toMuseum: { id: number; name: string; city: string; country: string } }[]
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialSeen: any | null
@@ -56,6 +56,7 @@ export default function ArtworkDetailClient({
 }: ArtworkDetailClientProps) {
   const t = useTranslations('Artwork')
   const tc = useTranslations('Countries')
+  const locale = useLocale()
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [seen, setSeen] = useState(initialSeen)
@@ -76,6 +77,10 @@ export default function ArtworkDetailClient({
 
   const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url)
   const missingImageLabel = t('missingImage')
+  const currentLoan = artwork.loans?.[0]
+  const loanUntil = currentLoan?.endAt
+    ? new Date(currentLoan.endAt).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })
+    : null
   const yearLabel = artwork.year_end && artwork.year_end !== artwork.year_start
     ? `${artwork.year_start}–${artwork.year_end}`
     : artwork.year_start?.toString() ?? null
@@ -228,20 +233,39 @@ export default function ArtworkDetailClient({
             {artwork.dimensions_raw && (
               <MetaRow label={t('dimensions')} value={artwork.dimensions_raw} />
             )}
-            {artwork.museum && (
+            {(currentLoan || artwork.museum || artwork.private_owner_name) && (
               <div>
                 <p className="mb-2 text-xs uppercase tracking-widest text-stone-400">{t('location')}</p>
                 <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <Link href={`/museums/${artwork.museum.id}`} title={t('viewMuseum')} className="flex items-center gap-1.5 text-sm font-semibold text-stone-900 transition hover:text-[#4256cc]"><MapPin size={13} className="text-[#ed694c]" />
-                      <span className="border-b border-transparent hover:border-[#4256cc]/30">
-                        {artwork.museum.name}
-                      </span>
-                    </Link>
-                    <p className="ml-5 mt-1 text-xs text-stone-500">
-                      {[artwork.museum.city, artwork.museum.country && tc.has(artwork.museum.country) ? tc(artwork.museum.country) : artwork.museum.country].filter(Boolean).join(', ')}
-                    </p>
-                  </div>
+                  {currentLoan ? (
+                    <div>
+                      <Link href={`/museums/${currentLoan.toMuseum.id}`} title={t('viewMuseum')} className="flex items-center gap-1.5 text-sm font-semibold text-stone-900 transition hover:text-[#4256cc]"><MapPin size={13} className="text-[#ed694c]" />
+                        <span className="border-b border-transparent hover:border-[#4256cc]/30">
+                          {currentLoan.toMuseum.name}
+                        </span>
+                      </Link>
+                      <p className="ml-5 mt-1 text-xs text-stone-500">
+                        {[currentLoan.toMuseum.city, currentLoan.toMuseum.country && tc.has(currentLoan.toMuseum.country) ? tc(currentLoan.toMuseum.country) : currentLoan.toMuseum.country].filter(Boolean).join(', ')}
+                      </p>
+                      <p className="ml-5 mt-1 text-xs text-amber-700">
+                        {t('currentLoanFrom', { owner: currentLoan.fromMuseum?.name ?? currentLoan.fromOwnerName ?? artwork.museum?.name ?? t('unknownOwner') })}
+                        {loanUntil ? ` · ${t('loanUntil', { date: loanUntil })}` : ''}
+                      </p>
+                    </div>
+                  ) : artwork.museum ? (
+                    <div>
+                      <Link href={`/museums/${artwork.museum.id}`} title={t('viewMuseum')} className="flex items-center gap-1.5 text-sm font-semibold text-stone-900 transition hover:text-[#4256cc]"><MapPin size={13} className="text-[#ed694c]" />
+                        <span className="border-b border-transparent hover:border-[#4256cc]/30">
+                          {artwork.museum.name}
+                        </span>
+                      </Link>
+                      <p className="ml-5 mt-1 text-xs text-stone-500">
+                        {[artwork.museum.city, artwork.museum.country && tc.has(artwork.museum.country) ? tc(artwork.museum.country) : artwork.museum.country].filter(Boolean).join(', ')}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="flex items-center gap-1.5 text-sm font-semibold text-stone-900"><MapPin size={13} className="text-[#ed694c]" />{t('privateCollection', { name: artwork.private_owner_name ?? '' })}</p>
+                  )}
                   <button
                     onClick={() => setReportOpen(!reportOpen)}
                     className="mt-0.5 flex shrink-0 items-center gap-1 text-xs text-stone-400 transition-colors hover:text-amber-600"
@@ -253,28 +277,6 @@ export default function ArtworkDetailClient({
                 </div>
               </div>
             )}
-            {!artwork.museum && artwork.private_owner_name && (
-              <div>
-                <p className="mb-2 text-xs uppercase tracking-widest text-stone-400">{t('location')}</p>
-                <div className="flex items-start justify-between gap-2">
-                  <p className="flex items-center gap-1.5 text-sm font-semibold text-stone-900"><MapPin size={13} className="text-[#ed694c]" />{t('privateCollection', { name: artwork.private_owner_name })}</p>
-                  <button
-                    onClick={() => setReportOpen(!reportOpen)}
-                    className="mt-0.5 flex shrink-0 items-center gap-1 text-xs text-stone-400 transition-colors hover:text-amber-600"
-                    title={t('reportTooltip')}
-                  >
-                    <AlertCircle size={12} />
-                    {t('reportWrong')}
-                  </button>
-                </div>
-              </div>
-            )}
-            {artwork.loans?.map((loan) => (
-              <div key={loan.id} className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-950">
-                <p>{t('currentLoanAt', { museum: loan.toMuseum.name })}</p>
-                <p>{t('currentLoanFrom', { owner: loan.fromMuseum?.name ?? loan.fromOwnerName ?? artwork.museum?.name ?? t('unknownOwner') })}</p>
-              </div>
-            ))}
           </div>
 
           {/* Report form */}
