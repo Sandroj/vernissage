@@ -247,10 +247,6 @@ export default function ArtworkDetailClient({
                       <p className="ml-5 mt-1 text-xs text-stone-500">
                         {[currentLoan.toMuseum.city, currentLoan.toMuseum.country && tc.has(currentLoan.toMuseum.country) ? tc(currentLoan.toMuseum.country) : currentLoan.toMuseum.country].filter(Boolean).join(', ')}
                       </p>
-                      <p className="ml-5 mt-1 text-xs text-amber-700">
-                        {t('currentLoanFrom', { owner: currentLoan.fromMuseum?.name ?? currentLoan.fromOwnerName ?? artwork.museum?.name ?? t('unknownOwner') })}
-                        {loanUntil ? ` · ${t('loanUntil', { date: loanUntil })}` : ''}
-                      </p>
                     </div>
                   ) : artwork.museum ? (
                     <div>
@@ -275,6 +271,12 @@ export default function ArtworkDetailClient({
                     {t('reportWrong')}
                   </button>
                 </div>
+                {currentLoan && (
+                  <div className="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-950">
+                    {t('currentLoanFrom', { owner: currentLoan.fromMuseum?.name ?? currentLoan.fromOwnerName ?? artwork.museum?.name ?? t('unknownOwner') })}
+                    {loanUntil ? ` · ${t('loanUntil', { date: loanUntil })}` : ''}
+                  </div>
+                )}
               </div>
             )}
           </div>
