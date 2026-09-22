@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXTAUTH_URL ?? 'https://arttracker-xi.vercel.app'
+  const baseUrl = process.env.NEXTAUTH_URL ?? 'https://www.seen.gallery'
   return {
     rules: {
       userAgent: '*',

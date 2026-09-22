@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       `Type: ${kind === 'missing_work' ? 'Missing artwork' : 'Incorrect listing'}`,
       `Artist: ${artistName}`,
       `Artwork: ${artworkTitle}`,
-      artworkId ? `App record: https://arttracker-xi.vercel.app/artworks/${artworkId}` : null,
+      artworkId ? `App record: https://www.seen.gallery/artworks/${artworkId}` : null,
       senderEmail ? `Reply to: ${senderEmail}` : null,
       '',
       message,

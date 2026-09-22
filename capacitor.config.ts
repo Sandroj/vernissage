@@ -12,7 +12,7 @@ const config: CapacitorConfig = {
   appName: 'Pinacot',
   webDir: 'public',
   server: {
-    url: 'https://arttracker-xi.vercel.app',
+    url: 'https://www.seen.gallery',
     cleartext: false,
   },
 }
