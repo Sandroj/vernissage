@@ -18,7 +18,7 @@ interface ArtworkWithArtist {
   image_url?: string | null
   museum?: { id: number; name: string; city: string } | null
   artist: { id: number; name: string; slug: string }
-  loans?: { id: number; toMuseum: { name: string } }[]
+  loans?: { id: number; toMuseum: { id: number; name: string; city: string; country?: string } }[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }

@@ -19,6 +19,7 @@ export default async function ArtistDetailPage({
   const catalogueWhere = registerArtists.some((a) => a.slug === params.slug)
     ? { catalogue_id: { not: null } }
     : {}
+  const currentLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
 
   const artist = await prisma.artist.findUnique({
     where: { slug: params.slug },
@@ -54,6 +55,11 @@ export default async function ArtistDetailPage({
           attribution_note: true,
           attribution_note_en: true,
           museum: { select: { id: true, name: true, city: true, country: true } },
+          private_owner_name: true,
+          loans: {
+            where: currentLoan,
+            select: { endAt: true, fromOwnerName: true, fromMuseum: { select: { name: true } }, toMuseum: { select: { id: true, name: true, city: true, country: true } } },
+          },
           _count: { select: { seenBy: true } },
         },
         orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
@@ -63,11 +69,17 @@ export default async function ArtistDetailPage({
 
   if (!artist) notFound()
 
+  // Een werk telt mee bij zowel de eigenaar (museumId) als waar het nu
+  // tijdelijk hangt (een actieve inkomende Loan) — zie loansTo hieronder.
+  const artistLoanWhere = { ...currentLoan, artwork: { artistId: artist.id, ...catalogueWhere } }
   const museumLocations = await prisma.museum.findMany({
     where: {
       lat: { not: null },
       lng: { not: null },
-      artworks: { some: { artistId: artist.id, ...catalogueWhere } },
+      OR: [
+        { artworks: { some: { artistId: artist.id, ...catalogueWhere } } },
+        { loansTo: { some: artistLoanWhere } },
+      ],
     },
     include: {
       _count: { select: { artworks: { where: { artistId: artist.id, ...catalogueWhere } } } },
@@ -76,6 +88,10 @@ export default async function ArtistDetailPage({
         where: { artistId: artist.id, ...catalogueWhere, ...hasImage },
         select: { image_local_path: true, image_url: true },
         orderBy: { id: 'asc' },
+      },
+      loansTo: {
+        where: artistLoanWhere,
+        select: { artwork: { select: { image_local_path: true, image_url: true } } },
       },
     },
     orderBy: { name: 'asc' },
@@ -118,8 +134,11 @@ export default async function ArtistDetailPage({
       : tc.has(museum.country) ? tc(museum.country) : museum.country,
     lat: museum.lat as number,
     lng: museum.lng as number,
-    artworkCount: museum._count.artworks,
-    previewImage: proxyImg(museum.artworks[0]?.image_local_path ?? museum.artworks[0]?.image_url) ?? null,
+    artworkCount: museum._count.artworks + museum.loansTo.length,
+    previewImage: proxyImg(
+      museum.artworks[0]?.image_local_path ?? museum.artworks[0]?.image_url
+      ?? museum.loansTo[0]?.artwork?.image_local_path ?? museum.loansTo[0]?.artwork?.image_url
+    ) ?? null,
     seenCount: seenByMuseum[museum.id] ?? 0,
   }))
 

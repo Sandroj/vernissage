@@ -20,6 +20,8 @@ interface Artwork {
   image_url?: string | null
   attribution_status?: string | null
   museum?: { name: string; city: string } | null
+  private_owner_name?: string | null
+  loans?: { toMuseum: { name: string; city: string } }[]
   artist?: { name: string; slug: string } | null
 }
 
@@ -46,6 +48,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
   const rawSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const imgSrc = proxyImg(rawSrc)
   const missingImageLabel = t('missingImage')
+  const currentLoan = artwork.loans?.[0]
 
   return (
     <>
@@ -115,7 +118,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
       <Link href={`/artworks/${artwork.id}`} className="block px-1 pt-3">
         <h3 className="line-clamp-2 font-display text-[1.08rem] font-semibold leading-tight text-stone-900 transition group-hover:text-[#4256cc]">{artwork.title}</h3>
         <p className="mt-1 truncate text-[11px] font-medium uppercase tracking-[.08em] text-stone-400">{[artwork.artist?.name, artwork.year_start].filter(Boolean).join(' · ')}</p>
-        {artwork.museum && <p className="mt-1.5 flex items-center gap-1 truncate text-xs text-stone-500"><MapPin size={11} className="shrink-0 text-[#ed694c]" /> {artwork.museum.city || artwork.museum.name}</p>}
+        {(currentLoan || artwork.museum) && <p className="mt-1.5 flex items-center gap-1 truncate text-xs text-stone-500"><MapPin size={11} className="shrink-0 text-[#ed694c]" /> {currentLoan ? (currentLoan.toMuseum.city || currentLoan.toMuseum.name) : (artwork.museum!.city || artwork.museum!.name)}</p>}
       </Link>
       </article>
 

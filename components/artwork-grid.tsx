@@ -26,6 +26,8 @@ interface Artwork {
   image_url?: string | null
   attribution_status?: string | null
   museum?: { id: number; name: string; city: string; country?: string } | null
+  private_owner_name?: string | null
+  loans?: { toMuseum: { id: number; name: string; city: string; country?: string } }[]
   artist?: { name: string; slug: string } | null
   _count?: { seenBy: number }
 }
