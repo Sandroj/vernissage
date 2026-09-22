@@ -337,8 +337,6 @@
     "openMuseum": "View museum",
     "collectionEyebrow": "Museum collection",
     "loanEyebrow": "On loan",
-    "onLoanHere": "On view here now",
-    "onLoanFrom": "On loan from {owner}",
     "loanedOut": "On loan elsewhere",
     "onLoanAt": "Currently on view at {museum}",
     "availableInApp": "available in Pinacot",

@@ -53,6 +53,9 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
   const tc = useTranslations('Countries')
   const country = museum.country && tc.has(museum.country) ? tc(museum.country) : museum.country
 
+  // On loan here now: owned elsewhere, but shown alongside the museum's own
+  // works so they appear as normal cards (with image) under "All artworks".
+  const gridArtworks = [...museum.artworks, ...incomingLoans.map((loan) => loan.artwork)]
   const availableArtworks = museum.artworks.filter((artwork) => artwork.image_url || artwork.image_local_path)
   const catalogueIds = new Set(museum.artworks.map((artwork) => artwork.id))
   const seenCount = Object.keys(seenMap).filter((id) => catalogueIds.has(Number(id))).length
@@ -130,18 +133,13 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
         </div>
       )}
 
-      {incomingLoans.length > 0 && <section className="mb-8 space-y-3">
-        <div><p className="eyebrow">{t('loanEyebrow')}</p><h2 className="font-display text-3xl text-stone-900">{t('onLoanHere')}</h2></div>
-        <div className="grid gap-2 sm:grid-cols-2">{incomingLoans.map((loan) => <Link key={loan.id} href={`/artworks/${loan.artwork.id}`} className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-stone-800 transition hover:bg-amber-100"><span className="font-semibold">{loan.artwork.title}</span><span className="block text-xs text-stone-600">{loan.artwork.artist.name} · {t('onLoanFrom', { owner: loan.fromMuseum?.name ?? loan.fromOwnerName ?? t('unknownOwner') })}</span></Link>)}</div>
-      </section>}
-
       {museum.artworks.some((work) => work.loans?.length) && <section className="mb-8 space-y-2">
         <p className="eyebrow">{t('loanEyebrow')}</p><h2 className="font-display text-2xl text-stone-900">{t('loanedOut')}</h2>
         {museum.artworks.flatMap((work) => (work.loans ?? []).map((loan) => <Link key={loan.id} href={`/artworks/${work.id}`} className="block rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-stone-800"><span className="font-semibold">{work.title}</span><span className="ml-2 text-stone-600">{t('onLoanAt', { museum: loan.toMuseum.name })}</span></Link>))}
       </section>}
 
-      {linkedTotal > 0 ? (
-        <ArtworkGrid artworks={museum.artworks} seenMap={seenMap} isLoggedIn={isLoggedIn} onRefresh={refresh} />
+      {gridArtworks.length > 0 ? (
+        <ArtworkGrid artworks={gridArtworks} seenMap={seenMap} isLoggedIn={isLoggedIn} onRefresh={refresh} />
       ) : (
         <div className="paper-card rounded-[2rem] p-10 text-center text-stone-500">
           <ImageOff size={30} className="mx-auto mb-3 text-stone-300" />
