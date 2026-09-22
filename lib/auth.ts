@@ -5,6 +5,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+import { isAdminEmail } from '@/lib/admin'
 
 const appleProvider =
   process.env.APPLE_CLIENT_ID && process.env.APPLE_CLIENT_SECRET
@@ -85,6 +86,7 @@ export const authOptions: NextAuthOptions = {
       // token.id ontbreekt na een wachtwoordreset van deze sessie; laat
       // session.user.id dan bewust ongezet zodat routes de sessie afwijzen.
       if (token?.id && session.user) session.user.id = token.id
+      if (session.user) session.user.isAdmin = isAdminEmail(session.user.email)
       return session
     },
   },

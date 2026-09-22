@@ -31,6 +31,7 @@ export default function Nav() {
     { href: '/nearby', label: t('nearby') },
     { href: '/discover', label: t('discover') },
     ...(session ? [{ href: '/profile', label: t('profile') }] : []),
+    ...(session?.user.isAdmin ? [{ href: '/admin', label: t('admin') }] : []),
   ]
 
   return (
