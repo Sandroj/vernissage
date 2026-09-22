@@ -1,6 +1,7 @@
 import { prisma, localizeArtwork } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { getAdminEmail } from '@/lib/admin'
 import { getLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { hasActiveEntitlement } from '@/lib/entitlement'
@@ -10,6 +11,7 @@ import ArtworkDetailClient from './artwork-detail-client'
 export default async function ArtworkDetailPage({ params, searchParams }: { params: { id: string }; searchParams: { returnTo?: string } }) {
   const session = await getServerSession(authOptions)
   const locale = await getLocale()
+  const isAdmin = !!await getAdminEmail()
 
   const artwork = await prisma.artwork.findUnique({
     where: { id: parseInt(params.id) },
@@ -44,6 +46,7 @@ export default async function ArtworkDetailPage({ params, searchParams }: { para
       seenCount={artwork._count.seenBy}
       isLoggedIn={!!session?.user}
       isPlus={isPlus}
+      isAdmin={isAdmin}
       backHref={searchParams.returnTo?.startsWith('/search') ? searchParams.returnTo : undefined}
     />
   )

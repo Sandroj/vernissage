@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, MapPin } from 'lucide-react'
+import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, MapPin, PencilLine } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
@@ -43,6 +43,7 @@ interface ArtworkDetailClientProps {
   seenCount: number
   isLoggedIn: boolean
   isPlus: boolean
+  isAdmin?: boolean
   backHref?: string
 }
 
@@ -50,6 +51,7 @@ export default function ArtworkDetailClient({
   artwork,
   initialSeen,
   seenCount,
+  isAdmin,
   isLoggedIn,
   isPlus,
   backHref,
@@ -177,7 +179,18 @@ export default function ArtworkDetailClient({
           <div>
             <div className="flex items-start justify-between gap-2">
               <h1 className="font-display text-4xl font-semibold leading-[1.02] text-stone-900">{artwork.title}</h1>
-              <ShareMenu url={`/artworks/${artwork.id}`} title={`${artwork.title} — ${artwork.artist.name}`} />
+              <div className="flex shrink-0 items-center gap-1">
+                {isAdmin && (
+                  <Link
+                    href={`/admin?artwork=${artwork.id}`}
+                    title="Bewerk dit werk in het beheerpaneel"
+                    className="flex size-8 items-center justify-center rounded-full text-stone-400 transition hover:bg-stone-100 hover:text-[#4256cc]"
+                  >
+                    <PencilLine size={16} />
+                  </Link>
+                )}
+                <ShareMenu url={`/artworks/${artwork.id}`} title={`${artwork.title} — ${artwork.artist.name}`} />
+              </div>
             </div>
             {artwork.title_de && (
               <p className="mt-2 text-base italic leading-snug text-stone-500">

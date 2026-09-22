@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Check, Image as ImageIcon, Link as LinkIcon, RotateCcw, Search, Upload, Save } from 'lucide-react'
 
 type Museum = { id: number; name: string; city: string; country: string }
@@ -42,7 +43,14 @@ export default function ArtworkEditor() {
   const [fetchUrl, setFetchUrl] = useState('')
   const [pendingSourceUrl, setPendingSourceUrl] = useState<string | null>(null)
 
+  const searchParams = useSearchParams()
+
   useEffect(() => { fetch('/api/admin/museums').then((r) => r.ok ? r.json() : []).then(setMuseums) }, [])
+  useEffect(() => {
+    const id = Number(searchParams.get('artwork'))
+    if (Number.isInteger(id) && id > 0) openArtwork(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   useEffect(() => {
     const timer = setTimeout(() => {
       if (query.trim().length < 2) { setResults([]); return }
