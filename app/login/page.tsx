@@ -15,6 +15,7 @@ function LoginForm() {
   const router = useRouter()
   const params = useSearchParams()
   const t = useTranslations('Login')
+  const appleSignInEnabled = process.env.NEXT_PUBLIC_ENABLE_APPLE_SIGN_IN === 'true'
   const authError = params.get('error')
   const [mode, setMode] = useState<'login' | 'register'>(params.get('mode') === 'register' ? 'register' : 'login')
   const [email, setEmail] = useState('')
@@ -85,6 +86,16 @@ function LoginForm() {
             {mode === 'login' ? t('signInSubtitle') : t('registerSubtitle')}
           </p>
         </div>
+
+        {appleSignInEnabled && (
+          <Button
+            className="h-11 w-full gap-2 rounded-full bg-black text-white hover:bg-stone-800"
+            onClick={() => signIn('apple', { callbackUrl: '/' })}
+            type="button"
+          >
+            {t('apple')}
+          </Button>
+        )}
 
         <Button
           className="h-11 w-full gap-2 rounded-full border-black/10 bg-white/70 text-stone-800 hover:bg-white"

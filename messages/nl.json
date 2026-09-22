@@ -346,6 +346,7 @@
   "Login": {
     "signInSubtitle": "Inloggen op je account",
     "registerSubtitle": "Nieuw account aanmaken",
+    "apple": "Doorgaan met Apple",
     "google": "Doorgaan met Google",
     "or": "of",
     "namePlaceholder": "Naam (optioneel)",
@@ -364,8 +365,8 @@
     "errInvalid": "Onjuist e-mailadres of wachtwoord",
     "authErrors": {
       "OAuthAccountNotLinked": "Dit e-mailadres is al gekoppeld aan een ander inlogtype. Probeer het opnieuw — de accounts worden nu gekoppeld.",
-      "OAuthCallback": "Inloggen via Google is mislukt bij het terugkeren. Probeer het opnieuw.",
-      "OAuthSignin": "Google-login is niet geconfigureerd.",
+      "OAuthCallback": "Inloggen via de externe provider is mislukt bij het terugkeren. Probeer het opnieuw.",
+      "OAuthSignin": "Deze externe login is niet geconfigureerd.",
       "AccessDenied": "Toegang geweigerd.",
       "Default": "Inloggen mislukt. Probeer het opnieuw."
     }
@@ -463,7 +464,7 @@
     "updated": "Laatst bijgewerkt: 21 september 2026",
     "intro": "Pinacot is een persoonlijke, niet-commerciële app om bij te houden welke kunstwerken je hebt gezien. Dit is wat we met je gegevens doen.",
     "collectTitle": "Welke gegevens we bewaren",
-    "collect1": "Je e-mailadres en naam — om je account te herkennen. Log je in met Google, dan ontvangen we alleen je naam, e-mailadres en profielfoto; nooit je wachtwoord of andere Google-gegevens.",
+    "collect1": "Je e-mailadres en naam — om je account te herkennen. Log je in met Google of Apple, dan ontvangen we alleen de accountgegevens die je toestaat, zoals je naam, e-mailadres en eventueel profielfoto; nooit je wachtwoord of andere accountgegevens.",
     "collect2": "De kunstwerken die je als gezien markeert, met de datum, locatie, waardering, notitie en optionele foto die je zelf invult.",
     "collect3": "Je stemmen op kunstenaars die je in de app wilt zien.",
     "useTitle": "Waarvoor we ze gebruiken",

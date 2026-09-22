@@ -1,9 +1,18 @@
 import { NextAuthOptions } from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
+import AppleProvider from 'next-auth/providers/apple'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+
+const appleProvider =
+  process.env.APPLE_CLIENT_ID && process.env.APPLE_CLIENT_SECRET
+    ? AppleProvider({
+        clientId: process.env.APPLE_CLIENT_ID,
+        clientSecret: process.env.APPLE_CLIENT_SECRET,
+      })
+    : null
 
 export const authOptions: NextAuthOptions = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,6 +27,7 @@ export const authOptions: NextAuthOptions = {
     newUser: '/discover?intro=1',
   },
   providers: [
+    ...(appleProvider ? [appleProvider] : []),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',

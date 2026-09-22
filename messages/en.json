@@ -346,6 +346,7 @@
   "Login": {
     "signInSubtitle": "Sign in to your account",
     "registerSubtitle": "Create a new account",
+    "apple": "Continue with Apple",
     "google": "Continue with Google",
     "or": "or",
     "namePlaceholder": "Name (optional)",
@@ -364,8 +365,8 @@
     "errInvalid": "Incorrect email address or password",
     "authErrors": {
       "OAuthAccountNotLinked": "This email is already linked to a different sign-in method. Try again — the accounts will now be linked.",
-      "OAuthCallback": "Signing in with Google failed on return. Please try again.",
-      "OAuthSignin": "Google sign-in is not configured.",
+      "OAuthCallback": "Signing in with the external provider failed on return. Please try again.",
+      "OAuthSignin": "This external sign-in method is not configured.",
       "AccessDenied": "Access denied.",
       "Default": "Sign-in failed. Please try again."
     }
@@ -463,7 +464,7 @@
     "updated": "Last updated: 21 September 2026",
     "intro": "Pinacot is a personal, non-commercial app for keeping track of the artworks you've seen. Here is what we do with your data.",
     "collectTitle": "What we store",
-    "collect1": "Your email address and name — to recognise your account. If you sign in with Google, we only receive your name, email address and profile picture; never your password or any other Google data.",
+    "collect1": "Your email address and name — to recognise your account. If you sign in with Google or Apple, we only receive the account details you allow, such as your name, email address and optionally profile picture; never your password or other account data.",
     "collect2": "The artworks you mark as seen, together with the date, location, rating, notes and optional photo you enter yourself.",
     "collect3": "Your votes for artists you'd like to see added to the app.",
     "useTitle": "What we use it for",
