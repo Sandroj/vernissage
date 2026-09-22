@@ -1,41 +1,53 @@
-import { prisma, localizeArtwork } from '@/lib/prisma'
+import { prisma, localizeArtwork, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { getAdminEmail } from '@/lib/admin'
+import { isAdminEmail } from '@/lib/admin'
 import { getLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { hasActiveEntitlement } from '@/lib/entitlement'
 import { signPhotoUrls } from '@/lib/photo-storage'
 import ArtworkDetailClient from './artwork-detail-client'
+import { unstable_cache } from 'next/cache'
+
+// Kunstwerk-data zelf is publieke catalogus-data — cachen scheelt een
+// Turso-roundtrip per bezoeker.
+const getCachedArtwork = unstable_cache(
+  (id: number) =>
+    prisma.artwork.findUnique({
+      where: { id },
+      include: {
+        artist: true,
+        museum: true,
+        loans: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { fromMuseum: true, toMuseum: true } },
+        _count: {
+          select: { seenBy: true },
+        },
+      },
+    }),
+  ['artwork-detail'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
 
 export default async function ArtworkDetailPage({ params, searchParams }: { params: { id: string }; searchParams: { returnTo?: string } }) {
-  const session = await getServerSession(authOptions)
-  const locale = await getLocale()
-  const isAdmin = !!await getAdminEmail()
-
-  const artwork = await prisma.artwork.findUnique({
-    where: { id: parseInt(params.id) },
-    include: {
-      artist: true,
-      museum: true,
-      loans: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { fromMuseum: true, toMuseum: true } },
-      _count: {
-        select: { seenBy: true },
-      },
-    },
-  })
+  const [session, locale, artwork] = await Promise.all([
+    getServerSession(authOptions),
+    getLocale(),
+    getCachedArtwork(parseInt(params.id)),
+  ])
+  const isAdmin = isAdminEmail(session?.user?.email)
 
   if (!artwork) notFound()
 
-  const seenRow = session?.user?.id
-    ? await prisma.seen.findUnique({
-        where: { userId_artworkId: { userId: session.user.id, artworkId: artwork.id } },
-      })
-    : null
+  const [seenRow, isPlus] = await Promise.all([
+    session?.user?.id
+      ? prisma.seen.findUnique({
+          where: { userId_artworkId: { userId: session.user.id, artworkId: artwork.id } },
+        })
+      : Promise.resolve(null),
+    session?.user?.id ? hasActiveEntitlement(session.user.id) : Promise.resolve(false),
+  ])
 
   const seen = seenRow ? (await signPhotoUrls([seenRow]))[0] : seenRow
-
-  const isPlus = session?.user?.id ? await hasActiveEntitlement(session.user.id) : false
 
   return (
     <ArtworkDetailClient

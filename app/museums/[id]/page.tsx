@@ -1,4 +1,4 @@
-import { prisma, primaryCatalogue } from '@/lib/prisma'
+import { prisma, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { notFound } from 'next/navigation'
@@ -7,28 +7,41 @@ import { ArrowLeft } from 'lucide-react'
 import MuseumDetailClient from './museum-detail-client'
 import { getTranslations } from 'next-intl/server'
 import { signPhotoUrls } from '@/lib/photo-storage'
+import { unstable_cache } from 'next/cache'
+
+// Publieke catalogus-data — cachen scheelt een Turso-roundtrip per bezoeker.
+const getCachedMuseum = unstable_cache(
+  (museumId: number) =>
+    prisma.museum.findUnique({
+      where: { id: museumId },
+      include: {
+        artworks: {
+          where: primaryCatalogue,
+          include: { artist: { select: { id: true, name: true, slug: true } }, loans: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { toMuseum: true } } },
+          orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
+        },
+        loansTo: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { artwork: { include: { artist: { select: { id: true, name: true, slug: true } }, museum: true } }, fromMuseum: true } },
+      },
+    }),
+  ['museum-detail'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
 
 export default async function MuseumDetailPage({
   params,
 }: {
   params: { id: string }
 }) {
-  const session = await getServerSession(authOptions)
-  const t = await getTranslations('Museums')
   const museumId = Number(params.id)
   if (isNaN(museumId)) notFound()
 
-  const museum = await prisma.museum.findUnique({
-    where: { id: museumId },
-    include: {
-      artworks: {
-        where: primaryCatalogue,
-        include: { artist: { select: { id: true, name: true, slug: true } }, loans: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { toMuseum: true } } },
-        orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
-      },
-      loansTo: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, include: { artwork: { include: { artist: { select: { id: true, name: true, slug: true } }, museum: true } }, fromMuseum: true } },
-    },
-  })
+  // seenRecords hangt alleen af van museumId (param) en session.user.id, niet
+  // van het museum-object zelf — dus alles in één keer parallel opvragen.
+  const [session, t, museum] = await Promise.all([
+    getServerSession(authOptions),
+    getTranslations('Museums'),
+    getCachedMuseum(museumId),
+  ])
 
   if (!museum) notFound()
 

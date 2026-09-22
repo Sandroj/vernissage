@@ -1,9 +1,10 @@
-import { prisma, hasImage, primaryCatalogue } from '@/lib/prisma'
+import { prisma, hasImage, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
 import { proxyImg } from '@/lib/utils'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import dynamic from 'next/dynamic'
+import { unstable_cache } from 'next/cache'
 
 // Leaflet werkt alleen client-side — geen SSR
 const MuseumMap = dynamic(() => import('@/components/museum-map'), {
@@ -15,32 +16,41 @@ const MuseumMap = dynamic(() => import('@/components/museum-map'), {
   ),
 })
 
-export default async function MuseumsPage() {
-  const session = await getServerSession(authOptions)
-  const t = await getTranslations('Museums')
-  const tc = await getTranslations('Countries')
-  const locale = await getLocale()
+// Publieke catalogus-data — cachen scheelt een Turso-roundtrip per bezoeker.
+const getCachedMuseums = unstable_cache(
+  () => {
+    // Een werk telt mee bij zowel de eigenaar (museumId) als waar het nu
+    // tijdelijk hangt (een actieve inkomende Loan) — zie loansTo hieronder.
+    const currentLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
+    return prisma.museum.findMany({
+      include: {
+        _count: { select: { artworks: { where: primaryCatalogue } } },
+        artworks: {
+          take: 1,
+          where: { AND: [primaryCatalogue, hasImage] },
+          select: { image_local_path: true, image_url: true },
+          orderBy: { id: 'asc' },
+        },
+        loansTo: {
+          where: { ...currentLoan, artwork: primaryCatalogue },
+          select: { artwork: { select: { image_local_path: true, image_url: true } } },
+        },
+      },
+      orderBy: { name: 'asc' },
+    })
+  },
+  ['museums-list'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
 
-  // Haal alle musea op — filter daarna in JS op coördinaten + artworks.
-  // Een werk telt mee bij zowel de eigenaar (museumId) als waar het nu
-  // tijdelijk hangt (een actieve inkomende Loan) — zie loansTo hieronder.
-  const currentLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
-  const allMuseums = await prisma.museum.findMany({
-    include: {
-      _count: { select: { artworks: { where: primaryCatalogue } } },
-      artworks: {
-        take: 1,
-        where: { AND: [primaryCatalogue, hasImage] },
-        select: { image_local_path: true, image_url: true },
-        orderBy: { id: 'asc' },
-      },
-      loansTo: {
-        where: { ...currentLoan, artwork: primaryCatalogue },
-        select: { artwork: { select: { image_local_path: true, image_url: true } } },
-      },
-    },
-    orderBy: { name: 'asc' },
-  })
+export default async function MuseumsPage() {
+  const [session, t, tc, locale, allMuseums] = await Promise.all([
+    getServerSession(authOptions),
+    getTranslations('Museums'),
+    getTranslations('Countries'),
+    getLocale(),
+    getCachedMuseums(),
+  ])
 
   // Filter op geldige coördinaten en minstens één werk (eigen collectie of bruikleen)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,14 +58,16 @@ export default async function MuseumsPage() {
     (m) => m.lat != null && m.lng != null && m._count.artworks + m.loansTo.length > 0
   )
 
-  // Seen counts per museum
+  // Seen counts per museum — één query in plaats van één count-query per museum.
   const seenByMuseum: Record<number, number> = {}
   if (session?.user?.id) {
-    for (const museum of museums) {
-      const count = await prisma.seen.count({
-        where: { userId: session.user.id, artwork: { museumId: museum.id, ...primaryCatalogue } },
-      })
-      seenByMuseum[museum.id] = count
+    const seenRows = await prisma.seen.findMany({
+      where: { userId: session.user.id, artwork: { ...primaryCatalogue, museumId: { not: null } } },
+      select: { artwork: { select: { museumId: true } } },
+    })
+    for (const row of seenRows) {
+      const museumId = row.artwork.museumId as number
+      seenByMuseum[museumId] = (seenByMuseum[museumId] ?? 0) + 1
     }
   }
 

@@ -1,4 +1,4 @@
-import { prisma, hasImage, localizeArtist, registerArtists } from '@/lib/prisma'
+import { prisma, hasImage, localizeArtist, registerArtists, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
 import { getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -7,102 +7,128 @@ import ArtistDetailClient from './artist-detail-client'
 import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 import { signPhotoUrls } from '@/lib/photo-storage'
+import { unstable_cache } from 'next/cache'
+
+const currentLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
+
+function catalogueWhereForSlug(slug: string) {
+  return registerArtists.some((a) => a.slug === slug) ? { catalogue_id: { not: null } } : {}
+}
+
+// Artiestdata en museumlocaties zijn publieke catalogus-data — cachen scheelt
+// twee Turso-roundtrips per bezoeker. Beide matchen op de slug/catalogue-
+// filter i.p.v. artist.id, zodat ze niet op elkaar hoeven te wachten.
+const getCachedArtist = unstable_cache(
+  (slug: string) => {
+    const catalogueWhere = catalogueWhereForSlug(slug)
+    return prisma.artist.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        birth_year: true,
+        death_year: true,
+        nationality: true,
+        nationality_en: true,
+        bio: true,
+        bio_en: true,
+        portrait_url: true,
+        artworks: {
+          where: catalogueWhere,
+          select: {
+            id: true,
+            title: true,
+            title_de: true,
+            year_start: true,
+            year_end: true,
+            medium_raw: true,
+            type_normalized: true,
+            dimensions_raw: true,
+            image_local_path: true,
+            image_url: true,
+            image_source_name: true,
+            catalogue_id: true,
+            jh_catalogue_id: true,
+            alternate_titles: true,
+            attribution_status: true,
+            attribution_note: true,
+            attribution_note_en: true,
+            museum: { select: { id: true, name: true, city: true, country: true } },
+            private_owner_name: true,
+            loans: {
+              where: currentLoan,
+              select: { endAt: true, fromOwnerName: true, fromMuseum: { select: { name: true } }, toMuseum: { select: { id: true, name: true, city: true, country: true } } },
+            },
+            _count: { select: { seenBy: true } },
+          },
+          orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
+        },
+      },
+    })
+  },
+  ['artist-detail'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
+
+const getCachedMuseumLocations = unstable_cache(
+  (slug: string) => {
+    const catalogueWhere = catalogueWhereForSlug(slug)
+    // Een werk telt mee bij zowel de eigenaar (museumId) als waar het nu
+    // tijdelijk hangt (een actieve inkomende Loan) — zie loansTo hieronder.
+    const artistLoanWhere = { ...currentLoan, artwork: { artist: { slug }, ...catalogueWhere } }
+    return prisma.museum.findMany({
+      where: {
+        lat: { not: null },
+        lng: { not: null },
+        OR: [
+          { artworks: { some: { artist: { slug }, ...catalogueWhere } } },
+          { loansTo: { some: artistLoanWhere } },
+        ],
+      },
+      include: {
+        _count: { select: { artworks: { where: { artist: { slug }, ...catalogueWhere } } } },
+        artworks: {
+          take: 1,
+          where: { artist: { slug }, ...catalogueWhere, ...hasImage },
+          select: { image_local_path: true, image_url: true },
+          orderBy: { id: 'asc' },
+        },
+        loansTo: {
+          where: artistLoanWhere,
+          select: { artwork: { select: { image_local_path: true, image_url: true } } },
+        },
+      },
+      orderBy: { name: 'asc' },
+    })
+  },
+  ['artist-museum-locations'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
 
 export default async function ArtistDetailPage({
   params,
 }: {
   params: { slug: string }
 }) {
-  const session = await getServerSession(authOptions)
-  const locale = await getLocale()
-  const tc = await getTranslations('Countries')
-  const catalogueWhere = registerArtists.some((a) => a.slug === params.slug)
-    ? { catalogue_id: { not: null } }
-    : {}
-  const currentLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
+  const catalogueWhere = catalogueWhereForSlug(params.slug)
 
-  const artist = await prisma.artist.findUnique({
-    where: { slug: params.slug },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      birth_year: true,
-      death_year: true,
-      nationality: true,
-      nationality_en: true,
-      bio: true,
-      bio_en: true,
-      portrait_url: true,
-      artworks: {
-        where: catalogueWhere,
-        select: {
-          id: true,
-          title: true,
-          title_de: true,
-          year_start: true,
-          year_end: true,
-          medium_raw: true,
-          type_normalized: true,
-          dimensions_raw: true,
-          image_local_path: true,
-          image_url: true,
-          image_source_name: true,
-          catalogue_id: true,
-          jh_catalogue_id: true,
-          alternate_titles: true,
-          attribution_status: true,
-          attribution_note: true,
-          attribution_note_en: true,
-          museum: { select: { id: true, name: true, city: true, country: true } },
-          private_owner_name: true,
-          loans: {
-            where: currentLoan,
-            select: { endAt: true, fromOwnerName: true, fromMuseum: { select: { name: true } }, toMuseum: { select: { id: true, name: true, city: true, country: true } } },
-          },
-          _count: { select: { seenBy: true } },
-        },
-        orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
-      },
-    },
-  })
+  const [session, locale, tc] = await Promise.all([
+    getServerSession(authOptions),
+    getLocale(),
+    getTranslations('Countries'),
+  ])
 
-  if (!artist) notFound()
-
-  // Een werk telt mee bij zowel de eigenaar (museumId) als waar het nu
-  // tijdelijk hangt (een actieve inkomende Loan) — zie loansTo hieronder.
-  const artistLoanWhere = { ...currentLoan, artwork: { artistId: artist.id, ...catalogueWhere } }
-  const museumLocations = await prisma.museum.findMany({
-    where: {
-      lat: { not: null },
-      lng: { not: null },
-      OR: [
-        { artworks: { some: { artistId: artist.id, ...catalogueWhere } } },
-        { loansTo: { some: artistLoanWhere } },
-      ],
-    },
-    include: {
-      _count: { select: { artworks: { where: { artistId: artist.id, ...catalogueWhere } } } },
-      artworks: {
-        take: 1,
-        where: { artistId: artist.id, ...catalogueWhere, ...hasImage },
-        select: { image_local_path: true, image_url: true },
-        orderBy: { id: 'asc' },
-      },
-      loansTo: {
-        where: artistLoanWhere,
-        select: { artwork: { select: { image_local_path: true, image_url: true } } },
-      },
-    },
-    orderBy: { name: 'asc' },
-  })
-
-  const seenRecords = session?.user?.id
-    ? await signPhotoUrls(
-        await prisma.seen.findMany({
+  // Alle drie onafhankelijk van elkaar (museumLocations/seenRecords matchen
+  // op slug, niet op artist.id) — dus in één keer parallel opvragen.
+  const [artist, museumLocations, seenRecordsRaw] = await Promise.all([
+    getCachedArtist(params.slug),
+    getCachedMuseumLocations(params.slug),
+    session?.user?.id
+      ? prisma.seen.findMany({
           where: {
             userId: session.user.id,
-            artwork: { artistId: artist.id, ...catalogueWhere },
+            artwork: { artist: { slug: params.slug }, ...catalogueWhere },
           },
           select: {
             id: true,
@@ -115,8 +141,12 @@ export default async function ArtistDetailPage({
             artwork: { select: { museumId: true } },
           },
         })
-      )
-    : []
+      : Promise.resolve([]),
+  ])
+
+  if (!artist) notFound()
+
+  const seenRecords = await signPhotoUrls(seenRecordsRaw)
 
   const seenMap = Object.fromEntries(seenRecords.map((s: { artworkId: number; [key: string]: unknown }) => [s.artworkId, s]))
   const seenByMuseum = seenRecords.reduce<Record<number, number>>((counts, seen) => {

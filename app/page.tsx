@@ -1,4 +1,4 @@
-import { prisma, hasImage, primaryCatalogue } from '@/lib/prisma'
+import { prisma, hasImage, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, ArrowUpRight, MapPin, Sparkles } from 'lucide-react'
 import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
+import { unstable_cache } from 'next/cache'
 
 // Handpicked instantly-recognizable works, one or two per artist, used for
 // the homepage hero carousel instead of an arbitrary "first N by id" pick.
@@ -26,22 +27,46 @@ const FEATURED_HERO_WORKS = [
   { artist: 'Wassily Kandinsky', title: 'Yellow-Red-Blue' },
 ]
 
-export default async function DashboardPage() {
-  const session = await getServerSession(authOptions)
-  const t = await getTranslations('Home')
-
-  const artists = await prisma.artist.findMany({
-    include: {
-      _count: { select: { artworks: { where: primaryCatalogue } } },
-      artworks: {
-        where: { AND: [primaryCatalogue, hasImage] },
-        take: 2,
-        orderBy: { id: 'asc' },
-        select: { id: true, title: true, image_url: true, image_local_path: true },
+// Kunstenaars + hero-werken zijn publieke catalogus-data die hooguit een
+// paar keer per dag verandert — cachen scheelt twee Turso-roundtrips per
+// bezoeker (zie performance-spike in HANDOFF).
+const getCachedHomeArtists = unstable_cache(
+  () =>
+    prisma.artist.findMany({
+      include: {
+        _count: { select: { artworks: { where: primaryCatalogue } } },
+        artworks: {
+          where: { AND: [primaryCatalogue, hasImage] },
+          take: 2,
+          orderBy: { id: 'asc' },
+          select: { id: true, title: true, image_url: true, image_local_path: true },
+        },
       },
-    },
-    orderBy: { name: 'asc' },
-  })
+      orderBy: { name: 'asc' },
+    }),
+  ['home-artists'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
+
+const getCachedFeaturedWorks = unstable_cache(
+  () =>
+    prisma.artwork.findMany({
+      where: {
+        AND: [hasImage, { OR: FEATURED_HERO_WORKS.map((f) => ({ title: f.title, artist: { name: f.artist } })) }],
+      },
+      select: { id: true, title: true, image_url: true, image_local_path: true, artist: { select: { name: true } } },
+    }),
+  ['home-featured-works'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
+
+export default async function DashboardPage() {
+  const [session, t, artists, featuredRows] = await Promise.all([
+    getServerSession(authOptions),
+    getTranslations('Home'),
+    getCachedHomeArtists(),
+    getCachedFeaturedWorks(),
+  ])
 
   const seenCounts: Record<number, number> = {}
   const recentSeen: Array<{
@@ -57,33 +82,28 @@ export default async function DashboardPage() {
   }> = []
 
   if (session?.user?.id) {
-    // Fetch the user's artist ids once instead of issuing one count query per artist.
-    const seenArtworkRows = await prisma.seen.findMany({
-      where: { userId: session.user.id, artwork: primaryCatalogue },
-      select: { artwork: { select: { artistId: true } } },
-    })
+    // Beide "seen"-queries zijn onafhankelijk van elkaar — parallel i.p.v. na elkaar.
+    const [seenArtworkRows, recent] = await Promise.all([
+      prisma.seen.findMany({
+        where: { userId: session.user.id, artwork: primaryCatalogue },
+        select: { artwork: { select: { artistId: true } } },
+      }),
+      prisma.seen.findMany({
+        where: { userId: session.user.id, artwork: primaryCatalogue },
+        include: { artwork: { include: { artist: true } } },
+        orderBy: { dateSeen: 'desc' },
+        take: 12,
+      }),
+    ])
     for (const row of seenArtworkRows) {
       seenCounts[row.artwork.artistId] = (seenCounts[row.artwork.artistId] ?? 0) + 1
     }
-    const recent = await prisma.seen.findMany({
-      where: { userId: session.user.id, artwork: primaryCatalogue },
-      include: { artwork: { include: { artist: true } } },
-      orderBy: { dateSeen: 'desc' },
-      take: 12,
-    })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recentSeen.push(...(recent as any[]))
   }
 
   const totalSeen = Object.values(seenCounts).reduce((a, b) => a + b, 0)
   const totalArtworks = artists.reduce((a, b) => a + b._count.artworks, 0)
-
-  const featuredRows = await prisma.artwork.findMany({
-    where: {
-      AND: [hasImage, { OR: FEATURED_HERO_WORKS.map((f) => ({ title: f.title, artist: { name: f.artist } })) }],
-    },
-    select: { id: true, title: true, image_url: true, image_local_path: true, artist: { select: { name: true } } },
-  })
   const heroWorks = FEATURED_HERO_WORKS
     .map((f) => featuredRows.find((r) => r.title === f.title && r.artist.name === f.artist))
     .filter((r): r is NonNullable<typeof r> => Boolean(r))

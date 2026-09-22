@@ -17,6 +17,11 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export const hasImage = { OR: [{ image_url: { not: null } }, { image_local_path: { not: null } }] }
 
+// Publieke catalogus-data (artiesten/werken/musea) verandert hooguit een paar
+// keer per dag via scraper/admin-edits — 5 minuten stale is onmerkbaar en
+// scheelt een Turso-roundtrip per bezoeker.
+export const CATALOG_REVALIDATE_SECONDS = 300
+
 // Artists with a frozen primary register (Van Gogh Worldwide F numbers,
 // Wildenstein W numbers). Legacy WikiArt rows without a verified register
 // number stay in the database for audit and safe relation preservation, but

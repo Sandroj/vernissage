@@ -1,9 +1,10 @@
-import { prisma, hasImage, localizeArtist, primaryCatalogue } from '@/lib/prisma'
+import { prisma, hasImage, localizeArtist, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import ArtistCard from '@/components/artist-card'
 import ArtistsSearch from '@/components/artists-search'
+import { unstable_cache } from 'next/cache'
 
 // Use recognisable anchor works for the artist cards instead of whichever
 // image happens to have the lowest database id.
@@ -15,39 +16,58 @@ const FEATURED_ARTIST_WORKS = [
   { artist: 'Wassily Kandinsky', title: 'Composition VII' },
 ]
 
+// Zoekresultaten zijn ook publieke catalogus-data — cache per zoekterm (`q`
+// zit automatisch in de cache-key omdat unstable_cache de functie-argumenten
+// meeneemt).
+const getCachedArtists = unstable_cache(
+  (q: string) =>
+    prisma.artist.findMany({
+      where: q
+        ? { OR: [{ name: { contains: q } }, { nationality: { contains: q } }] }
+        : undefined,
+      include: {
+        _count: { select: { artworks: { where: primaryCatalogue } } },
+        artworks: {
+          take: 1,
+          where: { AND: [primaryCatalogue, hasImage] },
+          orderBy: { id: 'asc' },
+          select: { image_local_path: true, image_url: true },
+        },
+      },
+      orderBy: { name: 'asc' },
+    }),
+  ['artists-list'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
+
+const getCachedFeaturedRows = unstable_cache(
+  () =>
+    prisma.artwork.findMany({
+      where: {
+        AND: [hasImage, { OR: FEATURED_ARTIST_WORKS.map((work) => ({ title: work.title, artist: { name: work.artist } })) }],
+      },
+      select: { image_local_path: true, image_url: true, title: true, artist: { select: { name: true } } },
+      orderBy: { id: 'asc' },
+    }),
+  ['artists-featured-rows'],
+  { revalidate: CATALOG_REVALIDATE_SECONDS }
+)
+
 export default async function ArtistsPage({
   searchParams,
 }: {
   searchParams: { q?: string }
 }) {
-  const session = await getServerSession(authOptions)
-  const t = await getTranslations('Artists')
-  const locale = await getLocale()
   const q = searchParams.q ?? ''
 
-  const artists = await prisma.artist.findMany({
-    where: q
-      ? { OR: [{ name: { contains: q } }, { nationality: { contains: q } }] }
-      : undefined,
-    include: {
-      _count: { select: { artworks: { where: primaryCatalogue } } },
-      artworks: {
-        take: 1,
-        where: { AND: [primaryCatalogue, hasImage] },
-        orderBy: { id: 'asc' },
-        select: { image_local_path: true, image_url: true },
-      },
-    },
-    orderBy: { name: 'asc' },
-  })
+  const [session, t, locale, artists, featuredRows] = await Promise.all([
+    getServerSession(authOptions),
+    getTranslations('Artists'),
+    getLocale(),
+    getCachedArtists(q),
+    getCachedFeaturedRows(),
+  ])
 
-  const featuredRows = await prisma.artwork.findMany({
-    where: {
-      AND: [hasImage, { OR: FEATURED_ARTIST_WORKS.map((work) => ({ title: work.title, artist: { name: work.artist } })) }],
-    },
-    select: { image_local_path: true, image_url: true, title: true, artist: { select: { name: true } } },
-    orderBy: { id: 'asc' },
-  })
   const featuredImages = new Map(
     FEATURED_ARTIST_WORKS.map((work) => [
       work.artist,
