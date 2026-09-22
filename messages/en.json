@@ -145,6 +145,12 @@
       ,"kusamaReturnJapan": "Return to Japan · 1974–1992"
       ,"kusamaInternational": "International recognition · 1993–2006"
       ,"kusamaLate": "Late work · 2007–2026"
+      ,"kruyderFormation": "Training and stained glass · until 1911"
+      ,"kruyderSintLucas": "Sint Lucas and Luminism · 1912–1916"
+      ,"kruyderVogelenzang": "Expressionist breakthrough · 1916–1919"
+      ,"kruyderHeemstede": "Heemstede watercolours · 1919–1922"
+      ,"kruyderBennebroek": "Bennebroek, mature style · 1922–1927"
+      ,"kruyderBlaricum": "Blaricum/Gooi, late work · 1927–1935"
     },
     "theme": {
       "sunflowers": "Sunflowers",
@@ -186,6 +192,10 @@
       ,"kusamaPumpkins": "Pumpkins"
       ,"kusamaInfinityMirrorRooms": "Infinity Mirror Rooms"
       ,"kusamaDotsFlowers": "Dots and flowers"
+      ,"kruyderStillLifes": "Still lifes"
+      ,"kruyderFarmAnimals": "Farm animals"
+      ,"kruyderJoKruyder": "Portraits of Jo Kruyder"
+      ,"kruyderLandscapes": "Landscapes and village views"
     },
     "type": {
       "painting": "Paintings",

@@ -140,6 +140,23 @@ export const ARTIST_TAXONOMIES: Record<string, ArtistTaxonomy> = {
       { key: 'rembrandt-landscapes', labelKey: 'theme.rembrandtLandscapes', matches: titleMatches(/landscape/i) },
     ],
   },
+  'herman-kruyder': {
+    periods: [
+      { key: 'kruyder-formation', labelKey: 'period.kruyderFormation', matches: yearIn(1881, 1911) },
+      { key: 'kruyder-sint-lucas', labelKey: 'period.kruyderSintLucas', matches: yearIn(1912, 1916) },
+      { key: 'kruyder-vogelenzang', labelKey: 'period.kruyderVogelenzang', matches: yearIn(1916, 1919) },
+      { key: 'kruyder-heemstede', labelKey: 'period.kruyderHeemstede', matches: yearIn(1919, 1922) },
+      { key: 'kruyder-bennebroek', labelKey: 'period.kruyderBennebroek', matches: yearIn(1922, 1927) },
+      { key: 'kruyder-blaricum', labelKey: 'period.kruyderBlaricum', matches: yearIn(1927, 1935) },
+    ],
+    themes: [
+      { key: 'kruyder-self-portraits', labelKey: 'theme.selfPortraits', matches: titleMatches(/zelfportret|self[- ]?portrait/i) },
+      { key: 'kruyder-still-lifes', labelKey: 'theme.kruyderStillLifes', matches: titleMatches(/stilleven|still life/i) },
+      { key: 'kruyder-farm-animals', labelKey: 'theme.kruyderFarmAnimals', matches: titleMatches(/varken|\bkoe\b|koeien|\bhond\b|\bgeit\b|\bhaan\b|\bpaard\b|\bstier\b/i) },
+      { key: 'kruyder-jo-kruyder', labelKey: 'theme.kruyderJoKruyder', matches: titleMatches(/jo kruyder|mijn vrouw|my wife/i) },
+      { key: 'kruyder-landscapes', labelKey: 'theme.kruyderLandscapes', matches: titleMatches(/landschap|bosgezicht|dorpsstraat|\btuin\b|landscape/i) },
+    ],
+  },
   'yayoi-kusama': {
     periods: [
       { key: 'kusama-early-japan', labelKey: 'period.kusamaEarlyJapan', matches: yearIn(1945, 1957) },
