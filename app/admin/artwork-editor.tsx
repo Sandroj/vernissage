@@ -6,7 +6,7 @@ import { Check, Image as ImageIcon, Link as LinkIcon, RotateCcw, Search, Upload,
 type Museum = { id: number; name: string; city: string; country: string }
 type Result = { id: number; title: string; year_start: number | null; artist: { name: string } }
 type Loan = { id: number; current: boolean; fromOwnerName: string | null; fromMuseum: Museum | null; toMuseum: Museum; endAt: string | null; sourceUrl: string | null }
-type Artwork = { [key: string]: unknown; id: number; title: string; museumId: number | null; artist: { name: string }; museum: Museum | null; loans: Loan[]; edits: { id: number; editorEmail: string; createdAt: string; sourceUrl: string | null }[] }
+type Artwork = { [key: string]: unknown; id: number; title: string; museumId: number | null; private_owner_name: string | null; artist: { name: string }; museum: Museum | null; loans: Loan[]; edits: { id: number; editorEmail: string; createdAt: string; sourceUrl: string | null }[] }
 type FormValues = Record<string, string | number | null>
 
 const textFields = [
@@ -61,6 +61,7 @@ export default function ArtworkEditor() {
     const nextValues: FormValues = {}
     for (const [key] of textFields) nextValues[key] = data[key] ?? ''
     nextValues.museumId = data.museumId ?? ''
+    nextValues.private_owner_name = data.private_owner_name ?? ''
     setValues(nextValues)
     setQuery(`${String(data.title)} — ${data.artist.name}`)
     setResults([])
@@ -151,6 +152,9 @@ export default function ArtworkEditor() {
         <div className="flex flex-wrap items-start justify-between gap-3 border-b border-stone-100 pb-4"><div><p className="text-xs font-semibold uppercase tracking-[.14em] text-[#4256cc]">Geselecteerd record · #{artwork.id}</p><h3 className="mt-1 font-display text-2xl text-stone-900">{artwork.title}</h3><p className="text-sm text-stone-500">{artwork.artist.name}</p></div><button type="button" onClick={() => { setArtwork(null); setResults([]); setQuery('') }} className="inline-flex items-center gap-2 rounded-lg border border-stone-300 px-3 py-2 text-xs font-semibold text-stone-600 hover:bg-stone-50"><RotateCcw size={14} /> Ander werk kiezen</button></div>
         <label className="sm:col-span-2 text-sm text-stone-600">Collectie-eigenaar / huidige museumkoppeling
           <select value={values.museumId ?? ''} onChange={(e) => setValues({ ...values, museumId: e.target.value })} className="mt-1 w-full rounded-lg border border-stone-300 bg-white p-2.5"><option value="">Geen gekoppeld museum</option>{museums.map((museum) => <option key={museum.id} value={museum.id}>{museum.name} — {museum.city}</option>)}</select>
+        </label>
+        <label className="sm:col-span-2 text-sm text-stone-600">Particuliere collectie (naam eigenaar, alleen als er geen museum gekoppeld is)
+          <input value={values.private_owner_name == null ? '' : String(values.private_owner_name)} onChange={(e) => setValues({ ...values, private_owner_name: e.target.value })} placeholder="Bijv. Collectie Regnault" className="mt-1 w-full rounded-lg border border-stone-300 p-2.5" />
         </label>
         {fieldGroups.map((group) => <div key={group.title} className="space-y-3"><div><h4 className="text-sm font-semibold text-stone-900">{group.title}</h4><p className="text-xs text-stone-400">{group.description}</p></div><div className="grid gap-4 sm:grid-cols-2">{group.fields.map((key) => { const label = textFields.find(([field]) => field === key)?.[1] ?? key; return <label key={key} className="text-sm text-stone-600">{label}
           {key.includes('note') || key === 'alternate_titles' ? <textarea value={values[key] == null ? '' : String(values[key])} onChange={(e) => setValues({ ...values, [key]: e.target.value })} rows={2} className="mt-1 w-full rounded-lg border border-stone-300 p-2.5" /> : <input type={key.startsWith('year_') ? 'number' : key === 'image_retrieved_at' ? 'date' : 'text'} value={values[key] ? String(values[key]).slice(0, 10) : ''} onChange={(e) => setValues({ ...values, [key]: e.target.value })} className="mt-1 w-full rounded-lg border border-stone-300 p-2.5" />}

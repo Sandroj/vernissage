@@ -67,7 +67,7 @@ export default function ImportClient() {
 
         <TabsContent value="import" className="space-y-4 pt-4">
           <p className="text-slate-400 text-sm">
-            Plak JSON-output van een scraper (array van werken met velden: artist, title, year_start, medium_raw, type_normalized, dimensions_raw, holder_name, holder_city, image_url).
+            Plak JSON-output van een scraper (array van werken met velden: artist, title, year_start, medium_raw, type_normalized, dimensions_raw, holder_name, holder_city, image_url, source_url). Voor een werk in een particuliere collectie: gebruik private_owner_name (naam eigenaar) in plaats van holder_name/holder_city.
           </p>
           <Textarea
             value={jsonData}

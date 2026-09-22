@@ -38,6 +38,7 @@ model Artwork {
   id                   Int              @id @default(autoincrement())
   artistId             Int
   museumId             Int?
+  private_owner_name   String?
   title                String
   title_de             String?
   year_start           Int?

@@ -4,7 +4,7 @@ import { getAdminEmail } from '@/lib/admin'
 
 const fields = [
   'title', 'title_de', 'year_start', 'year_end', 'medium_raw', 'type_normalized',
-  'dimensions_raw', 'museumId', 'image_url', 'image_source_url', 'image_source_name',
+  'dimensions_raw', 'museumId', 'private_owner_name', 'image_url', 'image_source_url', 'image_source_name',
   'image_rights', 'source_url', 'source_name', 'catalogue_id', 'jh_catalogue_id',
   'image_retrieved_at', 'alternate_titles', 'attribution_status', 'attribution_note', 'attribution_note_en',
 ] as const

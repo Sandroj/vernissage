@@ -33,6 +33,7 @@ interface ArtworkDetailClientProps {
     location_verified_at?: string | Date | null
     attribution_status?: string | null
     attribution_note?: string | null
+    private_owner_name?: string | null
     artist: { id: number; name: string; slug: string }
     museum?: { id: number; name: string; city: string; country: string } | null
     loans?: { id: number; fromOwnerName: string | null; fromMuseum?: { id: number; name: string } | null; toMuseum: { id: number; name: string } }[]
@@ -241,6 +242,22 @@ export default function ArtworkDetailClient({
                       {[artwork.museum.city, artwork.museum.country && tc.has(artwork.museum.country) ? tc(artwork.museum.country) : artwork.museum.country].filter(Boolean).join(', ')}
                     </p>
                   </div>
+                  <button
+                    onClick={() => setReportOpen(!reportOpen)}
+                    className="mt-0.5 flex shrink-0 items-center gap-1 text-xs text-stone-400 transition-colors hover:text-amber-600"
+                    title={t('reportTooltip')}
+                  >
+                    <AlertCircle size={12} />
+                    {t('reportWrong')}
+                  </button>
+                </div>
+              </div>
+            )}
+            {!artwork.museum && artwork.private_owner_name && (
+              <div>
+                <p className="mb-2 text-xs uppercase tracking-widest text-stone-400">{t('location')}</p>
+                <div className="flex items-start justify-between gap-2">
+                  <p className="flex items-center gap-1.5 text-sm font-semibold text-stone-900"><MapPin size={13} className="text-[#ed694c]" />{t('privateCollection', { name: artwork.private_owner_name })}</p>
                   <button
                     onClick={() => setReportOpen(!reportOpen)}
                     className="mt-0.5 flex shrink-0 items-center gap-1 text-xs text-stone-400 transition-colors hover:text-amber-600"

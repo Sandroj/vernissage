@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     let museumId: number | undefined
-    if (work.holder_name && work.holder_city) {
+    if (!work.private_owner_name && work.holder_name && work.holder_city) {
       let museum = await prisma.museum.findFirst({
         where: { name: work.holder_name, city: work.holder_city },
       })
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
       data: {
         artistId: artist.id,
         museumId,
+        private_owner_name: work.private_owner_name ?? null,
         title,
         year_start: work.year_start ?? null,
         year_end: work.year_end ?? null,
