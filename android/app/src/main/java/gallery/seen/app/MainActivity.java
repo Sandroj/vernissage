@@ -1,4 +1,4 @@
-package com.pinacot.app;
+package gallery.seen.app;
 
 import com.getcapacitor.BridgeActivity;
 

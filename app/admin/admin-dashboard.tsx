@@ -12,7 +12,7 @@ export default function AdminDashboard({ users }: { users: AdminUser[] }) {
   return (
     <div className="max-w-6xl">
       <div className="mb-7">
-        <p className="eyebrow mb-2">Vernissage redactie</p>
+        <p className="eyebrow mb-2">Seen redactie</p>
         <h1 className="font-display text-5xl font-medium tracking-tight text-stone-900">Beheer</h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-500">Werk bestaande catalogusrecords bij, verbeter afbeeldingen en leg bruiklenen vast. Bulkimport is beschikbaar als aparte onderhoudstaak.</p>
       </div>

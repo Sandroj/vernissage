@@ -1,5 +1,5 @@
 /**
- * Pinacot-merk: een ingelijst kunstwerk met een koraalkleurige
+ * Seen-merk: een ingelijst kunstwerk met een koraalkleurige
  * "gezien"-stip. Puur SVG, dus scherp op elk formaat van favicon tot hero.
  */
 export function LogoMark({ size = 32, className }: { size?: number; className?: string }) {
@@ -26,7 +26,7 @@ export function Logo({ size = 32, wordmark = true, className }: { size?: number;
   return (
     <span className={`flex shrink-0 items-center gap-2.5 ${className ?? ''}`}>
       <LogoMark size={size} />
-      {wordmark && <span className="font-display text-xl font-semibold">Pinacot</span>}
+      {wordmark && <span className="font-display text-xl font-semibold">Seen</span>}
     </span>
   )
 }

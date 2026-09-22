@@ -39,7 +39,7 @@ export async function GET() {
   return new NextResponse(JSON.stringify(data, null, 2), {
     headers: {
       'Content-Type': 'application/json',
-      'Content-Disposition': 'attachment; filename="vernissage-export.json"',
+      'Content-Disposition': 'attachment; filename="seen-export.json"',
     },
   })
 }

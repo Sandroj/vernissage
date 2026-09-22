@@ -5,7 +5,7 @@
 // Gebruik:
 //   node scripts/generate-apple-client-secret.mjs \
 //     --team-id ABCDE12345 \
-//     --client-id com.pinacot.app.signin \
+//     --client-id gallery.seen.app.signin \
 //     --key-id XXXXXXXXXX \
 //     --key-path ~/Downloads/AuthKey_XXXXXXXXXX.p8
 //

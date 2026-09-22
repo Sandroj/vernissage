@@ -269,7 +269,7 @@ async function seedArtist(config: ArtistSeedConfig) {
 }
 
 async function main() {
-  console.log('Seeding new artists into Pinacot...')
+  console.log('Seeding new artists into Seen...')
   console.log(`Database: ${DB_PATH}`)
 
   for (const config of ARTISTS) {

@@ -15,9 +15,9 @@ const geist = localFont({
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Meta')
   return {
-    title: 'Pinacot',
+    title: 'Seen',
     description: t('description'),
-    appleWebApp: { title: 'Pinacot', statusBarStyle: 'default' },
+    appleWebApp: { title: 'Seen', statusBarStyle: 'default' },
   }
 }
 

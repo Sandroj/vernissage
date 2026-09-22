@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Pinacot',
-    short_name: 'Pinacot',
+    name: 'Seen',
+    short_name: 'Seen',
     description: 'Houd bij welke kunstwerken je hebt gezien',
     start_url: '/',
     display: 'standalone',

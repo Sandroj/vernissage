@@ -13,7 +13,7 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
   if (!session?.user?.id) return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 })
 
   if (!(await hasActiveEntitlement(session.user.id))) {
-    return NextResponse.json({ error: 'Dit vereist Pinacot Plus.' }, { status: 403 })
+    return NextResponse.json({ error: 'Dit vereist Seen Plus.' }, { status: 403 })
   }
 
   const userId = session.user.id

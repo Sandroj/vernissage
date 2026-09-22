@@ -303,7 +303,7 @@
     "addVisit": "Add another visit",
     "deleteVisit": "Delete",
     "upsellTitle": "Save more than one visit",
-    "upsellBody": "Save multiple visits to this artwork with Pinacot Plus — €24.99/year.",
+    "upsellBody": "Save multiple visits to this artwork with Seen Plus — €24.99/year.",
     "upgradeButton": "Upgrade to Plus",
     "checkoutError": "Could not start checkout. Please try again."
   },
@@ -339,7 +339,7 @@
     "loanEyebrow": "On loan",
     "loanedOut": "On loan elsewhere",
     "onLoanAt": "Currently on view at {museum}",
-    "availableInApp": "available in Pinacot",
+    "availableInApp": "available in Seen",
     "linkedWorks": "linked",
     "withoutImage": "{count, plural, =1 {1 linked work has no image and isn't shown in the gallery yet.} other {# linked works have no image and aren't shown in the gallery yet.}}",
     "noAvailableWorks": "No works with images available yet",
@@ -444,7 +444,7 @@
     "deleting": "Deleting..."
   },
   "Discover": {
-    "introEyebrow": "Welcome to Pinacot",
+    "introEyebrow": "Welcome to Seen",
     "introTitle1": "Remember what you've seen",
     "introText1": "Log which artwork you saw, in which museum and when, in a couple of taps.",
     "introTitle2": "Find it again with ease",
@@ -469,7 +469,7 @@
   "Privacy": {
     "title": "Privacy",
     "updated": "Last updated: 21 September 2026",
-    "intro": "Pinacot is a personal, non-commercial app for keeping track of the artworks you've seen. Here is what we do with your data.",
+    "intro": "Seen is a personal, non-commercial app for keeping track of the artworks you've seen. Here is what we do with your data.",
     "collectTitle": "What we store",
     "collect1": "Your email address and name — to recognise your account. If you sign in with Google or Apple, we only receive the account details you allow, such as your name, email address and optionally profile picture; never your password or other account data.",
     "collect2": "The artworks you mark as seen, together with the date, location, rating, notes and optional photo you enter yourself.",
@@ -479,7 +479,7 @@
     "use2": "If you enable “Seen items public”, other users only see how many people have seen a work — never who.",
     "use3": "We do not sell or share your data with third parties and do not use it for advertising.",
     "storageTitle": "Where it lives",
-    "storage": "The database is hosted by Turso and the app by Vercel, under their standard security. Artwork images are loaded via Cloudflare R2 and an image proxy (wsrv.nl); no personal data is sent along with those requests. Photos you add to a seen work or visit are stored separately, in a non-public Cloudflare R2 storage; they're only visible to you via a temporary secure link. For password resets and account notifications we send email via Resend. If you choose Pinacot Plus, Stripe processes your email address and payment details to handle the payment; we ourselves only store your subscription status, never your card or bank details.",
+    "storage": "The database is hosted by Turso and the app by Vercel, under their standard security. Artwork images are loaded via Cloudflare R2 and an image proxy (wsrv.nl); no personal data is sent along with those requests. Photos you add to a seen work or visit are stored separately, in a non-public Cloudflare R2 storage; they're only visible to you via a temporary secure link. For password resets and account notifications we send email via Resend. If you choose Seen Plus, Stripe processes your email address and payment details to handle the payment; we ourselves only store your subscription status, never your card or bank details.",
     "rightsTitle": "Your rights",
     "rights": "You can change your name and privacy setting yourself on your profile page. From there you can also export all your data or delete your account and all associated data yourself, immediately — no email needed. If you still need help, email <email></email>.",
     "cookiesTitle": "Cookies",

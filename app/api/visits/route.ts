@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   if (!session?.user?.id) return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 })
 
   if (!(await hasActiveEntitlement(session.user.id))) {
-    return NextResponse.json({ error: 'Dit vereist Pinacot Plus.' }, { status: 403 })
+    return NextResponse.json({ error: 'Dit vereist Seen Plus.' }, { status: 403 })
   }
 
   const { artworkId, dateSeen, locationSeen, notes, rating, photo_url } = await req.json()

@@ -303,7 +303,7 @@
     "addVisit": "Nog een bezoek toevoegen",
     "deleteVisit": "Verwijderen",
     "upsellTitle": "Bewaar meerdere bezoeken",
-    "upsellBody": "Bewaar meerdere bezoeken aan dit werk met Pinacot Plus — €24,99/jaar.",
+    "upsellBody": "Bewaar meerdere bezoeken aan dit werk met Seen Plus — €24,99/jaar.",
     "upgradeButton": "Upgrade naar Plus",
     "checkoutError": "Kon de checkout niet starten. Probeer het opnieuw."
   },
@@ -339,7 +339,7 @@
     "loanEyebrow": "Bruiklenen",
     "loanedOut": "Elders in bruikleen",
     "onLoanAt": "Nu te zien bij {museum}",
-    "availableInApp": "beschikbaar in Pinacot",
+    "availableInApp": "beschikbaar in Seen",
     "linkedWorks": "gekoppeld",
     "withoutImage": "{count, plural, =1 {1 gekoppeld werk heeft geen beeld en staat daarom nog niet in de galerij.} other {# gekoppelde werken hebben geen beeld en staan daarom nog niet in de galerij.}}",
     "noAvailableWorks": "Nog geen werken met afbeelding beschikbaar",
@@ -444,7 +444,7 @@
     "deleting": "Bezig met verwijderen..."
   },
   "Discover": {
-    "introEyebrow": "Welkom bij Pinacot",
+    "introEyebrow": "Welkom bij Seen",
     "introTitle1": "Onthoud wat je hebt gezien",
     "introText1": "Leg in een paar tikken vast welk kunstwerk je zag, in welk museum en wanneer.",
     "introTitle2": "Vind het moeiteloos terug",
@@ -469,7 +469,7 @@
   "Privacy": {
     "title": "Privacy",
     "updated": "Laatst bijgewerkt: 21 september 2026",
-    "intro": "Pinacot is een persoonlijke, niet-commerciële app om bij te houden welke kunstwerken je hebt gezien. Dit is wat we met je gegevens doen.",
+    "intro": "Seen is een persoonlijke, niet-commerciële app om bij te houden welke kunstwerken je hebt gezien. Dit is wat we met je gegevens doen.",
     "collectTitle": "Welke gegevens we bewaren",
     "collect1": "Je e-mailadres en naam — om je account te herkennen. Log je in met Google of Apple, dan ontvangen we alleen de accountgegevens die je toestaat, zoals je naam, e-mailadres en eventueel profielfoto; nooit je wachtwoord of andere accountgegevens.",
     "collect2": "De kunstwerken die je als gezien markeert, met de datum, locatie, waardering, notitie en optionele foto die je zelf invult.",
@@ -479,7 +479,7 @@
     "use2": "Als je “Gezien-items openbaar” aanzet, zien andere gebruikers alleen hoeveel mensen een werk hebben gezien — nooit wie.",
     "use3": "We verkopen of delen je gegevens niet met derden en gebruiken ze niet voor advertenties.",
     "storageTitle": "Waar ze staan",
-    "storage": "De database draait bij Turso en de app bij Vercel, beide binnen de EU/VS onder hun standaard beveiliging. Kunstwerkafbeeldingen worden geladen via Cloudflare R2 en een beeldproxy (wsrv.nl); daarbij worden geen persoonsgegevens meegestuurd. Foto's die je zelf bij een gezien werk of bezoek toevoegt, bewaren we apart in een niet-openbare Cloudflare R2-opslag; ze zijn alleen voor jou zichtbaar via een tijdelijke beveiligde link. Voor wachtwoordherstel en accountmeldingen versturen we e-mail via Resend. Kies je voor Pinacot Plus, dan verwerkt Stripe je e-mailadres en betaalgegevens om de betaling af te handelen; wij bewaren zelf alleen je abonnementsstatus, nooit je kaart- of bankgegevens.",
+    "storage": "De database draait bij Turso en de app bij Vercel, beide binnen de EU/VS onder hun standaard beveiliging. Kunstwerkafbeeldingen worden geladen via Cloudflare R2 en een beeldproxy (wsrv.nl); daarbij worden geen persoonsgegevens meegestuurd. Foto's die je zelf bij een gezien werk of bezoek toevoegt, bewaren we apart in een niet-openbare Cloudflare R2-opslag; ze zijn alleen voor jou zichtbaar via een tijdelijke beveiligde link. Voor wachtwoordherstel en accountmeldingen versturen we e-mail via Resend. Kies je voor Seen Plus, dan verwerkt Stripe je e-mailadres en betaalgegevens om de betaling af te handelen; wij bewaren zelf alleen je abonnementsstatus, nooit je kaart- of bankgegevens.",
     "rightsTitle": "Je rechten",
     "rights": "Je kunt je naam en privacy-instelling zelf aanpassen op je profielpagina. Daar kun je ook al je gegevens exporteren of je account en alle bijbehorende gegevens direct zelf verwijderen — geen e-mail nodig. Heb je toch hulp nodig, mail dan naar <email></email>.",
     "cookiesTitle": "Cookies",

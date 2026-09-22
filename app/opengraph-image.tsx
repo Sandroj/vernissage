@@ -26,7 +26,7 @@ export default function OpengraphImage() {
           <circle cx="21.5" cy="9.5" r="3.4" fill="#ed694c" stroke="#fffdf8" strokeWidth="1.2" />
         </svg>
         <div style={{ display: 'flex', fontSize: 76, fontWeight: 600, color: '#24211c', letterSpacing: -2 }}>
-          Pinacot
+          Seen
         </div>
         <div style={{ display: 'flex', fontSize: 28, color: '#6b6355' }}>
           Kunstwerken en museumbezoeken bijhouden

@@ -28,9 +28,9 @@ function renderNav() {
 }
 
 describe('Nav', () => {
-  it('toont Pinacot logo', () => {
+  it('toont Seen logo', () => {
     renderNav()
-    expect(screen.getByText('Pinacot')).toBeInTheDocument()
+    expect(screen.getByText('Seen')).toBeInTheDocument()
   })
   it('toont Inloggen als niet ingelogd', () => {
     renderNav()

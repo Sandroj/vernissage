@@ -8,8 +8,8 @@ import type { CapacitorConfig } from '@capacitor/cli'
 // zelf, niet je laptop). Zie appstore-plan §4 in de datarepo voor de
 // achtergrond van deze keuze.
 const config: CapacitorConfig = {
-  appId: 'com.pinacot.app',
-  appName: 'Pinacot',
+  appId: 'gallery.seen.app',
+  appName: 'Seen',
   webDir: 'public',
   server: {
     url: 'https://www.seen.gallery',

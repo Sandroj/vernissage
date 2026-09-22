@@ -10,7 +10,7 @@ import urllib.parse
 OUTDIR = os.path.join(os.path.dirname(__file__), '..', 'public', 'images', 'discover')
 IIIF = 'https://www.artic.edu/iiif/2'
 AIC  = 'https://api.artic.edu/api/v1/artworks/search'
-UA   = 'Pinacot/1.0 (educational project; contact@example.com)'
+UA   = 'Seen/1.0 (educational project; contact@example.com)'
 
 # Artists to fetch — no Banksy per user request
 ARTISTS = [

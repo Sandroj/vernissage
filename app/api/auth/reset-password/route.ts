@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
       const { sent, error } = await sendNotificationEmail({
         to: user.email,
-        subject: 'Wachtwoord resetten voor Pinacot',
+        subject: 'Wachtwoord resetten voor Seen',
         text: `Klik op deze link om je wachtwoord te resetten (1 uur geldig):\n${resetUrl}\n\nHeb je dit niet aangevraagd? Negeer dit bericht.`,
       })
       if (!sent) {

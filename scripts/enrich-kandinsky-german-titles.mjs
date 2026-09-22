@@ -56,7 +56,7 @@ async function fetchWikidataLabels(qids) {
     url.searchParams.set('props', 'labels')
     url.searchParams.set('languages', 'de')
     url.searchParams.set('format', 'json')
-    const response = await fetch(url, { headers: { 'User-Agent': 'PinacotArtCatalogue/1.0 (title metadata research)' } })
+    const response = await fetch(url, { headers: { 'User-Agent': 'SeenArtCatalogue/1.0 (title metadata research)' } })
     if (!response.ok) throw new Error(`Wikidata returned ${response.status}`)
     const json = await response.json()
     return json.entities ?? {}
@@ -75,7 +75,7 @@ async function main() {
 
   const sourcedPages = rows.filter(row => row.source_name === 'wassilykandinsky.net' && row.source_url)
   const pageTitles = await mapLimit(sourcedPages, 4, async (row) => {
-    const response = await fetch(String(row.source_url), { headers: { 'User-Agent': 'PinacotArtCatalogue/1.0 (title metadata research)' } })
+    const response = await fetch(String(row.source_url), { headers: { 'User-Agent': 'SeenArtCatalogue/1.0 (title metadata research)' } })
     if (!response.ok) throw new Error(`Source page returned ${response.status}`)
     return parseGermanSubtitle(await response.text())
   })
