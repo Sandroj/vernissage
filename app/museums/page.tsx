@@ -21,7 +21,10 @@ export default async function MuseumsPage() {
   const tc = await getTranslations('Countries')
   const locale = await getLocale()
 
-  // Haal alle musea op — filter daarna in JS op coördinaten + artworks
+  // Haal alle musea op — filter daarna in JS op coördinaten + artworks.
+  // Een werk telt mee bij zowel de eigenaar (museumId) als waar het nu
+  // tijdelijk hangt (een actieve inkomende Loan) — zie loansTo hieronder.
+  const currentLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
   const allMuseums = await prisma.museum.findMany({
     include: {
       _count: { select: { artworks: { where: primaryCatalogue } } },
@@ -31,14 +34,18 @@ export default async function MuseumsPage() {
         select: { image_local_path: true, image_url: true },
         orderBy: { id: 'asc' },
       },
+      loansTo: {
+        where: { ...currentLoan, artwork: primaryCatalogue },
+        select: { artwork: { select: { image_local_path: true, image_url: true } } },
+      },
     },
     orderBy: { name: 'asc' },
   })
 
-  // Filter op geldige coördinaten en minstens één werk
+  // Filter op geldige coördinaten en minstens één werk (eigen collectie of bruikleen)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const museums = (allMuseums as any[]).filter(
-    (m) => m.lat != null && m.lng != null && m._count.artworks > 0
+    (m) => m.lat != null && m.lng != null && m._count.artworks + m.loansTo.length > 0
   )
 
   // Seen counts per museum
@@ -52,7 +59,8 @@ export default async function MuseumsPage() {
     }
   }
 
-  const totalArtworks = museums.reduce((sum: number, m: { _count: { artworks: number } }) => sum + m._count.artworks, 0)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const totalArtworks = museums.reduce((sum: number, m: any) => sum + m._count.artworks + m.loansTo.length, 0)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pins = museums.map((m: any) => ({
@@ -62,8 +70,11 @@ export default async function MuseumsPage() {
     country: m.country === 'Onbekend' ? '' : tc.has(m.country) ? tc(m.country) : m.country,
     lat: m.lat as number,
     lng: m.lng as number,
-    artworkCount: m._count.artworks,
-    previewImage: proxyImg(m.artworks[0]?.image_local_path ?? m.artworks[0]?.image_url) ?? null,
+    artworkCount: m._count.artworks + m.loansTo.length,
+    previewImage: proxyImg(
+      m.artworks[0]?.image_local_path ?? m.artworks[0]?.image_url
+      ?? m.loansTo[0]?.artwork?.image_local_path ?? m.loansTo[0]?.artwork?.image_url
+    ) ?? null,
     seenCount: seenByMuseum[m.id] ?? 0,
   }))
   const popupLabels = { works: t('works'), seen: t('seen'), openMuseum: t('openMuseum') }
