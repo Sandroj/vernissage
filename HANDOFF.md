@@ -1,5 +1,62 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 24 september 2026 (holo-folierand rond het logo)
+
+- Zelfde branch `seen-logo-salonwand`: het merk krijgt een dunne holo-rand
+  ("Holo, clean" uit het Design-canvas, artboard "★ Logo – holo variations"),
+  als knipoog naar zeldzame verzamelkaarten. Verloop:
+  `conic-gradient(from 210deg, #F2C66D, #FBEFD0, #A9D3E8, #C8B8EC, #F0B8CF, #FBEFD0, #F2C66D)`
+  (`HOLO_FOIL` in `components/logo.tsx`). Geen glans-overlay.
+- `LogoMark` is nu een `<span>` met die gradient als achtergrond en de tegel-SVG
+  erin; rand ≈ 4% van het formaat (min. 1.5px). `foil={false}` zet hem uit.
+- `app/apple-icon.tsx` vervangen door statische `app/apple-icon.png` (Satori
+  kent geen conic-gradient). `app/opengraph-image.tsx` gebruikt daarom
+  `public/icons/icon-512.png` als merkbeeld. `app/icon.svg` benadert de holo
+  met een lineaire gradient.
+- Opnieuw gegenereerd met holo-rand: `favicon.ico`, `icon-192/512.png`,
+  `apple-icon.png`, iOS `AppIcon-512@2x.png` (volle vierkant; holo langs de
+  rand, iOS maskeert de hoeken), Android `ic_launcher.png` en
+  `ic_launcher_round.png`. De adaptieve Android-iconen (API 26+:
+  `ic_launcher_foreground` op `#16162A`) hebben bewust géén holo-rand, omdat
+  de maskervorm per toestel verschilt.
+- Verificatie: `tsc --noEmit` en `git diff --check` groen; `npm run build`
+  lokaal op de Mac gedraaid (24 september 2026) en geslaagd — volledige
+  routetabel gegenereerd, geen fouten. De `prisma:error ... ENOTFOUND
+  arttracker-sandroj...turso.io`-regels tijdens static generation zijn de
+  sandbox zonder netwerktoegang tot Turso, geen buildfout.
+
+## Aanvulling — 24 september 2026 (nieuw logo: salonwand + rode stip)
+
+- Branch `seen-logo-salonwand` (vanaf `main`): nieuw Seen-logo doorgevoerd.
+  Merk = "salonwand" (vijf vlakken in siena/oker/viridiaan/blauw/ivoor op een
+  inktkleurige tegel `#16162A`) met een rode "gezien"-stip `#D8342B`.
+  Woordmerk = `seen` in Instrument Serif + dezelfde rode stip.
+- `components/logo.tsx`: `LogoMark` (valt onder 40 px terug op een
+  vereenvoudigde versie van 3 vlakken + stip; `tone="light"` voor donkere
+  achtergronden), nieuw `Wordmark`, en `Logo` (mark + woordmark). Kleuren in
+  `BRAND`.
+- Font: `app/fonts/InstrumentSerif-Regular.woff` (OFL, uit
+  `@fontsource/instrument-serif` 5.3.0, latin-subset) via `next/font/local` als
+  `--font-logo`; Tailwind-klasse `font-logo`. Alleen gebruikt voor het woordmerk.
+- Vervangen: `app/icon.svg`, `app/favicon.ico` (16/32/48), `app/apple-icon.tsx`,
+  `app/opengraph-image.tsx` (laadt het woff-font via `readFile`; Satori kan
+  geen woff2), `public/icons/icon-{192,512}.png`, iOS
+  `AppIcon-512@2x.png`, Android `mipmap-*/ic_launcher{,_round,_foreground}.png`
+  en `values/ic_launcher_background.xml` (nu `#16162A`). Login toont het
+  woordmerk in plaats van de tekst "Seen".
+- Ontwerpbron: Design-canvas "Seen – logo, ad & fonts", artboard
+  "★ Logo – salonwand + rode stip".
+- Verificatie: `tsc --noEmit` en `git diff --check` groen. `next build` kon in
+  de Linux-sandbox niet draaien (macOS-native modules); **draai
+  `npm run build` lokaal op de Mac** vóór mergen. OG-beeld en woordmerk zijn
+  los gerenderd en visueel gecontroleerd.
+- Niet aangepast (bewuste keuze, nog open): `themeColor`/`theme_color`
+  (`#4256cc`) in `app/layout.tsx` en `app/manifest.ts`, de blauwe accenten in
+  de UI, en de iOS/Android-splashscreens. `npx cap sync` nodig om de native
+  projecten bij te werken.
+- Volgende stap: lokaal builden, bekijken, branch mergen naar `main` en
+  deployen; daarna eventueel themeColor naar `#16162A`.
+
 ## Aanvulling — 19 september 2026 (populariteitssortering)
 
 - `Popular` in het werkenraster gebruikt nu een onderzochte curatoriële ranking
