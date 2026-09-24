@@ -8,8 +8,6 @@ export const contentType = 'image/png'
 export default async function OpengraphImage() {
   // Satori (next/og) kan geen woff2 lezen; daarom de .woff-versie.
   const instrumentSerif = await readFile(join(process.cwd(), 'app/fonts/InstrumentSerif-Regular.woff'))
-  const mark = await readFile(join(process.cwd(), 'public/icons/icon-512.png'))
-  const markSrc = `data:image/png;base64,${mark.toString('base64')}`
 
   return new ImageResponse(
     (
@@ -26,10 +24,15 @@ export default async function OpengraphImage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 44 }}>
-          {/* Holo-rand kan Satori niet tekenen (geen conic-gradient), dus het
-              merk komt uit de gegenereerde PNG. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={markSrc} width={176} height={176} alt="" />
+          <svg width="168" height="168" viewBox="0 0 120 120">
+            <rect width="120" height="120" rx="28" fill="#16162A" />
+            <rect x="16" y="16" width="42" height="54" rx="2" fill="#A4482A" />
+            <rect x="64" y="16" width="40" height="24" rx="2" fill="#E3B04B" />
+            <rect x="64" y="46" width="40" height="24" rx="2" fill="#1F5A4A" />
+            <rect x="16" y="76" width="26" height="28" rx="2" fill="#4A6FB5" />
+            <rect x="48" y="76" width="56" height="28" rx="2" fill="#F4EFE6" />
+            <circle cx="90" cy="90" r="6" fill="#D8342B" />
+          </svg>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 7 }}>
             <div style={{ display: 'flex', fontFamily: 'Instrument Serif', fontSize: 190, lineHeight: 0.8, letterSpacing: -4, color: '#16162A' }}>
               seen

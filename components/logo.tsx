@@ -1,6 +1,6 @@
 /**
  * Seen-merk: een "salonwand" — kunstwerken dicht op elkaar gehangen — met de
- * rode "gezien"-stip, omlijst door een dunne holo-folierand (verzamelkaart). In galeries betekent een rode stip "verkocht"; bij Seen
+ * rode "gezien"-stip. In galeries betekent een rode stip "verkocht"; bij Seen
  * betekent hij "gezien". Het woordmerk is `seen` in Instrument Serif, gevolgd
  * door dezelfde stip.
  *
@@ -20,75 +20,48 @@ export const BRAND = {
 
 type MarkTone = 'dark' | 'light'
 
-/**
- * Holo-folierand, zoals bij een zeldzame verzamelkaart. Zelfde verloop als op
- * de app-iconen (PNG's in public/icons, app/apple-icon.png, iOS/Android).
- */
-export const HOLO_FOIL =
-  'conic-gradient(from 210deg, #F2C66D, #FBEFD0, #A9D3E8, #C8B8EC, #F0B8CF, #FBEFD0, #F2C66D)'
-
 export function LogoMark({
   size = 32,
   tone = 'dark',
-  foil = true,
   className,
 }: {
   size?: number
   /** `dark`: donkere tegel (standaard). `light`: ivoren tegel voor op donkere achtergronden. */
   tone?: MarkTone
-  /** Holo-folierand rond de tegel (standaard aan). */
-  foil?: boolean
   className?: string
 }) {
   const bg = tone === 'dark' ? BRAND.ink : BRAND.ivory
   const accentTile = tone === 'dark' ? BRAND.ivory : BRAND.ink
   const simple = size < 40
-  // Rand ≈ 4% van het formaat (8px op 196px), minimaal 1.5px zodat hij op
-  // navigatieformaat nog zichtbaar is.
-  const edge = foil ? Math.max(1.5, Math.round(size * 0.041 * 2) / 2) : 0
-  const inner = size - edge * 2
-  const innerRadius = (inner * 28) / 120
 
   return (
-    <span
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 120 120"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
       aria-hidden="true"
-      className={`inline-block shrink-0 align-middle ${className ?? ''}`}
-      style={{
-        width: size,
-        height: size,
-        padding: edge,
-        boxSizing: 'border-box',
-        borderRadius: innerRadius + edge,
-        background: foil ? HOLO_FOIL : undefined,
-      }}
     >
-      <svg
-        width={inner}
-        height={inner}
-        viewBox="0 0 120 120"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ display: 'block' }}
-      >
-        <rect width="120" height="120" rx="28" fill={bg} />
-        {simple ? (
-          <>
-            <rect x="14" y="14" width="44" height="92" rx="3" fill={BRAND.siena} />
-            <rect x="64" y="14" width="42" height="42" rx="3" fill={BRAND.ochre} />
-            <rect x="64" y="62" width="42" height="44" rx="3" fill={accentTile} />
-            <circle cx="85" cy="84" r="12" fill={BRAND.dot} />
-          </>
-        ) : (
-          <>
-            <rect x="16" y="16" width="42" height="54" rx="2" fill={BRAND.siena} />
-            <rect x="64" y="16" width="40" height="24" rx="2" fill={BRAND.ochre} />
-            <rect x="64" y="46" width="40" height="24" rx="2" fill={BRAND.viridian} />
-            <rect x="16" y="76" width="26" height="28" rx="2" fill={BRAND.blue} />
-            <rect x="48" y="76" width="56" height="28" rx="2" fill={accentTile} />
-            <circle cx="90" cy="90" r="6" fill={BRAND.dot} />
-          </>
-        )}
-      </svg>
-    </span>
+      <rect width="120" height="120" rx="28" fill={bg} />
+      {simple ? (
+        <>
+          <rect x="14" y="14" width="44" height="92" rx="3" fill={BRAND.siena} />
+          <rect x="64" y="14" width="42" height="42" rx="3" fill={BRAND.ochre} />
+          <rect x="64" y="62" width="42" height="44" rx="3" fill={accentTile} />
+          <circle cx="85" cy="84" r="12" fill={BRAND.dot} />
+        </>
+      ) : (
+        <>
+          <rect x="16" y="16" width="42" height="54" rx="2" fill={BRAND.siena} />
+          <rect x="64" y="16" width="40" height="24" rx="2" fill={BRAND.ochre} />
+          <rect x="64" y="46" width="40" height="24" rx="2" fill={BRAND.viridian} />
+          <rect x="16" y="76" width="26" height="28" rx="2" fill={BRAND.blue} />
+          <rect x="48" y="76" width="56" height="28" rx="2" fill={accentTile} />
+          <circle cx="90" cy="90" r="6" fill={BRAND.dot} />
+        </>
+      )}
+    </svg>
   )
 }
 
