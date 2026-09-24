@@ -124,7 +124,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-12">
-      <section className="relative overflow-hidden rounded-[2rem] bg-[#25231f] px-5 py-6 text-white sm:px-10 sm:py-12 lg:min-h-[570px] lg:px-14 lg:py-16">
+      <section className="relative overflow-hidden rounded-[2rem] bg-[#25231f] px-5 py-6 text-white sm:px-10 sm:py-9 lg:min-h-[460px] lg:px-14 lg:py-10">
         <div className="absolute -left-24 top-1/2 size-72 -translate-y-1/2 rounded-full bg-[#ed694c]/25 blur-3xl" />
         <div className="absolute right-20 top-0 size-72 rounded-full bg-[#5368df]/25 blur-3xl" />
         <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_.95fr]">
@@ -142,14 +142,14 @@ export default async function DashboardPage() {
               <Link href="/artists"><Button className="h-12 rounded-full bg-[#ed694c] px-6 text-white hover:bg-[#db573c]">{t('explore')} <ArrowUpRight size={16} /></Button></Link>
               {!session && <Link href="/login?mode=register"><Button variant="outline" className="h-12 rounded-full border-white/20 bg-white/5 px-6 text-white hover:bg-white/10">{t('ctaRegister')}</Button></Link>}
             </div>
-            <div className="mt-12 flex gap-8 border-t border-white/12 pt-6 text-sm text-white/50">
+            <div className="mt-8 flex gap-8 border-t border-white/12 pt-6 text-sm text-white/50">
               <div><span className="block text-2xl font-semibold text-white">{totalArtworks.toLocaleString()}</span>{t('works')}</div>
               <div><span className="block text-2xl font-semibold text-white">{artists.length}</span>{t('artists')}</div>
               <div><span className="block text-2xl font-semibold text-white">{totalSeen}</span>{t('seen')}</div>
             </div>
           </div>
 
-          <div className="relative h-[200px] w-full overflow-hidden rounded-[1.6rem] sm:h-[430px]">
+          <div className="relative h-[200px] w-full overflow-hidden rounded-[1.6rem] sm:h-[340px]">
             {heroGroups.map((group, groupIndex) => (
               <div
                 key={groupIndex}
