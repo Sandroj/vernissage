@@ -26,5 +26,9 @@ export default async () => {
   return {
     ...jestConfig,
     transformIgnorePatterns: updatedPatterns,
+    // .worktrees/ (git-ignored, see using-git-worktrees) sits inside the repo
+    // root — without this, Jest also discovers and runs the copies of every
+    // test file nested inside any active worktree.
+    testPathIgnorePatterns: [...(jestConfig.testPathIgnorePatterns || []), '<rootDir>/.worktrees/', '<rootDir>/worktrees/'],
   }
 }
