@@ -45,12 +45,17 @@ export default async function MuseumDetailPage({
 
   if (!museum) notFound()
 
+  // Grid toont zowel eigen werken als inkomende bruiklenen (artwork.museumId
+  // wijst dan naar het thuismuseum, niet dit museum) — seen-status moet op
+  // artworkId matchen, niet op museumId, anders mist een geleend werk altijd.
+  const gridArtworkIds = [...museum.artworks, ...museum.loansTo.map((loan) => loan.artwork)].map((a) => a.id)
+
   const seenRecords = session?.user?.id
     ? await signPhotoUrls(
         await prisma.seen.findMany({
           where: {
             userId: session.user.id,
-            artwork: { museumId, ...primaryCatalogue },
+            artworkId: { in: gridArtworkIds },
           },
           select: {
             id: true,

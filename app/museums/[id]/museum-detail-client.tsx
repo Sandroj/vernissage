@@ -69,10 +69,11 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
     const res = await fetch('/api/seen')
     if (res.ok) {
       const all = await res.json()
+      const gridIds = new Set(gridArtworks.map((a) => a.id))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map: Record<number, any> = {}
       for (const s of all) {
-        if (museum.artworks.some((a) => a.id === s.artworkId)) {
+        if (gridIds.has(s.artworkId)) {
           map[s.artworkId] = s
         }
       }
