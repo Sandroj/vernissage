@@ -127,22 +127,22 @@ export default async function DashboardPage() {
       <section className="relative overflow-hidden rounded-[2rem] bg-[#25231f] px-5 py-6 text-white sm:px-10 sm:py-9 lg:min-h-[460px] lg:px-14 lg:py-10">
         <div className="absolute -left-24 top-1/2 size-72 -translate-y-1/2 rounded-full bg-[#ed694c]/25 blur-3xl" />
         <div className="absolute right-20 top-0 size-72 rounded-full bg-[#5368df]/25 blur-3xl" />
-        <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_.95fr]">
+        <div className="relative z-10 grid items-center gap-6 sm:gap-8 lg:gap-12 lg:grid-cols-[1.05fr_.95fr]">
           <div className="max-w-2xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-medium text-white/75">
+            <div className="mb-4 sm:mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-medium text-white/75">
               <Sparkles size={13} className="text-[#f4b548]" /> {t('eyebrow')}
             </div>
             <h1 className="font-display text-[clamp(2.75rem,11vw,7.7rem)] sm:text-[clamp(3.6rem,8vw,7.7rem)] font-medium leading-[.82] text-[#fffaf0]">
               {session?.user?.name ? t('hello', { name: session.user.name.split(' ')[0] }) : t('heroTitle')}
             </h1>
-            <p className="mt-7 max-w-xl text-base leading-relaxed text-white/62 sm:text-lg">
+            <p className="mt-4 sm:mt-7 max-w-xl text-base leading-relaxed text-white/62 sm:text-lg">
               {session ? (totalSeen > 0 ? t('progress', { seen: totalSeen, total: totalArtworks }) : t('start')) : t('heroText')}
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-6 sm:mt-9 flex flex-wrap gap-3">
               <Link href="/artists"><Button className="h-12 rounded-full bg-[#ed694c] px-6 text-white hover:bg-[#db573c]">{t('explore')} <ArrowUpRight size={16} /></Button></Link>
               {!session && <Link href="/login?mode=register"><Button variant="outline" className="h-12 rounded-full border-white/20 bg-white/5 px-6 text-white hover:bg-white/10">{t('ctaRegister')}</Button></Link>}
             </div>
-            <div className="mt-8 flex gap-8 border-t border-white/12 pt-6 text-sm text-white/50">
+            <div className="mt-5 pt-4 sm:mt-8 sm:pt-6 flex gap-8 border-t border-white/12 text-sm text-white/50">
               <div><span className="block text-2xl font-semibold text-white">{totalArtworks.toLocaleString()}</span>{t('works')}</div>
               <div><span className="block text-2xl font-semibold text-white">{artists.length}</span>{t('artists')}</div>
               <div><span className="block text-2xl font-semibold text-white">{totalSeen}</span>{t('seen')}</div>
