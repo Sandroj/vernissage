@@ -7,7 +7,7 @@ import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
 import VisitHistory from '@/components/visit-history'
 import ShareMenu from '@/components/share-menu'
-import { cn, proxyImg } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useTranslations, useLocale } from 'next-intl'
 import ArtworkPlaceholder from '@/components/artwork-placeholder'
@@ -77,7 +77,7 @@ export default function ArtworkDetailClient({
       .catch(() => {})
   }, [modalOpen, seen, artwork.id])
 
-  const imgSrc = artwork.image_local_path ?? proxyImg(artwork.image_url)
+  const imgSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const missingImageLabel = t('missingImage')
   const currentLoan = artwork.loans?.[0]
   const loanUntil = currentLoan?.endAt

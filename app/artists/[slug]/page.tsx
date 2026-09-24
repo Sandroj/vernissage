@@ -5,7 +5,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { notFound } from 'next/navigation'
 import ArtistDetailClient from './artist-detail-client'
-import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 import { signPhotoUrls } from '@/lib/photo-storage'
 import { unstable_cache } from 'next/cache'
@@ -143,10 +142,10 @@ export default async function ArtistDetailPage({
     lat: museum.lat as number,
     lng: museum.lng as number,
     artworkCount: museum._count.artworks + museum.loansTo.length,
-    previewImage: proxyImg(
+    previewImage:
       museum.artworks[0]?.image_local_path ?? museum.artworks[0]?.image_url
       ?? museum.loansTo[0]?.artwork?.image_local_path ?? museum.loansTo[0]?.artwork?.image_url
-    ) ?? null,
+      ?? null,
     seenCount: seenByMuseum[museum.id] ?? 0,
   }))
 

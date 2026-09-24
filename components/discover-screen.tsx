@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { BookmarkPlus, Check, Search, Sparkles } from 'lucide-react'
@@ -129,10 +130,12 @@ export default function DiscoverScreen({ initialVotes, isLoggedIn, showIntro }: 
                 className={`overflow-hidden rounded-2xl border-2 transition-all ${isSelected ? 'border-[#4256cc] shadow-lg shadow-[#4256cc]/15' : 'border-transparent'}`}
               >
                 <div className="relative aspect-square bg-stone-200">
-                  <img
+                  <Image
                     src={`/images/discover/${slug}.jpg`}
                     alt={name}
-                    className="size-full object-cover"
+                    fill
+                    sizes="(max-width: 640px) 33vw, 25vw"
+                    className="object-cover"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                   />
                   {isSelected && (

@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { MapPin, LocateFixed, ArrowLeftRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
@@ -167,8 +168,8 @@ export default function NearbyScreen({ artists }: { artists: { id: number; name:
           <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {artworks.map((artwork) => (
               <Link key={artwork.id} href={`/artworks/${artwork.id}`} className="group min-w-0">
-                <div className="aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-1 ring-black/5 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
-                  <img src={artwork.image ?? '/placeholder.svg'} alt={artwork.title} className="size-full object-cover transition duration-700 group-hover:scale-105" />
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-1 ring-black/5 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
+                  <Image src={artwork.image ?? '/placeholder.svg'} alt={artwork.title} fill sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 18vw" className="object-cover transition duration-700 group-hover:scale-105" />
                 </div>
                 <h3 className="font-display mt-3 line-clamp-2 text-lg font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{artwork.title}</h3>
                 <p className="mt-1 truncate text-[11px] font-medium uppercase tracking-[.08em] text-stone-400">

@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import ProgressBar from '@/components/progress-bar'
-import { proxyImg } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 
 interface ArtistCardProps {
@@ -24,7 +24,7 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
   const pct = total > 0 ? (seenCount / total) * 100 : 0
 
   const [imgError, setImgError] = useState(false)
-  const imgSrc = imgError ? null : proxyImg(featuredImage ?? artist.portrait_url, 300)
+  const imgSrc = imgError ? null : (featuredImage ?? artist.portrait_url)
 
   return (
     <Link
@@ -33,13 +33,13 @@ export default function ArtistCard({ artist, seenCount, featuredImage }: ArtistC
     >
       <div className="relative aspect-square overflow-hidden rounded-2xl bg-stone-200 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
         {imgSrc ? (
-          <img
+          <Image
             src={imgSrc}
             onError={() => setImgError(true)}
             alt={t('featuredAlt', { name: artist.name })}
-            loading="lazy"
-            decoding="async"
-            className="size-full object-cover transition duration-700 group-hover:scale-105"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            className="object-cover transition duration-700 group-hover:scale-105"
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-[#e7e9fa] font-display text-4xl font-bold text-[#4256cc]/50">

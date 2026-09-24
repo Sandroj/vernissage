@@ -5,7 +5,7 @@ import { Building2, Globe, ImageOff, MapPin } from 'lucide-react'
 import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
 import { useTranslations } from 'next-intl'
-import { proxyImg } from '@/lib/utils'
+import Image from 'next/image'
 
 interface ArtworkWithArtist {
   id: number
@@ -63,7 +63,7 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
   const availableTotal = availableArtworks.length
   const withoutImage = linkedTotal - availableTotal
   const pct = linkedTotal > 0 ? (seenCount / linkedTotal) * 100 : 0
-  const cover = proxyImg(availableArtworks[0]?.image_local_path ?? availableArtworks[0]?.image_url)
+  const cover = availableArtworks[0]?.image_local_path ?? availableArtworks[0]?.image_url
 
   async function refresh() {
     const res = await fetch('/api/seen')
@@ -84,7 +84,7 @@ export default function MuseumDetailClient({ museum, seenMap: initialSeenMap, is
   return (
     <div className="pb-12">
       <div className="relative mb-10 min-h-[360px] overflow-hidden rounded-[2rem] bg-[#25231f] p-6 text-white sm:p-9 lg:p-11">
-        {cover && <img src={cover} alt="" className="absolute inset-0 size-full object-cover opacity-25" />}
+        {cover && <Image src={cover} alt="" fill sizes="100vw" priority className="object-cover opacity-25" />}
         <div className="absolute inset-0 bg-gradient-to-r from-[#24211d] via-[#24211d]/92 to-[#24211d]/45" />
         <div className="relative flex min-h-[290px] items-end">
           <div className="flex w-full items-start gap-4">

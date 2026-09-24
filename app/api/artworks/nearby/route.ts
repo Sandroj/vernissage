@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { prisma, primaryCatalogue } from '@/lib/prisma'
-import { proxyImg } from '@/lib/utils'
 import { haversineKm } from '@/lib/geo'
 
 const RADIUS_KM = 200
@@ -47,7 +46,7 @@ export async function GET(req: Request) {
         id: artwork.id,
         title: artwork.title,
         year: artwork.year_start,
-        image: proxyImg(artwork.image_local_path ?? artwork.image_url),
+        image: artwork.image_local_path ?? artwork.image_url ?? undefined,
         artistName: artwork.artist.name,
         distanceKm: Math.round(distanceKm),
         location: { id: location.id, name: location.name, city: location.city, country: location.country, lat: location.lat, lng: location.lng },

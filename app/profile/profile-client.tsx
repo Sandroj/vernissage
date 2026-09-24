@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { toast } from 'sonner'
 import { CheckCircle2, ChevronDown, Download, Eye, LogOut, Mail, Settings2, Sparkles, Trash2, User } from 'lucide-react'
 import { useTranslations, useFormatter } from 'next-intl'
-import { proxyImg } from '@/lib/utils'
+import Image from 'next/image'
 import Lightbox from '@/components/lightbox'
 
 interface RecentSeen {
@@ -133,10 +133,10 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
           ) : (
             <div className="grid gap-2 sm:grid-cols-2">
               {recentSeen.map((item) => {
-                const image = proxyImg(item.artwork.image_local_path ?? item.artwork.image_url)
+                const image = item.artwork.image_local_path ?? item.artwork.image_url
                 return <Link key={item.id} href={`/artworks/${item.artwork.id}`} className="group flex items-center gap-3 rounded-2xl p-2.5 transition hover:bg-black/[.035]">
-                  <div className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
-                    {image ? <img src={image} alt="" className="size-full object-cover transition duration-500 group-hover:scale-105" /> : <div className="size-full bg-[#e7e1d6]" />}
+                  <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
+                    {image ? <Image src={image} alt="" fill sizes="64px" className="object-cover transition duration-500 group-hover:scale-105" /> : <div className="size-full bg-[#e7e1d6]" />}
                   </div>
                   <div className="min-w-0"><p className="line-clamp-2 font-display text-base font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{item.artwork.title}</p><p className="mt-1 truncate text-xs text-stone-500">{item.artwork.artist.name} · {fmt.dateTime(new Date(item.dateSeen), { day: 'numeric', month: 'short', year: 'numeric' })}</p></div>
                 </Link>
@@ -157,11 +157,11 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
                     </summary>
                     <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
                       {artworks.map((artwork) => {
-                        const image = proxyImg(artwork.image_local_path ?? artwork.image_url)
+                        const image = artwork.image_local_path ?? artwork.image_url
                         return <li key={artwork.id}>
                           <Link href={`/artworks/${artwork.id}`} className="group flex min-w-0 items-center gap-2 rounded-xl p-1.5 transition hover:bg-black/[.035]">
-                            <span className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
-                              {image ? <img src={image} alt="" className="size-full object-cover transition duration-300 group-hover:scale-105" /> : <span className="block size-full bg-[#e7e1d6]" />}
+                            <span className="relative block size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
+                              {image ? <Image src={image} alt="" fill sizes="64px" className="object-cover transition duration-300 group-hover:scale-105" /> : <span className="block size-full bg-[#e7e1d6]" />}
                             </span>
                             <span className="min-w-0 line-clamp-2 text-xs leading-tight text-[#4256cc] group-hover:underline">{artwork.title}</span>
                           </Link>

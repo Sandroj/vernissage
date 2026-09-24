@@ -1,5 +1,4 @@
 import { prisma, hasImage, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
-import { proxyImg } from '@/lib/utils'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -83,10 +82,10 @@ export default async function MuseumsPage() {
     lat: m.lat as number,
     lng: m.lng as number,
     artworkCount: m._count.artworks + m.loansTo.length,
-    previewImage: proxyImg(
+    previewImage:
       m.artworks[0]?.image_local_path ?? m.artworks[0]?.image_url
       ?? m.loansTo[0]?.artwork?.image_local_path ?? m.loansTo[0]?.artwork?.image_url
-    ) ?? null,
+      ?? null,
     seenCount: seenByMuseum[m.id] ?? 0,
   }))
   const popupLabels = { works: t('works'), seen: t('seen'), openMuseum: t('openMuseum') }

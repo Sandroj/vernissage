@@ -4,7 +4,7 @@ import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
 import { useTranslations } from 'next-intl'
 import { ArrowDown, MapPin } from 'lucide-react'
-import { proxyImg } from '@/lib/utils'
+import Image from 'next/image'
 import MuseumMap, { type MuseumPin } from '@/components/museum-map'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -84,7 +84,7 @@ export default function ArtistDetailClient({ artist, totalWorks, seenMap: initia
   const seenCount = Object.keys(seenMap).length
   const total = totalWorks
   const pct = total > 0 ? (seenCount / total) * 100 : 0
-  const cover = proxyImg(artworks.find((a) => a.image_url || a.image_local_path)?.image_local_path ?? artworks.find((a) => a.image_url || a.image_local_path)?.image_url)
+  const cover = artworks.find((a) => a.image_url || a.image_local_path)?.image_local_path ?? artworks.find((a) => a.image_url || a.image_local_path)?.image_url
   const heroImage = cover ?? artist.portrait_url ?? undefined
 
   const years = artist.birth_year
@@ -141,13 +141,13 @@ export default function ArtistDetailClient({ artist, totalWorks, seenMap: initia
     <div className="pb-12">
       {/* Artist hero */}
       <div className="relative mb-10 min-h-[430px] overflow-hidden rounded-[2rem] bg-[#25231f] p-6 text-white sm:p-9 lg:p-12">
-        {heroImage && <img src={heroImage} alt="" className="absolute inset-0 size-full object-cover opacity-25 blur-[1px]" />}
+        {heroImage && <Image src={heroImage} alt="" fill sizes="100vw" priority className="object-cover opacity-25 blur-[1px]" />}
         <div className="absolute inset-0 bg-gradient-to-r from-[#24211d] via-[#24211d]/88 to-[#24211d]/30" />
         <div className="relative flex min-h-[350px] flex-col justify-end gap-7 sm:flex-row sm:items-end sm:justify-start">
           {/* Portrait */}
-          <div className="size-28 shrink-0 overflow-hidden rounded-[1.4rem] bg-white/10 ring-1 ring-white/20 sm:size-36">
+          <div className="relative size-28 shrink-0 overflow-hidden rounded-[1.4rem] bg-white/10 ring-1 ring-white/20 sm:size-36">
             {artist.portrait_url ? (
-              <img src={artist.portrait_url} alt={artist.name} className="w-full h-full object-cover" />
+              <Image src={artist.portrait_url} alt={artist.name} fill sizes="144px" className="object-cover" />
             ) : (
               <div className="flex size-full items-center justify-center font-display text-5xl font-bold text-white/40">
                 {artist.name[0]}

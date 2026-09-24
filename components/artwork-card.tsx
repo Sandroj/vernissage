@@ -1,9 +1,10 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Check, CheckCircle2, HelpCircle, MapPin } from 'lucide-react'
 import SeenModal from '@/components/seen-modal'
-import { cn, proxyImg } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 import ArtworkPlaceholder from '@/components/artwork-placeholder'
 
@@ -45,8 +46,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
   const t = useTranslations('Card')
   const [modalOpen, setModalOpen] = useState(false)
   const [imgError, setImgError] = useState(false)
-  const rawSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
-  const imgSrc = proxyImg(rawSrc)
+  const imgSrc = artwork.image_local_path ?? artwork.image_url ?? undefined
   const missingImageLabel = t('missingImage')
   const currentLoan = artwork.loans?.[0]
 
@@ -57,15 +57,16 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
         {/* Image — klikken gaat naar de detailpagina */}
         <Link href={`/artworks/${artwork.id}`} className="block size-full">
           {imgSrc && !imgError ? (
-            <img
+            <Image
               src={imgSrc}
               onError={() => setImgError(true)}
               alt={artwork.title}
+              fill
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
               className={cn(
-                'size-full object-cover transition-all duration-700',
+                'object-cover transition-all duration-700',
                 !seen && 'group-hover:scale-[1.03]'
               )}
-              loading="lazy"
             />
           ) : (
             <ArtworkPlaceholder

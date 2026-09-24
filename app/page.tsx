@@ -2,10 +2,10 @@ import { prisma, hasImage, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
+import Image from 'next/image'
 import ArtistCard from '@/components/artist-card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ArrowUpRight, MapPin, Sparkles } from 'lucide-react'
-import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 import { unstable_cache } from 'next/cache'
 
@@ -162,12 +162,13 @@ export default async function DashboardPage() {
                     href={`/artworks/${work.id}`}
                     className={`group relative min-h-0 overflow-hidden ${workIndex === 0 ? 'row-span-2' : ''}`}
                   >
-                    <img
-                      src={proxyImg(work.image_local_path ?? work.image_url) ?? '/placeholder.jpg'}
+                    <Image
+                      src={work.image_local_path ?? work.image_url ?? '/placeholder.jpg'}
                       alt={work.title}
-                      fetchPriority={groupIndex === 0 ? 'high' : 'low'}
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      fill
+                      sizes="(max-width: 640px) 60vw, 30vw"
+                      priority={groupIndex === 0}
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     />
                     <div className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent ${workIndex === 0 ? 'p-5 pt-20' : 'p-3 pt-10'}`}>
                       <p className={`line-clamp-1 font-medium ${workIndex === 0 ? 'text-base' : 'text-xs'}`}>{work.title}</p>
@@ -215,13 +216,13 @@ export default async function DashboardPage() {
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
             {recentSeen.map((s) => (
               <Link key={s.id} href={`/artworks/${s.artworkId}`} className="group">
-                <div className="aspect-square overflow-hidden rounded-2xl bg-stone-200 shadow-sm ring-1 ring-black/5 transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
-                  <img
-                    src={s.artwork.image_local_path ?? proxyImg(s.artwork.image_url) ?? '/placeholder.jpg'}
+                <div className="relative aspect-square overflow-hidden rounded-2xl bg-stone-200 shadow-sm ring-1 ring-black/5 transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
+                  <Image
+                    src={s.artwork.image_local_path ?? s.artwork.image_url ?? '/placeholder.jpg'}
                     alt={s.artwork.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    fill
+                    sizes="(max-width: 640px) 33vw, 16vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
                 <p className="mt-2 truncate text-xs text-stone-500 transition-colors group-hover:text-stone-900">{s.artwork.title}</p>
