@@ -13,7 +13,8 @@ const FEATURED_ARTIST_WORKS = [
   { artist: 'Claude Monet', title: 'Impression, sunrise' },
   { artist: 'Gustav Klimt', title: 'The Kiss' },
   { artist: 'Johannes Vermeer', title: 'Girl with a Pearl Earring' },
-  { artist: 'Wassily Kandinsky', title: 'Composition VII' },
+  { artist: 'Wassily Kandinsky', title: 'Composition X' },
+  { artist: 'Frida Kahlo', title: 'Self-Portrait with Thorn Necklace and Hummingbird' },
 ]
 
 // Zoekresultaten zijn ook publieke catalogus-data — cache per zoekterm (`q`
