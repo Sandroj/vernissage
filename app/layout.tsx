@@ -12,6 +12,14 @@ const geist = localFont({
   variable: '--font-sans',
 })
 
+// Alleen voor het Seen-woordmerk (components/logo.tsx). OFL, zie fonts/InstrumentSerif-OFL.txt.
+const instrumentSerif = localFont({
+  src: './fonts/InstrumentSerif-Regular.woff',
+  variable: '--font-logo',
+  weight: '400',
+  display: 'swap',
+})
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Meta')
   return {
@@ -28,7 +36,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   return (
-    <html lang={locale} className={geist.variable}>
+    <html lang={locale} className={`${geist.variable} ${instrumentSerif.variable}`}>
       <body className="min-h-screen antialiased">
         <NextIntlClientProvider>
         <Providers>

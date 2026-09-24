@@ -5,6 +5,7 @@ export const contentType = 'image/png'
 
 // Apple touch icons get their own rounded-corner mask from iOS, so this fills
 // the full square rather than reusing the browser favicon dimensions.
+// Geometry mirrors LogoMark in components/logo.tsx (salonwand + rode stip).
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -13,17 +14,16 @@ export default function AppleIcon() {
           width: '100%',
           height: '100%',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#4256cc',
-          borderRadius: 36,
+          background: '#16162A',
         }}
       >
-        <svg width="120" height="120" viewBox="0 0 32 32">
-          <rect x="7.5" y="8" width="17" height="16" rx="2.5" fill="#fffdf8" />
-          <path d="M9.5 21.5 14 16.5l3.1 3 2.5-2.6 2.9 3.3" stroke="#4256cc" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <path d="M9.5 24h13" stroke="#24211c" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-          <circle cx="21.5" cy="9.5" r="3.4" fill="#ed694c" stroke="#fffdf8" strokeWidth="1.2" />
+        <svg width="180" height="180" viewBox="0 0 120 120">
+          <rect x="16" y="16" width="42" height="54" rx="2" fill="#A4482A" />
+          <rect x="64" y="16" width="40" height="24" rx="2" fill="#E3B04B" />
+          <rect x="64" y="46" width="40" height="24" rx="2" fill="#1F5A4A" />
+          <rect x="16" y="76" width="26" height="28" rx="2" fill="#4A6FB5" />
+          <rect x="48" y="76" width="56" height="28" rx="2" fill="#F4EFE6" />
+          <circle cx="90" cy="90" r="6" fill="#D8342B" />
         </svg>
       </div>
     ),
