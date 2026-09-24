@@ -1,5 +1,27 @@
 # HANDOFF — Vernissage
 
+## Aanvulling — 24 september 2026 (holo-folierand rond het logo)
+
+- Zelfde branch `seen-logo-salonwand`: het merk krijgt een dunne holo-rand
+  ("Holo, clean" uit het Design-canvas, artboard "★ Logo – holo variations"),
+  als knipoog naar zeldzame verzamelkaarten. Verloop:
+  `conic-gradient(from 210deg, #F2C66D, #FBEFD0, #A9D3E8, #C8B8EC, #F0B8CF, #FBEFD0, #F2C66D)`
+  (`HOLO_FOIL` in `components/logo.tsx`). Geen glans-overlay.
+- `LogoMark` is nu een `<span>` met die gradient als achtergrond en de tegel-SVG
+  erin; rand ≈ 4% van het formaat (min. 1.5px). `foil={false}` zet hem uit.
+- `app/apple-icon.tsx` vervangen door statische `app/apple-icon.png` (Satori
+  kent geen conic-gradient). `app/opengraph-image.tsx` gebruikt daarom
+  `public/icons/icon-512.png` als merkbeeld. `app/icon.svg` benadert de holo
+  met een lineaire gradient.
+- Opnieuw gegenereerd met holo-rand: `favicon.ico`, `icon-192/512.png`,
+  `apple-icon.png`, iOS `AppIcon-512@2x.png` (volle vierkant; holo langs de
+  rand, iOS maskeert de hoeken), Android `ic_launcher.png` en
+  `ic_launcher_round.png`. De adaptieve Android-iconen (API 26+:
+  `ic_launcher_foreground` op `#16162A`) hebben bewust géén holo-rand, omdat
+  de maskervorm per toestel verschilt.
+- Verificatie: `tsc --noEmit` en `git diff --check` groen; `next build` nog
+  lokaal op de Mac draaien.
+
 ## Aanvulling — 24 september 2026 (nieuw logo: salonwand + rode stip)
 
 - Branch `seen-logo-salonwand` (vanaf `main`): nieuw Seen-logo doorgevoerd.
