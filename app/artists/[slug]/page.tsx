@@ -36,29 +36,27 @@ const getCachedArtist = unstable_cache(
         portrait_url: true,
         artworks: {
           where: catalogueWhere,
+          // Alleen velden die ArtworkGrid/ArtworkCard daadwerkelijk gebruiken
+          // (filteren, facetten, zoeken, kaart-render) — bij artiesten met
+          // duizenden werken (Monet, Van Gogh) weegt elk ongebruikt veld hier
+          // mee in de payload van élk paginabezoek. De artwork-detailpagina
+          // haalt haar eigen volledige set op, dus niets gaat hier verloren.
           select: {
             id: true,
             title: true,
-            title_de: true,
             year_start: true,
             year_end: true,
-            medium_raw: true,
             type_normalized: true,
-            dimensions_raw: true,
             image_local_path: true,
             image_url: true,
-            image_source_name: true,
             catalogue_id: true,
             jh_catalogue_id: true,
             alternate_titles: true,
             attribution_status: true,
-            attribution_note: true,
-            attribution_note_en: true,
             museum: { select: { id: true, name: true, city: true, country: true } },
-            private_owner_name: true,
             loans: {
               where: currentLoan,
-              select: { endAt: true, fromOwnerName: true, fromMuseum: { select: { name: true } }, toMuseum: { select: { id: true, name: true, city: true, country: true } } },
+              select: { toMuseum: { select: { name: true, city: true } } },
             },
             _count: { select: { seenBy: true } },
           },
