@@ -19,8 +19,11 @@
   `ic_launcher_round.png`. De adaptieve Android-iconen (API 26+:
   `ic_launcher_foreground` op `#16162A`) hebben bewust géén holo-rand, omdat
   de maskervorm per toestel verschilt.
-- Verificatie: `tsc --noEmit` en `git diff --check` groen; `next build` nog
-  lokaal op de Mac draaien.
+- Verificatie: `tsc --noEmit` en `git diff --check` groen; `npm run build`
+  lokaal op de Mac gedraaid (24 september 2026) en geslaagd — volledige
+  routetabel gegenereerd, geen fouten. De `prisma:error ... ENOTFOUND
+  arttracker-sandroj...turso.io`-regels tijdens static generation zijn de
+  sandbox zonder netwerktoegang tot Turso, geen buildfout.
 
 ## Aanvulling — 24 september 2026 (nieuw logo: salonwand + rode stip)
 
