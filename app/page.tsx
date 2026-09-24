@@ -131,7 +131,7 @@ export default async function DashboardPage() {
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-medium text-white/75">
               <Sparkles size={13} className="text-[#f4b548]" /> {t('eyebrow')}
             </div>
-            <h1 className="font-display text-[clamp(2.75rem,11vw,7.7rem)] font-medium leading-[.82] text-[#fffaf0]">
+            <h1 className="font-display text-[clamp(2.75rem,11vw,7.7rem)] sm:text-[clamp(3.6rem,8vw,7.7rem)] font-medium leading-[.82] text-[#fffaf0]">
               {session?.user?.name ? t('hello', { name: session.user.name.split(' ')[0] }) : t('heroTitle')}
             </h1>
             <p className="mt-7 max-w-xl text-base leading-relaxed text-white/62 sm:text-lg">
