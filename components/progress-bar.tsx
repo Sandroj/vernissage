@@ -9,9 +9,10 @@ interface ProgressBarProps {
   total: number
   className?: string
   animate?: boolean
+  hideLabel?: boolean
 }
 
-export default function ProgressBar({ value, seen, total, className, animate = true }: ProgressBarProps) {
+export default function ProgressBar({ value, seen, total, className, animate = true, hideLabel = false }: ProgressBarProps) {
   const [display, setDisplay] = useState(animate ? 0 : value)
   const t = useTranslations('Progress')
 
@@ -23,10 +24,12 @@ export default function ProgressBar({ value, seen, total, className, animate = t
 
   return (
     <div className={cn('space-y-1.5', className)}>
-      <div className="flex justify-between text-xs">
-        <span className="text-stone-500">{t('seenOf', { seen, total })}</span>
-        <span className={cn('font-semibold', value > 0 ? 'text-[#4256cc]' : 'text-stone-400')}>{Math.round(value)}%</span>
-      </div>
+      {!hideLabel && (
+        <div className="flex justify-between text-xs">
+          <span className="text-stone-500">{t('seenOf', { seen, total })}</span>
+          <span className={cn('font-semibold', value > 0 ? 'text-[#4256cc]' : 'text-stone-400')}>{Math.round(value)}%</span>
+        </div>
+      )}
       <div className="h-1.5 bg-black/10 rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-700 ease-out"

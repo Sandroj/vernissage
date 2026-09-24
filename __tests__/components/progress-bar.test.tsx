@@ -20,4 +20,14 @@ describe('ProgressBar', () => {
     renderProgressBar({ value: 12.3, seen: 76, total: 616, animate: false })
     expect(screen.getByText('12%')).toBeInTheDocument()
   })
+  it('verbergt het tekstlabel als hideLabel is gezet', () => {
+    renderProgressBar({ value: 50, seen: 5, total: 10, animate: false, hideLabel: true })
+    expect(screen.queryByText('5 van 10 gezien')).not.toBeInTheDocument()
+    expect(screen.queryByText('50%')).not.toBeInTheDocument()
+  })
+
+  it('toont het tekstlabel standaard nog steeds', () => {
+    renderProgressBar({ value: 50, seen: 5, total: 10, animate: false })
+    expect(screen.getByText('5 van 10 gezien')).toBeInTheDocument()
+  })
 })
