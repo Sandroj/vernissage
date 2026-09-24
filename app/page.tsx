@@ -123,7 +123,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-12">
-      <section className="relative overflow-hidden rounded-[2rem] bg-[#25231f] px-6 py-8 text-white sm:px-10 sm:py-12 lg:min-h-[570px] lg:px-14 lg:py-16">
+      <section className="relative overflow-hidden rounded-[2rem] bg-[#25231f] px-5 py-6 text-white sm:px-10 sm:py-12 lg:min-h-[570px] lg:px-14 lg:py-16">
         <div className="absolute -left-24 top-1/2 size-72 -translate-y-1/2 rounded-full bg-[#ed694c]/25 blur-3xl" />
         <div className="absolute right-20 top-0 size-72 rounded-full bg-[#5368df]/25 blur-3xl" />
         <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_.95fr]">
@@ -131,7 +131,7 @@ export default async function DashboardPage() {
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-medium text-white/75">
               <Sparkles size={13} className="text-[#f4b548]" /> {t('eyebrow')}
             </div>
-            <h1 className="font-display text-[clamp(3.6rem,8vw,7.7rem)] font-medium leading-[.82] text-[#fffaf0]">
+            <h1 className="font-display text-[clamp(2.75rem,11vw,7.7rem)] font-medium leading-[.82] text-[#fffaf0]">
               {session?.user?.name ? t('hello', { name: session.user.name.split(' ')[0] }) : t('heroTitle')}
             </h1>
             <p className="mt-7 max-w-xl text-base leading-relaxed text-white/62 sm:text-lg">
@@ -148,7 +148,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="relative h-[370px] w-full overflow-hidden rounded-[1.6rem] sm:h-[430px]">
+          <div className="relative h-[200px] w-full overflow-hidden rounded-[1.6rem] sm:h-[430px]">
             {heroGroups.map((group, groupIndex) => (
               <div
                 key={groupIndex}
