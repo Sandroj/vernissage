@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ProgressBar from '@/components/progress-bar'
 import ArtworkGrid from '@/components/artwork-grid'
 import { useTranslations } from 'next-intl'
@@ -38,14 +38,34 @@ interface Artist {
 
 interface ArtistDetailClientProps {
   artist: Artist
+  totalWorks: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   seenMap: Record<number, any>
   isLoggedIn: boolean
   museumPins: MuseumPin[]
 }
 
-export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, isLoggedIn, museumPins }: ArtistDetailClientProps) {
+export default function ArtistDetailClient({ artist, totalWorks, seenMap: initialSeenMap, isLoggedIn, museumPins }: ArtistDetailClientProps) {
   const [seenMap, setSeenMap] = useState(initialSeenMap)
+  // Server stuurt de eerste `INITIAL_ARTWORKS_TAKE` werken mee (zie
+  // app/artists/[slug]/page.tsx); bij grote catalogi (Monet, Van Gogh) halen
+  // we de rest op de achtergrond op zodat zoeken/filteren op alles werkt
+  // zonder de eerste weergave te vertragen.
+  const [artworks, setArtworks] = useState(artist.artworks)
+  useEffect(() => {
+    if (totalWorks <= artist.artworks.length) return
+    let cancelled = false
+    fetch(`/api/artists/${artist.slug}/artworks`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.artworks) setArtworks(data.artworks)
+      })
+      .catch(() => {
+        // Stille fout: gebruiker blijft de eerste page zien, geen crash.
+      })
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [artist.slug])
   const [mapOpen, setMapOpen] = useState(false)
   const [seenFilter, setSeenFilter] = useState<'all' | 'seen' | 'unseen'>('all')
   const [bioExpanded, setBioExpanded] = useState(false)
@@ -62,9 +82,9 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
   }
 
   const seenCount = Object.keys(seenMap).length
-  const total = artist.artworks.length
+  const total = totalWorks
   const pct = total > 0 ? (seenCount / total) * 100 : 0
-  const cover = proxyImg(artist.artworks.find((a) => a.image_url || a.image_local_path)?.image_local_path ?? artist.artworks.find((a) => a.image_url || a.image_local_path)?.image_url)
+  const cover = proxyImg(artworks.find((a) => a.image_url || a.image_local_path)?.image_local_path ?? artworks.find((a) => a.image_url || a.image_local_path)?.image_url)
   const heroImage = cover ?? artist.portrait_url ?? undefined
 
   const years = artist.birth_year
@@ -80,7 +100,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map: Record<number, any> = {}
       for (const s of all) {
-        if (artist.artworks.some((a) => a.id === s.artworkId)) {
+        if (artworks.some((a) => a.id === s.artworkId)) {
           map[s.artworkId] = s
         }
       }
@@ -247,7 +267,7 @@ export default function ArtistDetailClient({ artist, seenMap: initialSeenMap, is
 
       {/* Werkenraster */}
       <div id="works"><ArtworkGrid
-        artworks={artist.artworks.map((a) => ({
+        artworks={artworks.map((a) => ({
           ...a,
           artist: { name: artist.name, slug: artist.slug },
         }))}

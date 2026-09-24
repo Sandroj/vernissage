@@ -1,4 +1,5 @@
-import { prisma, hasImage, localizeArtist, registerArtists, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
+import { prisma, hasImage, localizeArtist, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
+import { currentLoan, catalogueWhereForSlug, artworkListSelect, artworkListOrderBy, INITIAL_ARTWORKS_TAKE } from '@/lib/artist-catalogue'
 import { getLocale } from 'next-intl/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
@@ -8,12 +9,6 @@ import { proxyImg } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
 import { signPhotoUrls } from '@/lib/photo-storage'
 import { unstable_cache } from 'next/cache'
-
-const currentLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
-
-function catalogueWhereForSlug(slug: string) {
-  return registerArtists.some((a) => a.slug === slug) ? { catalogue_id: { not: null } } : {}
-}
 
 // Artiestdata en museumlocaties zijn publieke catalogus-data — cachen scheelt
 // twee Turso-roundtrips per bezoeker. Beide matchen op de slug/catalogue-
@@ -34,34 +29,19 @@ const getCachedArtist = unstable_cache(
         bio: true,
         bio_en: true,
         portrait_url: true,
+        // Eerste page (zelfde grootte als ArtworkGrid's client-side PAGE_SIZE)
+        // — bij Monet/Van Gogh (2000+ werken) domineert het aantal
+        // geserialiseerde objecten de laadtijd, niet de payload per object
+        // (gemeten: 2013 werken ≈1s, 200 werken ≈0,09s warm). De rest komt
+        // via app/api/artists/[slug]/artworks/route.ts binnen zodra de
+        // pagina geladen is — zie artist-detail-client.tsx.
         artworks: {
           where: catalogueWhere,
-          // Alleen velden die ArtworkGrid/ArtworkCard daadwerkelijk gebruiken
-          // (filteren, facetten, zoeken, kaart-render) — bij artiesten met
-          // duizenden werken (Monet, Van Gogh) weegt elk ongebruikt veld hier
-          // mee in de payload van élk paginabezoek. De artwork-detailpagina
-          // haalt haar eigen volledige set op, dus niets gaat hier verloren.
-          select: {
-            id: true,
-            title: true,
-            year_start: true,
-            year_end: true,
-            type_normalized: true,
-            image_local_path: true,
-            image_url: true,
-            catalogue_id: true,
-            jh_catalogue_id: true,
-            alternate_titles: true,
-            attribution_status: true,
-            museum: { select: { id: true, name: true, city: true, country: true } },
-            loans: {
-              where: currentLoan,
-              select: { toMuseum: { select: { name: true, city: true } } },
-            },
-            _count: { select: { seenBy: true } },
-          },
-          orderBy: [{ year_start: 'asc' }, { title: 'asc' }],
+          take: INITIAL_ARTWORKS_TAKE,
+          select: artworkListSelect,
+          orderBy: artworkListOrderBy,
         },
+        _count: { select: { artworks: { where: catalogueWhere } } },
       },
     })
   },
@@ -173,6 +153,7 @@ export default async function ArtistDetailPage({
   return (
     <ArtistDetailClient
       artist={localizeArtist(artist, locale)}
+      totalWorks={artist._count.artworks}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       seenMap={seenMap as any}
       isLoggedIn={!!session?.user}
