@@ -2,7 +2,7 @@ import { prisma, hasImage, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
-import ProgressBar from '@/components/progress-bar'
+import ArtistCard from '@/components/artist-card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ArrowUpRight, MapPin, Sparkles } from 'lucide-react'
 import { proxyImg } from '@/lib/utils'
@@ -188,30 +188,15 @@ export default async function DashboardPage() {
             {t('allArtists')} <ArrowRight size={14} />
           </Link>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {artists.map((artist) => {
-            const seen = seenCounts[artist.id] ?? 0
-            const total = artist._count.artworks
-            const pct = total > 0 ? (seen / total) * 100 : 0
-            return (
-              <Link
-                key={artist.id}
-                href={`/artists/${artist.slug}`}
-                className="paper-card group flex items-center gap-4 rounded-2xl p-5 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
-                  {featuredArtistImages.get(artist.name) && <img src={proxyImg(featuredArtistImages.get(artist.name)) ?? ''} alt="" loading="lazy" decoding="async" className="size-full object-cover transition duration-500 group-hover:scale-105" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-display text-xl font-semibold text-stone-900 transition-colors group-hover:text-[#4256cc]">{artist.name}</span>
-                    <span className="ml-4 text-xs text-stone-400">{seen}/{total}</span>
-                  </div>
-                  <ProgressBar value={pct} seen={seen} total={total} animate={false} />
-                </div>
-              </Link>
-            )
-          })}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {artists.slice(0, 8).map((artist) => (
+            <ArtistCard
+              key={artist.id}
+              artist={artist}
+              seenCount={seenCounts[artist.id] ?? 0}
+              featuredImage={featuredArtistImages.get(artist.name) ?? null}
+            />
+          ))}
         </div>
       </section>
 
