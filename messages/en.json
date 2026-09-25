@@ -29,6 +29,10 @@
     "menu": "Menu"
   },
   "Home": {
+    "firstEyebrow": "Start your collection",
+    "firstTitle": "Which have you seen?",
+    "firstText": "Tap a work you have seen in person. Not sure of the date? A guess is fine, you can change it later.",
+    "firstDone": "{count} logged · view your collection →",
     "onThisDayEyebrow": "Memory",
     "onThisDayTitle": "On this day",
     "yearsAgo": "{count, plural, one {# year ago} other {# years ago}}",

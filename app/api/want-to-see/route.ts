@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 // Privé verlanglijst: POST zet een werk erop, DELETE haalt het eraf.
-async function parse(req: Request) {
+async function parse(req: Request): Promise<{ error: NextResponse } | { userId: string; artworkId: number }> {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) return { error: NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 }) }
   const { artworkId } = await req.json().catch(() => ({}))

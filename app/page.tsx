@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import Image from 'next/image'
 import ArtistCard from '@/components/artist-card'
+import FirstSeenPicker from '@/components/first-seen-picker'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ArrowUpRight, MapPin, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
@@ -199,6 +200,8 @@ export default async function DashboardPage() {
           </div>
         </div>
       </section>
+
+      {session && totalSeen === 0 && heroWorks.length > 0 && <FirstSeenPicker works={heroWorks} />}
 
       {/* Artists progress */}
       <section>
