@@ -41,3 +41,10 @@ traffic patterns warrant them; make sure ordinary collection browsing and
 image delivery still work. This must be configured at the DNS/Cloudflare layer
 and cannot be activated by application code alone. A `robots.txt` directive is
 only a request to cooperative search engines, not a security boundary.
+
+`/terms` (Gebruiksvoorwaarden) forbids automated/bulk extraction and invokes
+EU database right; it is the legal basis for blocking scrapers. `POST
+/api/artists` is admin-only (`getAdminEmail`) and only accepts `name` and
+`nationality`. Rate limiting belongs in the Vercel Firewall (dashboard →
+Firewall → rule on path prefix `/api/`), not in app code: serverless instances
+share no memory, so an in-process counter would not limit anything.

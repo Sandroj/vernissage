@@ -490,6 +490,23 @@
     "nl": "NL",
     "en": "EN"
   },
+  "Terms": {
+    "title": "Gebruiksvoorwaarden",
+    "updated": "Laatst bijgewerkt: 25 september 2026",
+    "intro": "Seen is een persoonlijke app om bij te houden welke kunstwerken je hebt gezien. Door Seen te gebruiken ga je akkoord met deze voorwaarden.",
+    "useTitle": "Gebruik",
+    "use": "Je mag Seen gebruiken voor persoonlijk, niet-commercieel gebruik: werken bekijken, bijhouden wat je hebt gezien en je bezoeken plannen.",
+    "scrapingTitle": "Geen scrapen of bulk-downloaden",
+    "scraping": "Het is niet toegestaan de catalogus van Seen — kunstwerken, locaties, bruiklenen, beschrijvingen of afbeeldingen — geautomatiseerd of in bulk op te vragen, te kopiëren, te hergebruiken of te verspreiden, met bots, scrapers, crawlers of via de API's van de app. Uitzondering zijn zoekmachines die robots.txt respecteren.",
+    "databaseTitle": "Databankenrecht",
+    "database": "De catalogus is met substantiële investering samengesteld en wordt beschermd als databank onder de Europese Databankenrichtlijn en de Databankenwet. Het opvragen of hergebruiken van (een substantieel deel van) de inhoud zonder toestemming is niet toegestaan.",
+    "imagesTitle": "Afbeeldingen",
+    "images": "Afbeeldingen van kunstwerken zijn afkomstig van musea en publieke bronnen en worden getoond ter identificatie. Rechten op die afbeeldingen liggen bij de betreffende rechthebbenden.",
+    "enforceTitle": "Handhaving",
+    "enforce": "Bij misbruik kunnen we de toegang beperken of blokkeren en je account verwijderen.",
+    "contactTitle": "Contact",
+    "contact": "Vragen of toestemming voor hergebruik? Mail naar <email></email>."
+  },
   "Privacy": {
     "title": "Privacy",
     "updated": "Laatst bijgewerkt: 21 september 2026",

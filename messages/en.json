@@ -490,6 +490,23 @@
     "nl": "NL",
     "en": "EN"
   },
+  "Terms": {
+    "title": "Terms of use",
+    "updated": "Last updated: 25 September 2026",
+    "intro": "Seen is a personal app for keeping track of the artworks you've seen. By using Seen you agree to these terms.",
+    "useTitle": "Use",
+    "use": "You may use Seen for personal, non-commercial purposes: browsing works, tracking what you've seen and planning your visits.",
+    "scrapingTitle": "No scraping or bulk downloading",
+    "scraping": "You may not request, copy, reuse or redistribute Seen's catalogue — artworks, locations, loans, descriptions or images — automatically or in bulk, whether by bots, scrapers, crawlers or through the app's APIs. Search engines that respect robots.txt are excepted.",
+    "databaseTitle": "Database right",
+    "database": "The catalogue was compiled through substantial investment and is protected as a database under the EU Database Directive. Extracting or reusing (a substantial part of) its contents without permission is not allowed.",
+    "imagesTitle": "Images",
+    "images": "Artwork images come from museums and public sources and are shown for identification. Rights in those images remain with their respective rights holders.",
+    "enforceTitle": "Enforcement",
+    "enforce": "In case of misuse we may limit or block access and delete your account.",
+    "contactTitle": "Contact",
+    "contact": "Questions, or want permission to reuse? Email <email></email>."
+  },
   "Privacy": {
     "title": "Privacy",
     "updated": "Last updated: 21 September 2026",

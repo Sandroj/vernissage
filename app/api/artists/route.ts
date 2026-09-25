@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { getAdminEmail } from '@/lib/admin'
 import { slugify } from '@/lib/utils'
 
 export async function GET(req: Request) {
@@ -25,12 +24,12 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 })
+  if (!await getAdminEmail()) return NextResponse.json({ error: 'Niet bevoegd' }, { status: 403 })
 
-  const data = await req.json()
+  const { name, nationality } = await req.json()
+  if (typeof name !== 'string' || !name.trim()) return NextResponse.json({ error: 'name is verplicht' }, { status: 400 })
   const artist = await prisma.artist.create({
-    data: { ...data, slug: slugify(data.name) },
+    data: { name: name.trim(), slug: slugify(name), ...(typeof nationality === 'string' ? { nationality } : {}) },
   })
   return NextResponse.json(artist, { status: 201 })
 }
