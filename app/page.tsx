@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, ArrowUpRight, MapPin, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { unstable_cache } from 'next/cache'
+import { artistSortName } from '@/lib/artist-sort-name'
 
 // Handpicked instantly-recognizable works, one or two per artist, used for
 // the homepage hero carousel instead of an arbitrary "first N by id" pick.
@@ -70,6 +71,8 @@ export default async function DashboardPage() {
     getCachedHomeArtists(),
     getCachedFeaturedWorks(),
   ])
+
+  artists.sort((a, b) => artistSortName(a.name).localeCompare(artistSortName(b.name)))
 
   const seenCounts: Record<number, number> = {}
   const recentSeen: Array<{

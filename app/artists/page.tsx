@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import ArtistCard from '@/components/artist-card'
 import ArtistsSearch from '@/components/artists-search'
 import { unstable_cache } from 'next/cache'
+import { artistSortName } from '@/lib/artist-sort-name'
 
 // Use recognisable anchor works for the artist cards instead of whichever
 // image happens to have the lowest database id.
@@ -68,6 +69,8 @@ export default async function ArtistsPage({
     getCachedArtists(q),
     getCachedFeaturedRows(),
   ])
+
+  artists.sort((a, b) => artistSortName(a.name).localeCompare(artistSortName(b.name)))
 
   const featuredImages = new Map(
     FEATURED_ARTIST_WORKS.map((work) => [
