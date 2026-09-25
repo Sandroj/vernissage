@@ -84,6 +84,14 @@ export default async function DashboardPage() {
     }
   }> = []
 
+  const nowOnView: Array<{
+    id: number
+    title: string
+    image_local_path: string | null
+    image_url: string | null
+    artist: { name: string }
+    loan: { endAt: Date | null; toMuseum: { name: string; city: string } }
+  }> = []
   const onThisDayWorks: Array<{
     yearsAgo: number
     artwork: { id: number; title: string; image_local_path: string | null; image_url: string | null; artist: { name: string } }
@@ -91,7 +99,8 @@ export default async function DashboardPage() {
 
   if (session?.user?.id) {
     // Beide "seen"-queries zijn onafhankelijk van elkaar — parallel i.p.v. na elkaar.
-    const [seenArtworkRows, recent] = await Promise.all([
+    const liveLoan = { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }
+    const [seenArtworkRows, recent, wishlistOnLoan] = await Promise.all([
       prisma.seen.findMany({
         where: { userId: session.user.id, artwork: primaryCatalogue },
         select: { artworkId: true, dateSeen: true, artwork: { select: { artistId: true } } },
@@ -102,7 +111,22 @@ export default async function DashboardPage() {
         orderBy: { dateSeen: 'desc' },
         take: 12,
       }),
+      prisma.wantToSee.findMany({
+        where: { userId: session.user.id, artwork: { loans: { some: liveLoan } } },
+        orderBy: { createdAt: 'desc' },
+        take: 6,
+        select: {
+          artwork: {
+            select: {
+              id: true, title: true, image_local_path: true, image_url: true,
+              artist: { select: { name: true } },
+              loans: { where: liveLoan, take: 1, select: { endAt: true, toMuseum: { select: { name: true, city: true } } } },
+            },
+          },
+        },
+      }),
     ])
+    nowOnView.push(...wishlistOnLoan.map(({ artwork: { loans, ...artwork } }) => ({ ...artwork, loan: loans[0] })))
     for (const row of seenArtworkRows) {
       seenCounts[row.artwork.artistId] = (seenCounts[row.artwork.artistId] ?? 0) + 1
     }
@@ -227,6 +251,27 @@ export default async function DashboardPage() {
         <section className="grid gap-6 overflow-hidden rounded-[2rem] bg-[#e7e9fa] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
           <div><p className="eyebrow mb-2">{t('ctaEyebrow')}</p><h2 className="font-display text-4xl font-medium text-stone-900">{t('ctaTitle')}</h2><p className="mt-3 max-w-2xl text-stone-600">{t('ctaText')}</p></div>
           <div className="flex flex-wrap gap-3"><Link href="/login?mode=register"><Button className="h-11 rounded-full bg-[#4256cc] px-6 text-white hover:bg-[#3447b8]">{t('ctaRegister')}</Button></Link><Link href="/museums"><Button variant="outline" className="h-11 rounded-full border-black/10 bg-white/60 px-6 text-stone-800"><MapPin size={15} /> {t('ctaMuseums')}</Button></Link></div>
+        </section>
+      )}
+
+      {nowOnView.length > 0 && (
+        <section>
+          <p className="eyebrow mb-2">{t('nowOnViewEyebrow')}</p><h2 className="font-display mb-6 text-4xl font-medium text-stone-900">{t('nowOnViewTitle')}</h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {nowOnView.map((w) => (
+              <Link key={w.id} href={`/artworks/${w.id}`} className="paper-card group flex items-center gap-3 rounded-2xl p-2.5 transition hover:-translate-y-0.5">
+                <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-stone-200">
+                  <Image src={w.image_local_path ?? w.image_url ?? '/placeholder.jpg'} alt="" fill sizes="80px" className="object-cover" />
+                </div>
+                <div className="min-w-0">
+                  <p className="line-clamp-2 font-display text-base font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{w.title}</p>
+                  <p className="mt-1 truncate text-xs text-stone-500">{w.artist.name}</p>
+                  <p className="mt-1 flex items-center gap-1 truncate text-xs font-medium text-[#ed694c]"><MapPin size={12} className="shrink-0" /> {w.loan.toMuseum.name}, {w.loan.toMuseum.city}</p>
+                  {w.loan.endAt && <p className="mt-0.5 text-[11px] text-stone-400">{t('untilDate', { date: w.loan.endAt })}</p>}
+                </div>
+              </Link>
+            ))}
+          </div>
         </section>
       )}
 

@@ -73,7 +73,7 @@ export default async function ProfilePage() {
             image_url: true,
             artist: { select: { name: true } },
             museum: { select: { name: true, city: true } },
-            loans: { where: { current: true }, take: 1, select: { toMuseum: { select: { name: true, city: true } } } },
+            loans: { where: { current: true, OR: [{ endAt: null }, { endAt: { gte: new Date() } }] }, take: 1, select: { toMuseum: { select: { name: true, city: true } } } },
           },
         },
       },

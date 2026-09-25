@@ -29,6 +29,9 @@
     "menu": "Menu"
   },
   "Home": {
+    "nowOnViewEyebrow": "From your wishlist",
+    "nowOnViewTitle": "On view for a limited time",
+    "untilDate": "Until {date, date, long}",
     "firstEyebrow": "Start your collection",
     "firstTitle": "Which have you seen?",
     "firstText": "Tap a work you have seen in person. Not sure of the date? A guess is fine, you can change it later.",

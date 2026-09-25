@@ -29,6 +29,9 @@
     "menu": "Menu"
   },
   "Home": {
+    "nowOnViewEyebrow": "Van je verlanglijst",
+    "nowOnViewTitle": "Nu tijdelijk te zien",
+    "untilDate": "t/m {date, date, long}",
     "firstEyebrow": "Begin je collectie",
     "firstTitle": "Welke heb je ooit gezien?",
     "firstText": "Tik op een werk dat je in het echt zag. Weet je de datum niet precies? Een schatting is prima, je kunt hem later aanpassen.",
