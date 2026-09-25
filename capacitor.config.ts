@@ -10,7 +10,11 @@ import type { CapacitorConfig } from '@capacitor/cli'
 const config: CapacitorConfig = {
   appId: 'gallery.seen.app',
   appName: 'Seen',
-  webDir: 'public',
+  // NIET 'public' — dat is de echte Next.js-map met public/images/artworks
+  // (3GB, gitignored, alleen voor lokale scrapers). server.url hieronder
+  // laadt de site sowieso remote, dus webDir wordt nooit getoond; het bestaat
+  // alleen omdat `npx cap sync` een map nodig heeft om te kopiëren.
+  webDir: 'capacitor-www',
   server: {
     url: 'https://www.seen.gallery',
     cleartext: false,
