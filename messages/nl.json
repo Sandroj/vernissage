@@ -414,6 +414,12 @@
     "backToLogin": "Terug naar inloggen"
   },
   "Profile": {
+    "tasteEyebrow": "Jouw smaak",
+    "tasteTitle": "Smaakprofiel",
+    "tasteArtists": "Kunstenaars",
+    "tasteMuseums": "Musea",
+    "tasteDecades": "Periodes",
+    "tasteYears": "Gezien per jaar",
     "wishlistEyebrow": "Verlanglijst",
     "wishlistTitle": "Wil ik zien",
     "wishlistEmpty": "Nog niets op je verlanglijst. Tik bij een werk op ‘Wil ik zien’.",

@@ -414,6 +414,12 @@
     "backToLogin": "Back to sign in"
   },
   "Profile": {
+    "tasteEyebrow": "Your taste",
+    "tasteTitle": "Taste profile",
+    "tasteArtists": "Artists",
+    "tasteMuseums": "Museums",
+    "tasteDecades": "Periods",
+    "tasteYears": "Seen per year",
     "wishlistEyebrow": "Wishlist",
     "wishlistTitle": "Want to see",
     "wishlistEmpty": "Nothing on your wishlist yet. Tap ‘Want to see’ on any artwork.",

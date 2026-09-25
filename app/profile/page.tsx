@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { signPhotoUrls } from '@/lib/photo-storage'
 import ProfileClient from './profile-client'
+import { tasteProfile } from '@/lib/taste-profile'
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
@@ -19,12 +20,15 @@ export default async function ProfilePage() {
       where: { userId: session.user.id },
       orderBy: { dateSeen: 'desc' },
       select: {
+        dateSeen: true,
         artwork: {
           select: {
             id: true,
             title: true,
             image_local_path: true,
             image_url: true,
+            year_start: true,
+            museum: { select: { name: true } },
             artist: { select: { id: true, name: true, slug: true } },
           },
         },
@@ -111,6 +115,7 @@ export default async function ProfilePage() {
       seenByArtist={seenByArtist}
       recentSeen={recentSeen}
       myPhotos={myPhotos}
+      taste={seenCount >= 3 ? tasteProfile(seenRecords) : null}
       wishlist={wishlist.map(({ id, artwork: { loans, museum, ...artwork } }) => ({ id, artwork: { ...artwork, museum: loans[0]?.toMuseum ?? museum } }))}
     />
   )

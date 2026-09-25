@@ -11,6 +11,7 @@ import { Bookmark, CheckCircle2, ChevronDown, Download, Eye, LogOut, Mail, Setti
 import { useTranslations, useFormatter } from 'next-intl'
 import Image from 'next/image'
 import Lightbox from '@/components/lightbox'
+import type { Bar } from '@/lib/taste-profile'
 
 interface RecentSeen {
   id: number
@@ -33,10 +34,11 @@ interface ProfileClientProps {
   }>
   recentSeen: RecentSeen[]
   myPhotos: Array<{ id: string; dateSeen: Date | string; photo_url: string; artwork: { id: number; title: string } }>
+  taste: { artists: Bar[]; museums: Bar[]; decades: Bar[]; years: Bar[] } | null
   wishlist: Array<{ id: number; artwork: { id: number; title: string; image_local_path: string | null; image_url: string | null; artist: { name: string }; museum: { name: string; city: string } | null } }>
 }
 
-export default function ProfileClient({ user, seenCount, seenByArtist, recentSeen, myPhotos, wishlist }: ProfileClientProps) {
+export default function ProfileClient({ user, seenCount, seenByArtist, recentSeen, myPhotos, taste, wishlist }: ProfileClientProps) {
   const [name, setName] = useState(user.name ?? '')
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)
@@ -187,6 +189,18 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
         </section>
       </div>
 
+      {taste && (
+        <section className="paper-card mt-6 rounded-[1.75rem] p-5 sm:p-7">
+          <div className="mb-5"><p className="eyebrow mb-1">{t('tasteEyebrow')}</p><h2 className="font-display text-3xl font-medium text-stone-900">{t('tasteTitle')}</h2></div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <Bars title={t('tasteArtists')} bars={taste.artists} />
+            <Bars title={t('tasteMuseums')} bars={taste.museums} />
+            <Bars title={t('tasteDecades')} bars={taste.decades} />
+            <Bars title={t('tasteYears')} bars={taste.years} />
+          </div>
+        </section>
+      )}
+
       <section className="paper-card mt-6 rounded-[1.75rem] p-5 sm:p-7">
         <div className="mb-5 flex items-end justify-between gap-4">
           <div><p className="eyebrow mb-1">{t('wishlistEyebrow')}</p><h2 className="font-display text-3xl font-medium text-stone-900">{t('wishlistTitle')}</h2></div>
@@ -294,6 +308,25 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
           meta={{ title: openPhoto.title, artworkHref: `/artworks/${openPhoto.artworkId}` }}
         />
       )}
+    </div>
+  )
+}
+
+function Bars({ title, bars }: { title: string; bars: Bar[] }) {
+  if (bars.length === 0) return null
+  const max = Math.max(...bars.map((b) => b.count))
+  return (
+    <div>
+      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-stone-400">{title}</p>
+      <ul className="space-y-1.5">
+        {bars.map((b) => (
+          <li key={b.label} className="grid grid-cols-[minmax(0,9rem)_1fr_2rem] items-center gap-2 text-xs">
+            <span className="truncate text-stone-700">{b.label}</span>
+            <span className="h-2 rounded-full bg-black/[.05]"><span className="block h-full rounded-full bg-[#4256cc]" style={{ width: `${(b.count / max) * 100}%` }} /></span>
+            <span className="text-right tabular-nums text-stone-500">{b.count}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
