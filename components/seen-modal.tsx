@@ -14,6 +14,7 @@ interface SeenModalProps {
   existingSeen?: {
     id: number
     dateSeen: string
+    dateApprox?: boolean
     locationSeen?: string | null
     notes?: string | null
     rating?: number | null
@@ -37,6 +38,7 @@ export default function SeenModal({
   const [date, setDate] = useState<Date>(
     existingSeen ? new Date(existingSeen.dateSeen) : new Date()
   )
+  const [dateApprox, setDateApprox] = useState(existingSeen?.dateApprox ?? false)
   const [location, setLocation] = useState(existingSeen?.locationSeen ?? '')
   const [notes, setNotes] = useState(existingSeen?.notes ?? '')
   const [rating, setRating] = useState<number | null>(existingSeen?.rating ?? null)
@@ -53,6 +55,7 @@ export default function SeenModal({
       body: JSON.stringify({
         artworkId,
         dateSeen: date.toISOString(),
+        dateApprox,
         locationSeen: location || null,
         notes: notes || null,
         rating,
@@ -106,6 +109,8 @@ export default function SeenModal({
           <VisitFormFields
             date={date}
             onDateChange={setDate}
+            dateApprox={dateApprox}
+            onDateApproxChange={setDateApprox}
             locationValue={location}
             onLocationChange={setLocation}
             rating={rating}

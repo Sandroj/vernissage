@@ -106,7 +106,7 @@ export default async function DashboardPage() {
     const [seenArtworkRows, recent, wishlistOnLoan] = await Promise.all([
       prisma.seen.findMany({
         where: { userId: session.user.id, artwork: primaryCatalogue },
-        select: { artworkId: true, dateSeen: true, artwork: { select: { artistId: true } } },
+        select: { artworkId: true, dateSeen: true, dateApprox: true, artwork: { select: { artistId: true } } },
       }),
       prisma.seen.findMany({
         where: { userId: session.user.id, artwork: primaryCatalogue },

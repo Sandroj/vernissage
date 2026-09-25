@@ -285,6 +285,8 @@
   },
   "VisitForm": {
     "date": "Date",
+    "dateApproxToggle": "I don't remember exactly when",
+    "dateApproxNote": "Sometime in the past, no exact date",
     "location": "Location",
     "rating": "Rating",
     "notes": "Notes",
@@ -436,6 +438,7 @@
     "memberStat": "Member since",
     "recentEyebrow": "Your trail",
     "recentTitle": "Recently seen",
+    "seenDateUnknown": "Seen at some point",
     "browseMore": "More works",
     "recentEmpty": "You have not marked any works yet",
     "discoverWorks": "Explore the collection",

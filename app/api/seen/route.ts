@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   if (!session?.user?.id) return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 })
 
   const body = await req.json()
-  const { artworkId, dateSeen, locationSeen, notes, rating } = body
+  const { artworkId, dateSeen, dateApprox, locationSeen, notes, rating } = body
   const userId = session.user.id
   const photoTouched = 'photo_url' in body
 
@@ -36,10 +36,11 @@ export async function POST(req: Request) {
 
   const photoField = photoTouched ? { photo_url: storedKey } : {}
 
+  const resolvedDateSeen = dateApprox ? new Date() : new Date(dateSeen)
   const seen = await prisma.seen.upsert({
     where: { userId_artworkId: { userId, artworkId } },
-    update: { dateSeen: new Date(dateSeen), locationSeen, notes, rating, ...photoField },
-    create: { userId, artworkId, dateSeen: new Date(dateSeen), locationSeen, notes, rating, ...photoField },
+    update: { dateSeen: resolvedDateSeen, dateApprox: !!dateApprox, locationSeen, notes, rating, ...photoField },
+    create: { userId, artworkId, dateSeen: resolvedDateSeen, dateApprox: !!dateApprox, locationSeen, notes, rating, ...photoField },
   })
   // Gezien = van de verlanglijst af.
   await prisma.wantToSee.deleteMany({ where: { userId, artworkId } })

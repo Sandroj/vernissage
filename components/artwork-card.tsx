@@ -29,6 +29,7 @@ interface Artwork {
 interface SeenRecord {
   id: number
   dateSeen: string
+  dateApprox?: boolean
   locationSeen?: string | null
   notes?: string | null
   rating?: number | null

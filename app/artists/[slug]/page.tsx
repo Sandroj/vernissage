@@ -111,6 +111,7 @@ export default async function ArtistDetailPage({
             id: true,
             artworkId: true,
             dateSeen: true,
+            dateApprox: true,
             locationSeen: true,
             notes: true,
             rating: true,

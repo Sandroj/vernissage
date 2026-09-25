@@ -79,15 +79,15 @@ model Artwork {
 }
 
 model User {
-  id                String       @id @default(cuid())
+  id                String           @id @default(cuid())
   name              String?
-  email             String       @unique
+  email             String           @unique
   emailVerified     DateTime?
   image             String?
   password          String?
   passwordChangedAt DateTime?
-  seenPublic        Boolean      @default(true)
-  createdAt         DateTime     @default(now())
+  seenPublic        Boolean          @default(true)
+  createdAt         DateTime         @default(now())
   accounts          Account[]
   sessions          Session[]
   seen              Seen[]
@@ -134,17 +134,18 @@ model VerificationToken {
 }
 
 model Seen {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   userId       String
   artworkId    Int
   dateSeen     DateTime
+  dateApprox   Boolean   @default(false)
   locationSeen String?
   notes        String?
   rating       Int?
   photo_url    String?
-  createdAt    DateTime @default(now())
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  artwork      Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artwork      Artwork   @relation(fields: [artworkId], references: [id], onDelete: Cascade)
 
   @@unique([userId, artworkId])
   @@index([userId])

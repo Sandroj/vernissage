@@ -21,7 +21,7 @@ export async function GET() {
     }),
     prisma.seen.findMany({
       where: { userId },
-      select: { dateSeen: true, locationSeen: true, notes: true, rating: true, createdAt: true, artwork: artworkSelect },
+      select: { dateSeen: true, dateApprox: true, locationSeen: true, notes: true, rating: true, createdAt: true, artwork: artworkSelect },
     }),
     prisma.visit.findMany({
       where: { userId },

@@ -1,16 +1,21 @@
 type Row = {
   dateSeen: Date | string
+  dateApprox: boolean
   artwork: { year_start: number | null; artist: { name: string }; museum: { name: string } | null }
 }
 export type Bar = { label: string; count: number }
 
 /** Smaakprofiel uit iemands gezien-werken: top-kunstenaars/-musea, decennia, per jaar. */
 export function tasteProfile(rows: Row[]) {
+  // "Ooit gezien, weet niet meer wanneer"-items hebben geen betekenisvolle
+  // dateSeen (server vult die op de markeerdatum) - horen dus niet mee te
+  // tellen in het per-jaar-overzicht.
+  const datedRows = rows.filter((r) => !r.dateApprox)
   return {
     artists: top(rows.map((r) => r.artwork.artist.name), 5),
     museums: top(rows.flatMap((r) => (r.artwork.museum ? [r.artwork.museum.name] : [])), 5),
     decades: sorted(rows.flatMap((r) => (r.artwork.year_start ? [decade(r.artwork.year_start)] : []))),
-    years: sorted(rows.map((r) => String(new Date(r.dateSeen).getFullYear()))),
+    years: sorted(datedRows.map((r) => String(new Date(r.dateSeen).getFullYear()))),
   }
 }
 

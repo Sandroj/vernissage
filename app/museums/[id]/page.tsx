@@ -61,6 +61,7 @@ export default async function MuseumDetailPage({
             id: true,
             artworkId: true,
             dateSeen: true,
+            dateApprox: true,
             locationSeen: true,
             notes: true,
             rating: true,

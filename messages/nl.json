@@ -285,6 +285,8 @@
   },
   "VisitForm": {
     "date": "Datum",
+    "dateApproxToggle": "Ik weet niet meer precies wanneer",
+    "dateApproxNote": "Ergens in het verleden, geen exacte datum",
     "location": "Locatie",
     "rating": "Waardering",
     "notes": "Notitie",
@@ -436,6 +438,7 @@
     "memberStat": "Lid sinds",
     "recentEyebrow": "Jouw spoor",
     "recentTitle": "Recent gezien",
+    "seenDateUnknown": "Ooit gezien",
     "browseMore": "Meer werken",
     "recentEmpty": "Je hebt nog geen werken gemarkeerd",
     "discoverWorks": "Ontdek de collectie",

@@ -16,6 +16,7 @@ import type { Bar } from '@/lib/taste-profile'
 interface RecentSeen {
   id: number
   dateSeen: Date | string
+  dateApprox: boolean
   artwork: {
     id: number
     title: string
@@ -146,7 +147,7 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
                   <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
                     {image ? <Image src={image} alt="" fill sizes="64px" className="object-cover transition duration-500 group-hover:scale-105" /> : <div className="size-full bg-[#e7e1d6]" />}
                   </div>
-                  <div className="min-w-0"><p className="line-clamp-2 font-display text-base font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{item.artwork.title}</p><p className="mt-1 truncate text-xs text-stone-500">{item.artwork.artist.name} · {fmt.dateTime(new Date(item.dateSeen), { day: 'numeric', month: 'short', year: 'numeric' })}</p></div>
+                  <div className="min-w-0"><p className="line-clamp-2 font-display text-base font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{item.artwork.title}</p><p className="mt-1 truncate text-xs text-stone-500">{item.artwork.artist.name} · {item.dateApprox ? t('seenDateUnknown') : fmt.dateTime(new Date(item.dateSeen), { day: 'numeric', month: 'short', year: 'numeric' })}</p></div>
                 </Link>
               })}
             </div>

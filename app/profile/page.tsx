@@ -21,6 +21,7 @@ export default async function ProfilePage() {
       orderBy: { dateSeen: 'desc' },
       select: {
         dateSeen: true,
+        dateApprox: true,
         artwork: {
           select: {
             id: true,
@@ -41,6 +42,7 @@ export default async function ProfilePage() {
       select: {
         id: true,
         dateSeen: true,
+        dateApprox: true,
         artwork: {
           select: {
             id: true,

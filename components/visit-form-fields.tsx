@@ -20,6 +20,8 @@ const MAX_PHOTO_FILE_SIZE = 15 * 1024 * 1024
 interface VisitFormFieldsProps {
   date: Date
   onDateChange: (date: Date) => void
+  dateApprox?: boolean
+  onDateApproxChange?: (value: boolean) => void
   locationValue: string
   onLocationChange: (value: string) => void
   rating: number | null
@@ -33,6 +35,8 @@ interface VisitFormFieldsProps {
 export default function VisitFormFields({
   date,
   onDateChange,
+  dateApprox = false,
+  onDateApproxChange,
   locationValue,
   onLocationChange,
   rating,
@@ -105,24 +109,42 @@ export default function VisitFormFields({
       {/* Datum */}
       <div className="space-y-1.5">
         <label className="text-xs text-stone-500 uppercase tracking-widest">{t('date')}</label>
-        <Popover open={calOpen} onOpenChange={setCalOpen}>
-          <PopoverTrigger
-            render={
-              <Button variant="outline" className="h-10 w-full justify-start gap-2 px-3 bg-white/70 border-black/10 text-stone-800 hover:bg-white focus-visible:ring-1 focus-visible:ring-[#4256cc]/40" />
-            }
-          >
-            <CalendarIcon size={14} className="text-stone-500" />
-            {fmt.dateTime(date, { day: 'numeric', month: 'long', year: 'numeric' })}
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(d) => { if (d) { onDateChange(d); setCalOpen(false) } }}
-              initialFocus
+        {dateApprox ? (
+          <p className="flex h-10 items-center gap-2 rounded-md border border-black/10 bg-white/70 px-3 text-sm text-stone-600">
+            <CalendarIcon size={14} className="text-stone-400" />
+            {t('dateApproxNote')}
+          </p>
+        ) : (
+          <Popover open={calOpen} onOpenChange={setCalOpen}>
+            <PopoverTrigger
+              render={
+                <Button variant="outline" className="h-10 w-full justify-start gap-2 px-3 bg-white/70 border-black/10 text-stone-800 hover:bg-white focus-visible:ring-1 focus-visible:ring-[#4256cc]/40" />
+              }
+            >
+              <CalendarIcon size={14} className="text-stone-500" />
+              {fmt.dateTime(date, { day: 'numeric', month: 'long', year: 'numeric' })}
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(d) => { if (d) { onDateChange(d); setCalOpen(false) } }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        )}
+        {onDateApproxChange && (
+          <label className="flex items-center gap-2 pt-0.5 text-xs text-stone-500">
+            <input
+              type="checkbox"
+              checked={dateApprox}
+              onChange={(e) => onDateApproxChange(e.target.checked)}
+              className="size-3.5 rounded border-black/20"
             />
-          </PopoverContent>
-        </Popover>
+            {t('dateApproxToggle')}
+          </label>
+        )}
       </div>
 
       {/* Locatie */}
