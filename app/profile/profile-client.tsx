@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
@@ -49,6 +49,7 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
   const [deleting, setDeleting] = useState(false)
   const t = useTranslations('Profile')
   const fmt = useFormatter()
+  const { update: updateSession } = useSession()
 
   async function saveProfile() {
     setSaving(true)
@@ -58,8 +59,12 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
       body: JSON.stringify({ name, seenPublic }),
     })
     setSaving(false)
-    if (res.ok) toast.success(t('saved'))
-    else toast.error(t('error'))
+    if (res.ok) {
+      await updateSession({ name })
+      toast.success(t('saved'))
+    } else {
+      toast.error(t('error'))
+    }
   }
 
   async function deleteAccount() {
