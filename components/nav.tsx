@@ -35,7 +35,7 @@ export default function Nav() {
   ]
 
   return (
-    <div className="sticky top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+    <div className="sticky top-0 z-50 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:pt-[max(1rem,env(safe-area-inset-top))]">
       <nav
         className={cn(
           'mx-auto flex h-16 max-w-6xl items-center justify-between gap-5 rounded-full border px-4 backdrop-blur-2xl transition-all duration-300 motion-reduce:transition-none sm:px-6',

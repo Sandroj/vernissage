@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import Providers from '@/components/session-provider'
 import Nav from '@/components/nav'
+import BottomNav from '@/components/bottom-nav'
 import { Toaster } from 'sonner'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
@@ -31,6 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const viewport: Viewport = {
   themeColor: '#4256cc',
+  viewportFit: 'cover',
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -41,9 +43,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider>
         <Providers>
           <Nav />
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-10">
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 sm:py-10 pb-24 md:pb-10">
             {children}
           </main>
+          <BottomNav />
           <Toaster
             theme="light"
             position="bottom-right"
