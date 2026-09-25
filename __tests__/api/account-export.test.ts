@@ -6,6 +6,7 @@ jest.mock('@/lib/prisma', () => ({
     user: { findUnique: jest.fn() },
     seen: { findMany: jest.fn() },
     visit: { findMany: jest.fn() },
+    wantToSee: { findMany: jest.fn() },
     artistVote: { findMany: jest.fn() },
     report: { findMany: jest.fn() },
   },

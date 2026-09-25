@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, AlertCircle, ExternalLink, Database, HelpCircle, MapPin, PencilLine } from 'lucide-react'
+import { ArrowLeft, Bookmark, Check, AlertCircle, ExternalLink, Database, HelpCircle, MapPin, PencilLine } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Lightbox from '@/components/lightbox'
 import SeenModal from '@/components/seen-modal'
@@ -41,6 +41,7 @@ interface ArtworkDetailClientProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialSeen: any | null
   seenCount: number
+  initialWanted: boolean
   isLoggedIn: boolean
   isPlus: boolean
   isAdmin?: boolean
@@ -51,6 +52,7 @@ export default function ArtworkDetailClient({
   artwork,
   initialSeen,
   seenCount,
+  initialWanted,
   isAdmin,
   isLoggedIn,
   isPlus,
@@ -63,6 +65,18 @@ export default function ArtworkDetailClient({
   const [modalOpen, setModalOpen] = useState(false)
   const [seen, setSeen] = useState(initialSeen)
   const [currentSeenCount, setCurrentSeenCount] = useState(seenCount)
+  const [wanted, setWanted] = useState(initialWanted)
+
+  async function toggleWanted() {
+    const next = !wanted
+    setWanted(next)
+    const res = await fetch('/api/want-to-see', {
+      method: next ? 'POST' : 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ artworkId: artwork.id }),
+    })
+    if (!res.ok) { setWanted(!next); toast.error(t('wantError')) }
+  }
   const [reportOpen, setReportOpen] = useState(false)
   const [reportMsg, setReportMsg] = useState('')
   const [hasVisits, setHasVisits] = useState(false)
@@ -94,6 +108,7 @@ export default function ArtworkDetailClient({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updated = all.find((s: any) => s.artworkId === artwork.id)
       setSeen(updated ?? null)
+      if (updated) setWanted(false) // server haalt het werk van de verlanglijst
       if (!seen && updated) setCurrentSeenCount((c) => c + 1)
       if (seen && !updated) setCurrentSeenCount((c) => Math.max(0, c - 1))
     }
@@ -168,6 +183,7 @@ export default function ArtworkDetailClient({
           {/* Seen-knop onder afbeelding op mobiel */}
           <div className="flex items-center gap-3 mt-4 lg:hidden">
             <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
+            {isLoggedIn && !seen && <WantButton wanted={wanted} onToggle={toggleWanted} t={t} />}
             <SeenCount count={currentSeenCount} t={t} />
           </div>
         </div>
@@ -214,6 +230,7 @@ export default function ArtworkDetailClient({
           {/* Seen-knop — desktop */}
           <div className="hidden lg:flex items-center gap-3">
             <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
+            {isLoggedIn && !seen && <WantButton wanted={wanted} onToggle={toggleWanted} t={t} />}
             <SeenCount count={currentSeenCount} t={t} />
           </div>
 
@@ -388,6 +405,21 @@ function SeenButton({ seen, isLoggedIn, onOpen, t }: { seen: unknown; isLoggedIn
     >
       {!!seen && <Check size={12} />}
       {seen ? t('seenEdit') : t('markSeen')}
+    </Button>
+  )
+}
+
+function WantButton({ wanted, onToggle, t }: { wanted: boolean; onToggle: () => void; t: T }) {
+  return (
+    <Button
+      onClick={onToggle}
+      size="sm"
+      variant="outline"
+      aria-pressed={wanted}
+      className={cn('gap-1.5 h-8 rounded-full text-xs', wanted ? 'border-[#f4b548]/50 bg-[#fdf3dc] text-[#8a5a00] hover:bg-[#fbecc6]' : 'border-black/10 bg-white/60 text-stone-700 hover:bg-white')}
+    >
+      <Bookmark size={12} fill={wanted ? 'currentColor' : 'none'} />
+      {wanted ? t('wanted') : t('wantToSee')}
     </Button>
   )
 }

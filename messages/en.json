@@ -29,6 +29,9 @@
     "menu": "Menu"
   },
   "Home": {
+    "onThisDayEyebrow": "Memory",
+    "onThisDayTitle": "On this day",
+    "yearsAgo": "{count, plural, one {# year ago} other {# years ago}}",
     "hello": "Hello, {name}",
     "progress": "You've seen {seen} of {total} works.",
     "start": "Start tracking your museum visits.",
@@ -225,6 +228,9 @@
     "fullDetails": "View full details"
   },
   "Artwork": {
+    "wantToSee": "Want to see",
+    "wanted": "On wishlist",
+    "wantError": "Could not update your wishlist",
     "catalogue": "Catalogue number",
     "jhCatalogue": "Hulsker number",
     "attributionDisputed": "Attribution disputed",
@@ -401,6 +407,10 @@
     "backToLogin": "Back to sign in"
   },
   "Profile": {
+    "wishlistEyebrow": "Wishlist",
+    "wishlistTitle": "Want to see",
+    "wishlistEmpty": "Nothing on your wishlist yet. Tap ‘Want to see’ on any artwork.",
+    "wishlistPrivate": "Only visible to you",
     "title": "Profile",
     "eyebrow": "Your collection",
     "memberSince": "Member since {date}",

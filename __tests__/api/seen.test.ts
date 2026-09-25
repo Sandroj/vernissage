@@ -4,6 +4,7 @@
 jest.mock('@/lib/prisma', () => ({
   prisma: {
     seen: { upsert: jest.fn(), deleteMany: jest.fn(), findUnique: jest.fn(), findMany: jest.fn() },
+    wantToSee: { deleteMany: jest.fn() },
   },
 }))
 jest.mock('next-auth', () => ({ getServerSession: jest.fn() }))

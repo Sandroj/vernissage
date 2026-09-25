@@ -7,6 +7,7 @@ jest.mock('@/lib/prisma', () => ({
     billingCustomer: { findUnique: jest.fn(), deleteMany: jest.fn() },
     seen: { findMany: jest.fn(), deleteMany: jest.fn() },
     visit: { findMany: jest.fn(), deleteMany: jest.fn() },
+    wantToSee: { findMany: jest.fn(), deleteMany: jest.fn() },
     artistVote: { deleteMany: jest.fn() },
     report: { deleteMany: jest.fn() },
     session: { deleteMany: jest.fn() },

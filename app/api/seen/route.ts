@@ -41,6 +41,8 @@ export async function POST(req: Request) {
     update: { dateSeen: new Date(dateSeen), locationSeen, notes, rating, ...photoField },
     create: { userId, artworkId, dateSeen: new Date(dateSeen), locationSeen, notes, rating, ...photoField },
   })
+  // Gezien = van de verlanglijst af.
+  await prisma.wantToSee.deleteMany({ where: { userId, artworkId } })
 
   if (photoTouched && existing?.photo_url && existing.photo_url !== storedKey) {
     await deletePhotoIfOrphaned(userId, artworkId, existing.photo_url)

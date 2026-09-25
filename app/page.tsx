@@ -1,5 +1,6 @@
 import { prisma, hasImage, primaryCatalogue, CATALOG_REVALIDATE_SECONDS } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
+import { onThisDay } from '@/lib/on-this-day'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -82,12 +83,17 @@ export default async function DashboardPage() {
     }
   }> = []
 
+  const onThisDayWorks: Array<{
+    yearsAgo: number
+    artwork: { id: number; title: string; image_local_path: string | null; image_url: string | null; artist: { name: string } }
+  }> = []
+
   if (session?.user?.id) {
     // Beide "seen"-queries zijn onafhankelijk van elkaar — parallel i.p.v. na elkaar.
     const [seenArtworkRows, recent] = await Promise.all([
       prisma.seen.findMany({
         where: { userId: session.user.id, artwork: primaryCatalogue },
-        select: { artwork: { select: { artistId: true } } },
+        select: { artworkId: true, dateSeen: true, artwork: { select: { artistId: true } } },
       }),
       prisma.seen.findMany({
         where: { userId: session.user.id, artwork: primaryCatalogue },
@@ -101,6 +107,18 @@ export default async function DashboardPage() {
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recentSeen.push(...(recent as any[]))
+
+    const memories = onThisDay(seenArtworkRows).slice(0, 6)
+    if (memories.length > 0) {
+      const works = await prisma.artwork.findMany({
+        where: { id: { in: memories.map((m) => m.artworkId) } },
+        select: { id: true, title: true, image_local_path: true, image_url: true, artist: { select: { name: true } } },
+      })
+      for (const m of memories) {
+        const artwork = works.find((w) => w.id === m.artworkId)
+        if (artwork) onThisDayWorks.push({ yearsAgo: m.yearsAgo, artwork })
+      }
+    }
   }
 
   const totalSeen = Object.values(seenCounts).reduce((a, b) => a + b, 0)
@@ -206,6 +224,29 @@ export default async function DashboardPage() {
         <section className="grid gap-6 overflow-hidden rounded-[2rem] bg-[#e7e9fa] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
           <div><p className="eyebrow mb-2">{t('ctaEyebrow')}</p><h2 className="font-display text-4xl font-medium text-stone-900">{t('ctaTitle')}</h2><p className="mt-3 max-w-2xl text-stone-600">{t('ctaText')}</p></div>
           <div className="flex flex-wrap gap-3"><Link href="/login?mode=register"><Button className="h-11 rounded-full bg-[#4256cc] px-6 text-white hover:bg-[#3447b8]">{t('ctaRegister')}</Button></Link><Link href="/museums"><Button variant="outline" className="h-11 rounded-full border-black/10 bg-white/60 px-6 text-stone-800"><MapPin size={15} /> {t('ctaMuseums')}</Button></Link></div>
+        </section>
+      )}
+
+      {onThisDayWorks.length > 0 && (
+        <section>
+          <p className="eyebrow mb-2">{t('onThisDayEyebrow')}</p><h2 className="font-display mb-6 text-4xl font-medium text-stone-900">{t('onThisDayTitle')}</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+            {onThisDayWorks.map(({ yearsAgo, artwork }) => (
+              <Link key={artwork.id} href={`/artworks/${artwork.id}`} className="group">
+                <div className="relative aspect-square overflow-hidden rounded-2xl bg-stone-200 shadow-sm ring-1 ring-black/5 transition-all group-hover:-translate-y-1 group-hover:shadow-xl">
+                  <Image
+                    src={artwork.image_local_path ?? artwork.image_url ?? '/placeholder.jpg'}
+                    alt={artwork.title}
+                    fill
+                    sizes="(max-width: 640px) 50vw, 16vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-[#ed694c]">{t('yearsAgo', { count: yearsAgo })}</p>
+                <p className="truncate text-xs text-stone-500 transition-colors group-hover:text-stone-900">{artwork.title} · {artwork.artist.name}</p>
+              </Link>
+            ))}
+          </div>
         </section>
       )}
 

@@ -38,13 +38,16 @@ export default async function ArtworkDetailPage({ params, searchParams }: { para
 
   if (!artwork) notFound()
 
-  const [seenRow, isPlus] = await Promise.all([
+  const [seenRow, isPlus, wanted] = await Promise.all([
     session?.user?.id
       ? prisma.seen.findUnique({
           where: { userId_artworkId: { userId: session.user.id, artworkId: artwork.id } },
         })
       : Promise.resolve(null),
     session?.user?.id ? hasActiveEntitlement(session.user.id) : Promise.resolve(false),
+    session?.user?.id
+      ? prisma.wantToSee.count({ where: { userId: session.user.id, artworkId: artwork.id } })
+      : Promise.resolve(0),
   ])
 
   const seen = seenRow ? (await signPhotoUrls([seenRow]))[0] : seenRow
@@ -56,6 +59,7 @@ export default async function ArtworkDetailPage({ params, searchParams }: { para
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       initialSeen={seen as any}
       seenCount={artwork._count.seenBy}
+      initialWanted={wanted > 0}
       isLoggedIn={!!session?.user}
       isPlus={isPlus}
       isAdmin={isAdmin}

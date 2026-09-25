@@ -14,7 +14,7 @@ export async function GET() {
 
   const artworkSelect = { select: { title: true, artist: { select: { name: true } } } } as const
 
-  const [profile, seen, visits, votes, reports] = await Promise.all([
+  const [profile, seen, visits, wantToSee, votes, reports] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: { name: true, email: true, seenPublic: true, createdAt: true },
@@ -27,6 +27,7 @@ export async function GET() {
       where: { userId },
       select: { dateSeen: true, locationSeen: true, notes: true, rating: true, createdAt: true, artwork: artworkSelect },
     }),
+    prisma.wantToSee.findMany({ where: { userId }, select: { createdAt: true, artwork: artworkSelect } }),
     prisma.artistVote.findMany({ where: { userId }, select: { artistName: true, createdAt: true } }),
     prisma.report.findMany({
       where: { userId },
@@ -34,7 +35,7 @@ export async function GET() {
     }),
   ])
 
-  const data = { exportedAt: new Date().toISOString(), profile, seen, visits, votes, reports }
+  const data = { exportedAt: new Date().toISOString(), profile, seen, visits, wantToSee, votes, reports }
 
   return new NextResponse(JSON.stringify(data, null, 2), {
     headers: {

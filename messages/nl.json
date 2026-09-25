@@ -29,6 +29,9 @@
     "menu": "Menu"
   },
   "Home": {
+    "onThisDayEyebrow": "Herinnering",
+    "onThisDayTitle": "Op deze dag",
+    "yearsAgo": "{count} jaar geleden",
     "hello": "Hallo, {name}",
     "progress": "Jij hebt {seen} van {total} werken gezien.",
     "start": "Begin met het bijhouden van je kunstbezoeken.",
@@ -225,6 +228,9 @@
     "fullDetails": "Bekijk volledige details"
   },
   "Artwork": {
+    "wantToSee": "Wil ik zien",
+    "wanted": "Op verlanglijst",
+    "wantError": "Kon de verlanglijst niet bijwerken",
     "catalogue": "Catalogusnummer",
     "jhCatalogue": "Hulsker-nummer",
     "attributionDisputed": "Toeschrijving omstreden",
@@ -401,6 +407,10 @@
     "backToLogin": "Terug naar inloggen"
   },
   "Profile": {
+    "wishlistEyebrow": "Verlanglijst",
+    "wishlistTitle": "Wil ik zien",
+    "wishlistEmpty": "Nog niets op je verlanglijst. Tik bij een werk op ‘Wil ik zien’.",
+    "wishlistPrivate": "Alleen zichtbaar voor jou",
     "title": "Profiel",
     "eyebrow": "Jouw verzameling",
     "memberSince": "Lid sinds {date}",

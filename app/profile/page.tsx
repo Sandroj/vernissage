@@ -9,7 +9,7 @@ export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) redirect('/login')
 
-  const [user, seenCount, seenRecords, recentSeen, seenPhotos, visitPhotos] = await Promise.all([
+  const [user, seenCount, seenRecords, recentSeen, seenPhotos, visitPhotos, wishlist] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
       select: { id: true, name: true, email: true, image: true, seenPublic: true, createdAt: true, password: true },
@@ -60,6 +60,24 @@ export default async function ProfilePage() {
       take: 60,
       select: { id: true, dateSeen: true, photo_url: true, artwork: { select: { id: true, title: true } } },
     }),
+    prisma.wantToSee.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        artwork: {
+          select: {
+            id: true,
+            title: true,
+            image_local_path: true,
+            image_url: true,
+            artist: { select: { name: true } },
+            museum: { select: { name: true, city: true } },
+            loans: { where: { current: true }, take: 1, select: { toMuseum: { select: { name: true, city: true } } } },
+          },
+        },
+      },
+    }),
   ])
 
   // Visit photos win over a Seen row with the exact same photo_url — Seen is
@@ -93,6 +111,7 @@ export default async function ProfilePage() {
       seenByArtist={seenByArtist}
       recentSeen={recentSeen}
       myPhotos={myPhotos}
+      wishlist={wishlist.map(({ id, artwork: { loans, museum, ...artwork } }) => ({ id, artwork: { ...artwork, museum: loans[0]?.toMuseum ?? museum } }))}
     />
   )
 }

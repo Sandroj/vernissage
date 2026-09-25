@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { toast } from 'sonner'
-import { CheckCircle2, ChevronDown, Download, Eye, LogOut, Mail, Settings2, Sparkles, Trash2, User } from 'lucide-react'
+import { Bookmark, CheckCircle2, ChevronDown, Download, Eye, LogOut, Mail, Settings2, Sparkles, Trash2, User } from 'lucide-react'
 import { useTranslations, useFormatter } from 'next-intl'
 import Image from 'next/image'
 import Lightbox from '@/components/lightbox'
@@ -33,9 +33,10 @@ interface ProfileClientProps {
   }>
   recentSeen: RecentSeen[]
   myPhotos: Array<{ id: string; dateSeen: Date | string; photo_url: string; artwork: { id: number; title: string } }>
+  wishlist: Array<{ id: number; artwork: { id: number; title: string; image_local_path: string | null; image_url: string | null; artist: { name: string }; museum: { name: string; city: string } | null } }>
 }
 
-export default function ProfileClient({ user, seenCount, seenByArtist, recentSeen, myPhotos }: ProfileClientProps) {
+export default function ProfileClient({ user, seenCount, seenByArtist, recentSeen, myPhotos, wishlist }: ProfileClientProps) {
   const [name, setName] = useState(user.name ?? '')
   const [seenPublic, setSeenPublic] = useState(user.seenPublic)
   const [saving, setSaving] = useState(false)
@@ -185,6 +186,31 @@ export default function ProfileClient({ user, seenCount, seenByArtist, recentSee
           </div>
         </section>
       </div>
+
+      <section className="paper-card mt-6 rounded-[1.75rem] p-5 sm:p-7">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div><p className="eyebrow mb-1">{t('wishlistEyebrow')}</p><h2 className="font-display text-3xl font-medium text-stone-900">{t('wishlistTitle')}</h2></div>
+          <span className="text-xs text-stone-400">{t('wishlistPrivate')}</span>
+        </div>
+        {wishlist.length === 0 ? (
+          <div className="flex min-h-32 flex-col items-center justify-center rounded-2xl bg-black/[.025] px-6 text-center">
+            <Bookmark size={22} className="mb-3 text-stone-300" />
+            <p className="text-sm text-stone-600">{t('wishlistEmpty')}</p>
+          </div>
+        ) : (
+          <div className="grid gap-2 sm:grid-cols-2">
+            {wishlist.map(({ id, artwork }) => {
+              const image = artwork.image_local_path ?? artwork.image_url
+              return <Link key={id} href={`/artworks/${artwork.id}`} className="group flex items-center gap-3 rounded-2xl p-2.5 transition hover:bg-black/[.035]">
+                <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-stone-200">
+                  {image ? <Image src={image} alt="" fill sizes="64px" className="object-cover transition duration-500 group-hover:scale-105" /> : <div className="size-full bg-[#e7e1d6]" />}
+                </div>
+                <div className="min-w-0"><p className="line-clamp-2 font-display text-base font-semibold leading-tight text-stone-900 group-hover:text-[#4256cc]">{artwork.title}</p><p className="mt-1 truncate text-xs text-stone-500">{artwork.artist.name}{artwork.museum && ` · ${artwork.museum.name}, ${artwork.museum.city}`}</p></div>
+              </Link>
+            })}
+          </div>
+        )}
+      </section>
 
       <section className="paper-card mt-6 rounded-[1.75rem] p-5 sm:p-7">
         <div className="mb-5 flex items-center gap-2"><User size={16} className="text-[#4256cc]" /><h2 className="font-display text-2xl font-medium text-stone-900">{t('dataTitle')}</h2></div>
