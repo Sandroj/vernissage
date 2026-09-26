@@ -1,6 +1,7 @@
 # App Review-account (Apple/Google)
 
-Aangemaakt 22-09-2026, live productie (`https://arttracker-xi.vercel.app`).
+Aangemaakt 22-09-2026, live productie (`https://www.seen.gallery`, sinds de
+domein-cutover van 22-09-2026 — was `arttracker-xi.vercel.app`).
 
 ## Inloggegevens
 
@@ -16,7 +17,7 @@ kernflow direct zichtbaar is zonder eerst handmatig data te moeten invoeren.
 
 ## Reviewnotities (kopiëren naar App Store Connect / Play Console)
 
-> Pinacot is a personal diary for artworks you've seen in museums. Log in
+> Seen is a personal diary for artworks you've seen in museums. Log in
 > with the account above — it already contains a few marked-as-seen
 > artworks so the core flow is visible immediately.
 >
