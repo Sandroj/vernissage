@@ -347,6 +347,7 @@
     "title": "Musea",
     "subtitle": "{locations} locaties · {works} werken in de collectie",
     "disclaimer": "De kaart toont bekende collectiehouders. Werken kunnen tijdelijk in depot of in bruikleen zijn.",
+    "filterAllArtists": "Alle kunstenaars",
     "legendMuseum": "Museum",
     "legendSeen": "Werk(en) gezien",
     "legendHint": "· Klik op een pin om de museumpagina te openen",

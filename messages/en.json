@@ -347,6 +347,7 @@
     "title": "Museums",
     "subtitle": "{locations} locations · {works} works in the collection",
     "disclaimer": "The map shows known collection holders. Works may temporarily be in storage or on loan.",
+    "filterAllArtists": "All artists",
     "legendMuseum": "Museum",
     "legendSeen": "Work(s) seen",
     "legendHint": "· Click a pin to open the museum page",

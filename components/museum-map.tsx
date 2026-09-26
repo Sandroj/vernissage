@@ -66,6 +66,7 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
       const map = L.map(mapRef.current, {
         center: [43, 8],
         zoom: 3,
+        maxZoom: 16,
         zoomControl: true,
         scrollWheelZoom: true,
       })
@@ -82,6 +83,13 @@ export default function MuseumMap({ museums, labels, compact = false }: MuseumMa
           url: BASEMAP_URL,
           flavor: 'light',
           lang: 'en',
+          // De basemap-PMTiles gaan zelf maar tot z7 (zie AGENTS.md) — met
+          // maxDataZoom expliciet gezet blijft de laag verder inzoomen door
+          // de z7-tegel te schalen, i.p.v. dat Leaflet de hele kaart op
+          // z7 vastzet (marker-clusters in dichtbevolkte steden konden
+          // anders niet ver genoeg uit elkaar gezoomd worden).
+          maxDataZoom: 7,
+          maxZoom: 16,
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://protomaps.com">Protomaps</a>',
         }).addTo(map)
         // The layer's very first tile pass can race the PMTiles archive's own
