@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Check, CheckCircle2, HelpCircle, MapPin } from 'lucide-react'
+import { Check, HelpCircle, MapPin } from 'lucide-react'
+import { BRAND, Wordmark } from '@/components/logo'
 import SeenModal from '@/components/seen-modal'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
@@ -54,7 +55,7 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
   return (
     <>
       <article className="group min-w-0">
-      <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-2 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl', seen ? 'ring-[#4256cc]' : 'ring-black/5')}>
+      <div className={cn('relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-stone-200 shadow-sm ring-2 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl', seen ? 'ring-[#D8342B]' : 'ring-black/5')}>
         {/* Image — klikken gaat naar de detailpagina */}
         <Link href={`/artworks/${artwork.id}`} className="block size-full">
           {imgSrc && !imgError ? (
@@ -81,10 +82,14 @@ export default function ArtworkCard({ artwork, seen, onSeenChange, isLoggedIn }:
         </Link>
 
         {/* Gezien indicator */}
+        {/* Gezien-stempel — het woordmerk, rechtsonder zoals het rode stipje naast een schilderij */}
         {seen && (
-          <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1.5 rounded-full bg-[#4256cc] px-3 py-1.5 shadow-md">
-            <CheckCircle2 size={13} className="text-white" />
-            <span className="text-white text-xs font-semibold">{t('seenBadge')}</span>
+          <div
+            className="pointer-events-none absolute bottom-2.5 right-2.5 rounded-full px-2.5 pb-1.5 pt-1 text-stone-900 shadow-md transition-opacity duration-300 group-hover:opacity-0"
+            style={{ background: BRAND.ivory }}
+          >
+            <span aria-hidden="true"><Wordmark fontSize={18} /></span>
+            <span className="sr-only">{t('seenBadge')}</span>
           </div>
         )}
 
