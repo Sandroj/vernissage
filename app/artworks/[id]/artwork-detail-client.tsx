@@ -180,11 +180,13 @@ export default function ArtworkDetailClient({
             <Lightbox src={imgSrc} alt={artwork.title} onClose={() => setLightboxOpen(false)} />
           )}
 
-          {/* Seen-knop onder afbeelding op mobiel */}
-          <div className="flex items-center gap-3 mt-4 lg:hidden">
-            <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
-            {isLoggedIn && !seen && <WantButton wanted={wanted} onToggle={toggleWanted} t={t} />}
+          {/* Seen-knop onder afbeelding op mobiel — rechts, binnen bereik van de rechterduim */}
+          <div className="flex flex-wrap items-center gap-3 mt-4 lg:hidden">
             <SeenCount count={currentSeenCount} t={t} />
+            <div className="ml-auto flex shrink-0 items-center gap-3">
+              {isLoggedIn && !seen && <WantButton wanted={wanted} onToggle={toggleWanted} t={t} />}
+              <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
+            </div>
           </div>
         </div>
 

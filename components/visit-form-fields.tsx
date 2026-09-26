@@ -140,7 +140,7 @@ export default function VisitFormFields({
               type="checkbox"
               checked={dateApprox}
               onChange={(e) => onDateApproxChange(e.target.checked)}
-              className="size-3.5 rounded border-black/20"
+              className="size-3.5 shrink-0 rounded border-black/20"
             />
             {t('dateApproxToggle')}
           </label>
