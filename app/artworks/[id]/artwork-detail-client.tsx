@@ -183,7 +183,7 @@ export default function ArtworkDetailClient({
           {/* Seen-knop onder afbeelding op mobiel — rechts, binnen bereik van de rechterduim */}
           <div className="flex flex-wrap items-center gap-3 mt-4 lg:hidden">
             <SeenCount count={currentSeenCount} t={t} />
-            <div className="ml-auto flex shrink-0 items-center gap-3">
+            <div className="ml-auto flex shrink-0 items-center gap-2">
               {isLoggedIn && !seen && <WantButton wanted={wanted} onToggle={toggleWanted} t={t} />}
               <SeenButton seen={seen} isLoggedIn={isLoggedIn} onOpen={() => setModalOpen(true)} t={t} />
             </div>
@@ -399,7 +399,7 @@ function SeenButton({ seen, isLoggedIn, onOpen, t }: { seen: unknown; isLoggedIn
       onClick={onOpen}
       size="sm"
       className={cn(
-        'gap-1.5 h-8 text-xs',
+        'h-9 gap-1.5 rounded-full px-4 text-xs',
         seen
           ? 'border border-[#4256cc]/25 bg-[#e7e9fa] text-[#3447b8] hover:bg-[#dce0fa]'
           : 'border-0 bg-[#ed694c] text-white hover:bg-[#db573c]'
@@ -418,7 +418,7 @@ function WantButton({ wanted, onToggle, t }: { wanted: boolean; onToggle: () => 
       size="sm"
       variant="outline"
       aria-pressed={wanted}
-      className={cn('gap-1.5 h-8 rounded-full text-xs', wanted ? 'border-[#f4b548]/50 bg-[#fdf3dc] text-[#8a5a00] hover:bg-[#fbecc6]' : 'border-black/10 bg-white/60 text-stone-700 hover:bg-white')}
+      className={cn('h-9 gap-1.5 rounded-full px-4 text-xs', wanted ? 'border-[#f4b548]/50 bg-[#fdf3dc] text-[#8a5a00] hover:bg-[#fbecc6]' : 'border-black/10 bg-white/60 text-stone-700 hover:bg-white')}
     >
       <Bookmark size={12} fill={wanted ? 'currentColor' : 'none'} />
       {wanted ? t('wanted') : t('wantToSee')}
