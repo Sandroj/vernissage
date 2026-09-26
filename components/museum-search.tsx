@@ -4,6 +4,7 @@ import { Command, CommandInput, CommandList, CommandItem, CommandEmpty, CommandG
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { MapPin } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { useLocale, useTranslations } from 'next-intl'
 
 interface Museum { id: number; name: string; city: string; country: string }
@@ -51,7 +52,7 @@ export default function MuseumSearch({ value, onChange }: MuseumSearchProps) {
         }
       >
         <MapPin size={14} className="text-stone-400 flex-shrink-0" />
-        <span className={value ? 'text-stone-800' : 'text-stone-400'}>
+        <span className={cn('min-w-0 truncate', value ? 'text-stone-800' : 'text-stone-400')}>
           {value || t('trigger')}
         </span>
       </PopoverTrigger>
